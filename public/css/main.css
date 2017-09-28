@@ -1,0 +1,161 @@
+.background_pink_tmt {
+    background: #e4217f;
+}
+
+.background_imagesPhone {
+    height: 618px;
+    background-size: 454px 618px;
+    background-image: url(/public/images/instagran/phone.png);
+    width: 454px;
+}
+
+.background_imagesPhone img {
+    top: 100px;
+    position: relative;
+    left: 151px;
+    display: none;
+}
+
+.background_imagesPhone img:first-child {
+    display: block;
+}
+
+/*Text*/
+.text_tmt {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.text_head_bold_tmt {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 15px;
+}
+
+.news_tmt {
+    padding: 10px 0px;
+}
+
+.news_head_tmt > img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+.news_head_tmt {
+    display: flex;
+    flex-direction: row;
+}
+
+.news_head_tmt > span[name="content"] {
+    height: 100%;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+    padding-left: 10px;
+}
+
+.news_head_tmt > span[name="name"] {
+
+}
+
+.news_head_tmt > span[name="time"] {
+
+}
+
+/*button*/
+.button_clear_tmt {
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+}
+
+button.button_clear_tmt:focus {
+    border: none;
+}
+
+.button_background_none_tmt {
+    background: none;
+}
+
+button_background_none_tmt:hover {
+    background: none;
+}
+
+.button_tmt {
+    border: 1px solid;
+    padding: 5px;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 5px;
+    background: none;
+}
+
+/*Margin - Padding*/
+.marginBottom_5_tmt {
+    margin-bottom: 5px;
+}
+
+.paddingTop_100_tmt {
+    padding-top: 100px;
+}
+
+.paddingTop_4_tmt {
+    padding-top: 4px;
+}
+
+.paddingBottom_100_tmt {
+    padding-bottom: 100px;
+}
+
+/*Postion*/
+.postion_relative_tmt {
+    position: relative
+}
+
+.postion_absolute_tmt {
+    position: absolute
+}
+
+/*Change Bootstrap*/
+.form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #3e3e3e;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid rgba(204, 204, 204, 0.2);
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.form-control:focus {
+    border-color: rgba(228, 33, 127, 0.3);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(228, 33, 127, 0.28);
+}
+
+.form-control:hover {
+    border-color: rgba(228, 33, 127, 0.3);
+}
+
+.btn:hover, .btn:focus, .btn.focus {
+    border-color: rgba(228, 33, 127, 0.3);
+}
+
+.btn-default:hover, .btn-default:focus {
+    background: none;
+}
