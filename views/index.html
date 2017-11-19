@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lotus</title>
+
+    <link rel="stylesheet" href="../public/css/bootstrap.css">
+    <link rel="stylesheet" href="../public/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="../public/css/main.css">
+    <script src="../public/js/angular.min.js"></script>
+    <script src="../public/js/jquery.min.js"></script>
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!--App-->
+    <script src="../public/js/app.js"></script>
+    <!--Services-->
+    <script src="../public/js/services/factory.js"></script>
+    <!--Controller-->
+    <script src="../public/js/controllers/index.ctl.js"></script>
+
+</head>
+<body ng-app="myApp" ng-controller="index">
+<div class="container-fluid ">
+    <div class="row background_pink_tmt" style="padding:8px 0;">
+        <div class="col-md-6 text_tmt paddingTop_4_tmt">
+            <span class="text_head_bold_tmt">Lotus</span><br/>
+            Chia sẽ khoảnh khắc của bạn
+        </div>
+        <div class="col-md-6 paddingTop_4_tmt" style="text-align:right;">
+            <button class="button_tmt">Giới thiệu về chúng tôi</button>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="col-md-1"></div>
+    <div class="col-md-5">
+        <div class="background_imagesPhone">
+            <img src="../public/images/instagran/conversation.jpg">
+            <img src="../public/images/instagran/camera.jpg">
+            <img src="../public/images/instagran/editImage.jpg">
+            <img src="../public/images/instagran/newfeed.jpg">
+            <img src="../public/images/instagran/profile.jpg">
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-4 paddingTop_100_tmt paddingBottom_100_tmt">
+        <div class="col-sm-10 marginBottom_5_tmt" style="text-align: center">
+            <span class="text_logo">Lotus</span>
+        </div>
+        <div class="col-sm-10 marginBottom_5_tmt" style="text-align: center; letter-spacing: 0.5px; padding:0;">
+            <span style="font-weight: 600;color: rgba(88, 88, 88, 0.71);">Liên kết tài khoản của bạn với chúng tôi</span>
+        </div>
+        <div class="col-sm-10 marginBottom_5_tmt" style="text-align: center">
+            <img src="../public/images/logo/icon-facebook.png" class="hover-cursor" height="30px"/>
+            <img src="../public/images/logo/icon-google.png" class="hover-cursor" height="23px"/>
+        </div>
+        <div class="col-sm-10 marginBottom_5_tmt" style="text-align: left; padding:0;">
+            <span style="font-weight: 600;color: rgba(88, 88, 88, 0.71); letter-spacing: 0.5px;">Hoặc</span>
+
+        </div>
+        <form class="form-horizontal" ng-show="registerAccount.login" name="createAccount">
+            <div class="form-group marrginBottom_8_tmt">
+                <div class="col-sm-10">
+                    <input ng-model="registerAccount.createAccount.username" type="email" name="email"
+                           class="form-control"
+                           placeholder="Số điện thoại hoặc email"/>
+                </div>
+            </div>
+            <div class="form-group marrginBottom_8_tmt">
+                <div class="col-sm-10">
+                    <input ng-model="registerAccount.createAccount.name" type="text" name="fullname"
+                           class="form-control"
+                           placeholder="Tên đầy đủ"/>
+                </div>
+            </div>
+            <div class="form-group marrginBottom_8_tmt">
+                <div class="col-sm-10">
+                    <input ng-model="registerAccount.createAccount.nickname" type="text" name="nick"
+                           class="form-control"
+                           placeholder="Tên người dùng"/>
+                </div>
+            </div>
+            <div class="form-group marrginBottom_8_tmt">
+                <div class="col-sm-10">
+                    <input ng-model="registerAccount.createAccount.password" type="password" name="password"
+                           class="form-control"
+                           placeholder="Mật khẩu"/>
+                </div>
+            </div>
+            <div class="form-group marginBottom_5_tmt">
+                <div class="col-sm-offset-3 col-sm-10" style="margin-left: 0;margin-top: 10px;">
+                    <button type="submit" class="button_background_none_tmt btn btn-default" style="width: 100%"
+                            ng-click="registerAccount.buttonCreateAccount()">
+                        Tạo tài khoản
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form class="form-horizontal" ng-show="!registerAccount.login">
+            <div class="form-group marginBottom_5_tmt marrginBottom_8_tmt">
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" name="email" ng-model="login.loginAccount.username"
+                           placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group marginBottom_5_tmt marrginBottom_8_tmt">
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" name="password" ng-model="login.loginAccount.password"
+                           placeholder="Password">
+                </div>
+            </div>
+            {{login.loginAccount.password}}
+            <div class="form-group marginBottom_5_tmt">
+                <div class="col-sm-offset-3 col-sm-10" style="margin-left: 0;margin-top: 10px;">
+                    <button type="submit" class="button_background_none_tmt btn btn-default"
+                            ng-click="login.buttonLogin()" style="width: 100%;">
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="col-sm-10" style="text-align: center;">
+            <button ng-click="registerAccount.click()" class="button_clear_tmt text_system_not" ng-show="!registerAccount.login">
+                Tạo tài khoản
+            </button>
+            <button ng-click="registerAccount.click()" class="button_clear_tmt text_system_not" ng-show="registerAccount.login">
+                Tôi đã có tài khoản
+            </button>
+        </div>
+    </div>
+    <div class="col-md-1">{{registerAccount.createAccount.username}}</div>
+</div>
+</body>
+</html>
