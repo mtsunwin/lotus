@@ -1,15 +1,15 @@
 const table_name = "user";
 var _obj = {
-    id: 'abcxyz126',
+    id: 'abcxyz1267',
     name: 'Tran Minh Thang',
-    nickname: 'Thang',
+    nickname: 'minhthang',
     // datecreate: '',
     // localcreate: '',
     // ip:'',
     // phone: '',
     // email: '',
     // birthday: '',
-    username: 'minh@gmail.com',
+    username: 'minhh@gmail.com',
     password: 'minhthang'
     // accountFacebook: '',
     // accountGoogle: ''
@@ -29,16 +29,16 @@ var params = {
         "_id": {S: _obj.id},
         "fullname": {S: _obj.name},
         "nickname": {S: _obj.nickname},
-        "datacreate": {S: typeof (_obj.datecreate) != 'undefined' ? _obj.datecreate : 'null'},
-        "localcreate": {S: typeof (_obj.localcreate) != 'undefined' ? _obj.localcreate : 'null'},
-        "ipdevice": {S: typeof (_obj.ip) != 'undefined' ? _obj.ip : 'null'},
-        "phone": {S: typeof (_obj.phone) != 'undefined' ? _obj.phone : 'null'},
-        "email": {S: typeof (_obj.email) != 'undefined' ? _obj.email : 'null'},
-        "birthday": {S: typeof (_obj.birthday) != 'undefined' > 0 ? _obj.birthday : 'null'},
+        // "datacreate": {S: typeof (_obj.datecreate) != 'undefined' ? _obj.datecreate : 'null'},
+        // "localcreate": {S: typeof (_obj.localcreate) != 'undefined' ? _obj.localcreate : 'null'},
+        // "ipdevice": {S: typeof (_obj.ip) != 'undefined' ? _obj.ip : 'null'},
+        // "phone": {S: typeof (_obj.phone) != 'undefined' ? _obj.phone : 'null'},
+        // "email": {S: typeof (_obj.email) != 'undefined' ? _obj.email : 'null'},
+        // "birthday": {S: typeof (_obj.birthday) != 'undefined' > 0 ? _obj.birthday : 'null'},
         "username": {S: _obj.username},
         "password": {S: _obj.password},
-        "accountFacebook": {S: typeof (_obj.accountFacebook) != 'undefined' > 0 ? _obj.accountFacebook : 'null'},
-        "accountGoogle": {S: typeof (_obj.accountGoogle) != 'undefined' > 0 ? _obj.accountGoogle : 'null'}
+        // "accountFacebook": {S: typeof (_obj.accountFacebook) != 'undefined' > 0 ? _obj.accountFacebook : 'null'},
+        // "accountGoogle": {S: typeof (_obj.accountGoogle) != 'undefined' > 0 ? _obj.accountGoogle : 'null'}
     }
 };
 docClient.putItem(params, function (err, data) {

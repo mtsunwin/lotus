@@ -25,35 +25,6 @@ var params = {
         ":us": _content
     }
 };
-// var params = {
-//     TableName: table_name,
-//     ProjectionExpression: "fullname",
-//     FilterExpression:  "#colfullname = :valfullname",
-//     KeyConditionExpression:
-//         "#colfullname = :valfullname",
-//     ExpressionAttributeNames: {
-//         // "#colfullname": "fullname"
-//         "#colfullname": "fullname",
-//     },
-//     ExpressionAttributeValues: {
-//         ":valfullname": "thang"
-//     }
-// };
-// var params = {
-//     TableName: table_name,
-//     ProjectionExpression: "fullname, username", // tên bảng được lấy ra
-//     KeyConditionExpression: "#fullname = :value",
-//     FilterExpression: "#fullname = :value and #username = :username",
-//     ExpressionAttributeNames: {
-//         "#fullname": "fullname",
-//         "#username": "username"
-//     },
-//     ExpressionAttributeValues: {
-//         ":value": "thang",
-//         ":username": 'thang@gmail.com'
-//
-//     }
-// };
 docClient.query(params, function (err, data) {
     if (err) {
         console.log("Lỗi err", err);

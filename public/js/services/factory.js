@@ -6,7 +6,7 @@ angular.module('myApp.service', [])
                 var boolean;
                 $http({
                     method: "POST",
-                    url: "/sys/insertuser",
+                    url: "/insertuser",
                     headers: {"content-type": "application/json"},
                     dataType: "json",
                     data: JSON.stringify({
@@ -17,17 +17,17 @@ angular.module('myApp.service', [])
                     }),
                 }).then(callback);
             },
-            checkLogin: function (_username, _password, callback) {
+            checkLogin: function (_username, _password) {
                 $http({
                     method: "POST",
-                    url: "/sys/login",
+                    url: "/login",
                     headers: {"content-type": "application/json"},
                     dataType: "json",
                     data: JSON.stringify({
                         username: _username,
                         password: _password
                     }),
-                }).then(callback);
+                });
             }
         };
     }]);
