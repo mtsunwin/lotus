@@ -27,3 +27,6 @@ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar [options]
 For more information on available options, run with the -help option:
 
   java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -help
+  
+--Minh Thang C:\Lotus\lotus\SERVER\Dynamodb
+java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -inMemory
