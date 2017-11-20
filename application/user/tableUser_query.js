@@ -1,5 +1,5 @@
 const tableUser = "user";
-exports.iLogIn = function (AWS, _username, _password, callback) {
+exports.iLogIn = function (AWS, _username, _password, response, fs) {
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
         TableName: tableUser,
@@ -15,8 +15,15 @@ exports.iLogIn = function (AWS, _username, _password, callback) {
         }
     }
     docClient.scan(params, function (err, data) {
-        if (err) callback(err);
-        else callback(null, data);
+        if (err) {
+            console.log("ERR");
+        }
+        else {
+            fs.readFile("../views/newfeed.html", function (err, da) {
+                response.writeHead(200, {"content-type": "text/html"});
+                response.end(da);
+            });
+        }
     });
 }
 
