@@ -14,82 +14,29 @@
     <!--Services-->
     <script src="../public/js/services/factory.js"></script>
     <!--Controller-->
-    <script src="../public/js/controllers/index.ctl.js"></script>
+    <script src="../public/js/controllers/index.ctl.js" type="text/javascript"></script>
+    <script src="../public/js/controllers/newfeed.ctl.js" type="text/javascript"></script>
 </head>
-<body>
+<body ng-app="myApp" ng-controller="newfeed">
 <navbar></navbar>
+{{minhthang}}
 <div class="container">
-    <div class="col-md-10 col-md-offset-1 news_tmt row">
+    <div class="col-md-10 col-md-offset-1 news_tmt">
         <div class="row">
             <div class="col-xs-6 col-md-3 news_head_tmt">
                 <img src="../public/images/instagran/profile.jpg" height="80" width="75"/>
                 <span name="content">
-                    <span name="name" style="">name</span>
-                    <span name="time">Time</span>
+                    <span name="name">Tran Thang</span>
+                    <span name="time">8h30 20/10</span>
                 </span>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-6 col-md-3 news_head_tmt">
-
-            </div>
-        </div>
-        <div class="row" style="text-align: center;">
+        <div class="row thumbnail thumbnail_tmt" style="text-align: center;">
             <img src="../public/images/instagran/newfeed.jpg" height="427" width="240"/>
         </div>
-        <div class="row" style="background: #ccc; display: flex; justify-items: ;">
-            <span>111</span>
-            <span>222</span>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="col-md-10 col-md-offset-1 news_tmt row">
         <div class="row">
-            <div class="col-xs-6 col-md-3 news_head_tmt">
-                <img src="../public/images/instagran/profile.jpg" height="80" width="75"/>
-                <span name="content">
-                    <span name="name" style="">name</span>
-                    <span name="time">Time</span>
-                </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6 col-md-3 news_head_tmt">
-
-            </div>
-        </div>
-        <div class="row" style="text-align: center;">
-            <img src="../public/images/instagran/newfeed.jpg" height="427" width="240"/>
-        </div>
-        <div class="row" style="background: #ccc;">
-            <span>111</span>
-            <span>222</span>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="col-md-10 col-md-offset-1 news_tmt row">
-        <div class="row">
-            <div class="col-xs-6 col-md-3 news_head_tmt">
-                <img src="../public/images/instagran/profile.jpg" height="80" width="75"/>
-                <span name="content">
-                    <span name="name" style="">name</span>
-                    <span name="time">Time</span>
-                </span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6 col-md-3 news_head_tmt">
-
-            </div>
-        </div>
-        <div class="row" style="text-align: center;">
-            <img src="../public/images/instagran/newfeed.jpg" height="427" width="240"/>
-        </div>
-        <div class="row" style="background: #ccc; display: flex;">
-            <span style="justify-items: ">111</span>
-            <span>222</span>
+            <div class="button_like"></div>
+            <div class="button_share"></div>
         </div>
     </div>
 </div>

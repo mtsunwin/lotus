@@ -47,6 +47,7 @@
 .news_head_tmt {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 .news_head_tmt > span[name="content"] {
@@ -58,8 +59,9 @@
     padding-left: 10px;
 }
 
-.news_head_tmt > span[name="name"] {
-
+.news_head_tmt > span[name="content"] > span[name="name"] {
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .news_head_tmt > span[name="time"] {
@@ -93,6 +95,24 @@ button_background_none_tmt:hover {
     font-weight: 500;
     border-radius: 5px;
     background: none;
+}
+
+.button_like {
+    float: left;
+    height: 30px;
+    width: 30px;
+    background-image: url(/public/images/instagran/likedont.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.button_share {
+    float: right;
+    height: 30px;
+    width: 30px;
+    background-image: url(/public/images/instagran/share-option.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 /*Margin - Padding*/
@@ -158,4 +178,10 @@ button_background_none_tmt:hover {
 
 .btn-default:hover, .btn-default:focus {
     background: none;
+}
+
+/*thumbnail*/
+.thumbnail_tmt {
+    background: none;
+    border: none;
 }
