@@ -1,16 +1,20 @@
 const table_name = "user";
+const table_id = "_id";
+const table_username = "username";
+const table_password = "password";
+
 
 exports.createTableUser = function (AWS) {
     var dynamodb = new AWS.DynamoDB();
     var params = {
         TableName: table_name,
         KeySchema: [
-            {AttributeName: "_id", KeyType: "HASH"},  //Partition key
-            {AttributeName: "username", KeyType: "RANGE"}  //Sort key
+            {AttributeName: table_username, KeyType: "HASH"},  //Partition key
+            {AttributeName: table_password, KeyType: "RANGE"}  //Sort key
         ],
         AttributeDefinitions: [
-            {AttributeName: "_id", AttributeType: "S"},
-            {AttributeName: "username", AttributeType: "S"}
+            {AttributeName: table_username, AttributeType: "S"},
+            {AttributeName: table_password, AttributeType: "S"}
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 10,
@@ -47,7 +51,6 @@ exports.createTableUser = function (AWS) {
  * */
 exports.insertUser = function (AWS, _obj, callback) {
     var docClient = new AWS.DynamoDB();
-    console.log("2", _obj);
     var params = {
         TableName: table_name,
         Item: {
@@ -66,7 +69,6 @@ exports.insertUser = function (AWS, _obj, callback) {
             "accountGoogle": {S: typeof (_obj.accountGoogle) != 'undefined' ? _obj.accountGoogle : 'null'}
         }
     };
-    console.log(params);
     docClient.putItem(params, function (err, data) {
         if (err) callback(err);
         else callback(null, data);
@@ -78,6 +80,7 @@ exports.insertUser = function (AWS, _obj, callback) {
  * @param callback: trả kết quả về hàm
  **/
 exports.getListUser = function (AWS, _nameTable, callback) {
+    console.log("tmt ", _nameTable);
     var db = new AWS.DynamoDB();
     db.scan({
         TableName: _nameTable,
@@ -94,10 +97,10 @@ exports.getListUser = function (AWS, _nameTable, callback) {
 };
 
 /**
- *   Kiểm tra địa chỉ email-SDT của người dùng
- *
+ *   Kiểm tra địa chỉ email của người dùng
  **/
-exports.findItemhadExisted = function (AWS, _fullname, _username, callback) {
+exports.findItemhadExisted = function (AWS, _username, callback) {
+    console.log(_username);
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
         TableName: table_name,
