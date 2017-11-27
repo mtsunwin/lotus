@@ -5,7 +5,7 @@
 .background_imagesPhone {
     height: 618px;
     background-size: 454px 618px;
-    background-image: url(/public/images/instagran/phone.png);
+    background-image: url(/public/images/instagram/phone.png);
     width: 454px;
 }
 
@@ -32,6 +32,10 @@
     font-size: 15px;
     font-weight: 600;
     line-height: 15px;
+}
+
+.comment_friend span[name="name_friend"] {
+    font-weight: 600;
 }
 
 .news_tmt {
@@ -101,16 +105,23 @@ button_background_none_tmt:hover {
     float: left;
     height: 30px;
     width: 30px;
-    background-image: url(/public/images/instagran/likedont.png);
+    background-image: url(/public/images/instagram/likedont.png);
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.button_like span {
+    margin-left: 30px;
+    margin-top: 0;
+    top: 5px;
+    position: relative;
 }
 
 .button_share {
     float: right;
     height: 30px;
     width: 30px;
-    background-image: url(/public/images/instagran/share-option.png);
+    background-image: url(/public/images/instagram/share-option.png);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -184,4 +195,22 @@ button_background_none_tmt:hover {
 .thumbnail_tmt {
     background: none;
     border: none;
+}
+
+/*Cursor*/
+.cursor_tmt:hover {
+    cursor: pointer;
+}
+
+/*input*/
+.input_comment {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    margin-top: 2px;
+}
+
+.input_comment[type="text"]:focus {
+    border: none;
+    outline: none;
 }

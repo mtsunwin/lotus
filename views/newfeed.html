@@ -16,27 +16,37 @@
     <!--Controller-->
     <script src="../public/js/controllers/index.ctl.js" type="text/javascript"></script>
     <script src="../public/js/controllers/newfeed.ctl.js" type="text/javascript"></script>
+    <!--Directive-->
+    <script src="../public/js/directive/narNewsFeeds.dir.js"></script>
 </head>
 <body ng-app="myApp" ng-controller="newfeed">
-<navbar></navbar>
-{{minhthang}}
+<navnewsfeed></navnewsfeed>
 <div class="container">
-    <div class="col-md-10 col-md-offset-1 news_tmt">
+    <div class="col-md-10 col-md-offset-1 news_tmt" ng-repeat="data in listnews">
         <div class="row">
             <div class="col-xs-6 col-md-3 news_head_tmt">
-                <img src="../public/images/instagran/profile.jpg" height="80" width="75"/>
+                <img ng-src="{{data.avatar}}" height="80" width="75"/>
                 <span name="content">
-                    <span name="name">Tran Thang</span>
-                    <span name="time">8h30 20/10</span>
+                    <span name="name">{{data.name}}</span>
+                    <span name="time">{{data.time}}</span>
                 </span>
             </div>
         </div>
         <div class="row thumbnail thumbnail_tmt" style="text-align: center;">
-            <img src="../public/images/instagran/newfeed.jpg" height="427" width="240"/>
+            <img ng-src="{{data.image}}" height="427" width="240"/>
         </div>
         <div class="row">
-            <div class="button_like"></div>
-            <div class="button_share"></div>
+            <div class="button_like cursor_tmt"><span>{{data.countLike}}</span></div>
+            <div class="button_share cursor_tmt"></div>
+        </div>
+        <div class="row" ng-if="data.comment.length  > 0">
+            <div class="comment_friend" ng-repeat="conversation in data.comment">
+                <span name="name_friend">{{conversation.name}}</span>
+                <span name="conent_friend">{{conversation.content}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <input type="text" class="input_comment" placeholder="Nội dung bình luận..."/>
         </div>
     </div>
 </div>

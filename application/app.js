@@ -54,6 +54,19 @@ app.get("/home", function (request, response) {
     });
 });
 
+app.get("/profile", function (request, response) {
+    fs.readFile("../views/profile.html", function (err, data) {
+        if (err) {
+            response.writeHead(404, {"content-type": "text/html"});
+            response.end("not found");
+        } else {
+            response.writeHead(200, {"content-type": "text/html"});
+            response.write(data);
+            response.end();
+        }
+    });
+});
+
 app.post("/insertuser", function (req, resp) {
     var obj = {
         id: uuidv4(),
@@ -78,15 +91,6 @@ app.post("/insertuser", function (req, resp) {
             console.log("Lỗi", err);
         }
     });
-    // async function runner() {
-    //     console.log('sắp rồi...')
-    //     await wait(2007)
-    //     console.log('chờ tí...')
-    //     await wait(2012)
-    //     console.log('thêm chút nữa thôi...')
-    //     await wait(2016)
-    //     throw new Error(2016)
-    // }
     if (checked) {
         dt.insertUser(AWS, obj, function (err, data) {
             if (err) {
