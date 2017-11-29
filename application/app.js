@@ -67,6 +67,20 @@ app.get("/profile", function (request, response) {
     });
 });
 
+/**
+ * Add User in Collection
+ * ------- 2 steps -------
+ * 1. check user has existed in collection
+ * 2. if user don't exited then add to collection
+ * -------input-----------
+ * name
+ * nickname
+ * username
+ * password
+ * -------output----------
+ * 1 if success
+ * 0 if fail
+ */
 app.post("/insertuser", function (req, resp) {
     var obj = {
         id: uuidv4(),
@@ -76,35 +90,25 @@ app.post("/insertuser", function (req, resp) {
         password: req.body.password
     };
     if (obj.name.length == 0 || obj.nickname.length == 0 || obj.username.length == 0 || obj.password.length == 0) {
-        console.log("this");
         resp.writeHead(200, {"content-type": "text/html"});
         resp.end("0");
         return;
     }
     let dt = require("../application/user/tableUser");
     var checked = true;
-    dt.findItemhadExisted(AWS, req.body.username, function (err, data) { // Kiểm tra USERNAME đã tồn tại chưa
-        if (!err) {
-            console.log("thanh cong", data);
-            checked = false;
-        } else {
-            console.log("Lỗi", err);
+    dt.findItemhadExisted(AWS, req.body.username, function (err, data) {
+        if (!err && data.Count == 0) {
+            dt.insertUser(AWS, obj, function (err, da) {
+                if (!err) {
+                    resp.writeHead(200, {"content-type": "text/html"});
+                    resp.end("1");
+                } else {
+                    resp.writeHead(200, {"content-type": "text/html"});
+                    resp.end("0");
+                }
+            });
         }
     });
-    if (checked) {
-        dt.insertUser(AWS, obj, function (err, data) {
-            if (err) {
-                resp.writeHead(200, {"content-type": "text/html"});
-                resp.end("0");
-                return;
-            } else {
-                resp.writeHead(200, {"content-type": "text/html"});
-                resp.end("1");
-                return;
-            }
-        });
-    }
-
 });
 
 

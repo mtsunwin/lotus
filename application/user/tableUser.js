@@ -3,7 +3,10 @@ const table_id = "_id";
 const table_username = "username";
 const table_password = "password";
 
-
+/**
+ * Tạo Table User
+ * @param AWS
+ */
 exports.createTableUser = function (AWS) {
     var dynamodb = new AWS.DynamoDB();
     var params = {
@@ -70,8 +73,11 @@ exports.insertUser = function (AWS, _obj, callback) {
         }
     };
     docClient.putItem(params, function (err, data) {
-        if (err) callback(err);
-        else callback(null, data);
+        if (err)
+            callback(err);
+        else
+            callback(null, data);
+
     });
 };
 /**
@@ -100,11 +106,11 @@ exports.getListUser = function (AWS, _nameTable, callback) {
  *   Kiểm tra địa chỉ email của người dùng
  **/
 exports.findItemhadExisted = function (AWS, _username, callback) {
-    console.log(_username);
+    console.log("tmt findItemhadExisted: ", _username);
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
         TableName: table_name,
-        FilterExpression:
+        KeyConditionExpression:
             "#username = :username",
         ExpressionAttributeNames: {
             "#username": "username"
@@ -118,7 +124,6 @@ exports.findItemhadExisted = function (AWS, _username, callback) {
             callback(err);
         else
             callback(null, data);
-
     });
 }
 

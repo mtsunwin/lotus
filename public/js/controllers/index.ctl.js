@@ -2,9 +2,14 @@
 angular.module('myApp.controller', [])
     .controller('index', ["$scope", "Service", "$location", function ($scope, Service, $location) {
         $scope.registerAccount = {
+            completed: false,
             login: false,
             click: function () {
                 this.login = !this.login;
+                this.createAccount.username = "";
+                this.createAccount.nickname = "";
+                this.createAccount.name = "";
+                this.createAccount.password = "";
             },
             createAccount: {
                 username: "",
@@ -13,11 +18,11 @@ angular.module('myApp.controller', [])
                 password: ""
             },
             buttonCreateAccount: function () {
-                console.log("1", this.createAccount);
                 Service.registerAccount(this.createAccount.username, this.createAccount.name, this.createAccount.nickname, this.createAccount.password, function (data) {
-                    console.log("factory: ", data.data);
+                    console.log("tai sao?", data.data);
                     if (data.data == 1) {
-                        alert("thành công");
+                        alert("thành công 2");
+                        $scope.registerAccount.click();
                     } else {
                         alert("thất bại");
                     }
