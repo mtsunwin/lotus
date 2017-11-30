@@ -14,5 +14,6 @@ angular.module('myApp', [
     'myApp.controller.profile',
     'myApp.service',
     'myApp.directive',
-    'myApp.directiveNewsFeed'
+    'myApp.directiveNewsFeed',
+    'ngFileUpload'
 ])

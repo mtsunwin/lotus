@@ -6,6 +6,7 @@ const url = require("url");
 const bodyParser = require("body-parser");
 const AWS = require('aws-sdk');
 const uuidv4 = require('uuid/v4');
+var multer = require('multer');
 //
 let tbName_User = "user";
 // service
@@ -26,6 +27,40 @@ app.use("/public/js/", express.static("../node_modules/bootstrap/dist/js/"));
 app.set("views", "./views");
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+/**
+ * ciphertrick.com
+ */
+app.use(function (req, res, next) {
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+    res.header("Access-Control-Allow-Origin", "http://localhost");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+var storage = multer.diskStorage({ //multers disk storage settings
+    destination: function (req, file, cb) {
+        cb(null, '../public')
+    },
+    filename: function (req, file, cb) {
+        var datetimestamp = Date.now();
+        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1])
+    }
+});
+var upload = multer({ //multer settings
+    storage: storage
+}).single('file');
+
+app.post('/upload/', function (req, res) {
+    console.log("oke 1", req);
+    // upload(req, res, function (err) {
+    //     if (err) {
+    //         res.json({error_code: 1, err_desc: err});
+    //         return;
+    //     }
+    //     res.json({error_code: 0, err_desc: null});
+    // });
+});
+//------END ciphertrick.com----------
+
 // create server
 http.createServer(app).listen(9091);
 // controllers HOME
@@ -109,6 +144,25 @@ app.post("/insertuser", function (req, resp) {
             });
         }
     });
+});
+/**
+ * Check is login
+ * ------input-----
+ * username
+ * password
+ * ------output----
+ * 1 true -> đúng đăng nhập thành công
+ * 2 false -> sai đăng nhập thất bại
+ *
+ */
+app.post("/login", function (req, resp) {
+    var username = req.body.username;
+    var password = req.body.password;
+
+});
+
+app.post("/fileupload", function (req, resp) {
+    console.log("tmt thang", req.file);
 });
 
 

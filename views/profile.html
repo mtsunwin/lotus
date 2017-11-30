@@ -10,6 +10,8 @@
     <script src="../public/js/angular.min.js"></script>
     <script src="../public/js/jquery.min.js"></script>
     <script src="../public/js/bootstrap.min.js"></script>
+    <script src="../public/js/ng-file-upload.min.js"></script>
+    <script src="../public/js/ng-file-upload-shim.min.js"></script>
     <!--App-->
     <script src="../public/js/app.js"></script>
     <!--Services-->
@@ -22,5 +24,42 @@
 <body ng-app="myApp" ng-controller="profile">
 <navnewsfeed></navnewsfeed>
 {{profile}}
+<!--<form action="/upload" method="post" enctype="multipart/form-data">-->
+<!--<input type="file" id="file" name="file" multiple-->
+<!--onchange="angular.element(this).scope().getFileDetails(this)"/>-->
+<!--<input type="button" ng-click="uploadFiles()" value="Upload"/>-->
+<!--&lt;!&ndash;ADD A PROGRESS BAR ELEMENT.&ndash;&gt;-->
+<!--<p>-->
+<!--<progress id="pro" value="0"></progress>-->
+<!--</p>-->
+<!--</form>-->
+
+<form name="form">
+    Single Image with validations
+    <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+         ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
+         ngf-resize="{width: 100, height: 100}">Select
+    </div>
+    Multiple files
+    <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div>
+    Drop files:
+    <div ngf-drop ng-model="files" class="drop-box">Drop</div>
+    <button type="submit" ng-click="submit()">submit</button>
+</form>
+<br><br><br><br>
+Upload right away after file selection:
+<div class="button" ngf-select="upload($file)">Upload on file select</div>
+<div class="button" ngf-select="uploadFiles($files)" multiple="multiple">Upload on file select</div>
+Drop File:
+<div ngf-drop="uploadFiles($files)" class="drop-box"
+     ngf-drag-over-class="'dragover'" ngf-multiple="true"
+     ngf-pattern="'image/*,application/pdf'">Drop Images or PDFs files here</div>
+<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">
+Audio preview: <audio controls ngf-src="file"></audio>
+Video preview: <video controls ngf-src="file"></video>
+
+
 </body>
 </html>
