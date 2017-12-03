@@ -131,6 +131,16 @@ button_background_none_tmt:hover {
     margin-bottom: 5px;
 }
 
+.marginBottom_2_tmt {
+    margin-bottom: 2px;
+}
+marginRight_5_tmt{
+    margin-right: 5px;
+}
+.marginTop_10_tmt {
+    margin-top: 10px;
+}
+
 .paddingTop_100_tmt {
     padding-top: 100px;
 }
@@ -191,12 +201,6 @@ button_background_none_tmt:hover {
     background: none;
 }
 
-/*thumbnail*/
-.thumbnail_tmt {
-    background: none;
-    border: none;
-}
-
 /*Cursor*/
 .cursor_tmt:hover {
     cursor: pointer;
@@ -213,4 +217,14 @@ button_background_none_tmt:hover {
 .input_comment[type="text"]:focus {
     border: none;
     outline: none;
+}
+
+/*Textdecoration*/
+.tag_a:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
+.tag_a {
+    color: #fff;
 }

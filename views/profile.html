@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Lotus</title>
-
     <link rel="stylesheet" href="../public/css/bootstrap.css">
     <link rel="stylesheet" href="../public/css/bootstrap-theme.css">
     <link rel="stylesheet" href="../public/css/main.css">
@@ -20,46 +19,219 @@
     <script src="../public/js/controllers/profile.ctl.js"></script>
     <!--Directive-->
     <script src="../public/js/directive/narNewsFeeds.dir.js"></script>
+    <!--Font more-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic,700' rel='stylesheet'
+          type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="../public/profile/css/animate.css">
+    <!-- Icon Fonts-->
+    <link rel="stylesheet" href="../public/profile/css/font-awesome.min.css">
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" href="../public/profile/css/bootstrap.css">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="../public/profile/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../public/profile/css/owl.theme.default.min.css">
+    <!-- Theme style  -->
+    <link rel="stylesheet" href="../public/profile/css/style.css">
+    <!-- Modernizr JS -->
+    <script src="../public/profile/js/modernizr-2.6.2.min.js"></script>
 </head>
 <body ng-app="myApp" ng-controller="profile">
 <navnewsfeed></navnewsfeed>
-{{profile}}
-<!--<form action="/upload" method="post" enctype="multipart/form-data">-->
-<!--<input type="file" id="file" name="file" multiple-->
-<!--onchange="angular.element(this).scope().getFileDetails(this)"/>-->
-<!--<input type="button" ng-click="uploadFiles()" value="Upload"/>-->
-<!--&lt;!&ndash;ADD A PROGRESS BAR ELEMENT.&ndash;&gt;-->
-<!--<p>-->
-<!--<progress id="pro" value="0"></progress>-->
-<!--</p>-->
-<!--</form>-->
 
-<form name="form">
-    Single Image with validations
-    <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
-         ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
-         ngf-resize="{width: 100, height: 100}">Select
+<div class="container marginTop_10_tmt">
+    <div class="fh5co-narrow-content animate-box" data-animate-effect="fadeInLeft">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Hôm nay có gì mới?</h1>
+            </div>
+        </div>
+        <form action="">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <textarea name="" id="message" cols="30" rows="7" class="form-control"
+                                  placeholder="Message"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span class="thumbnail">
+                        <img ng-src="{{src}}" alt="...">
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group" style="float: right">
+                    <input type="submit" class="btn btn-primary btn-md" value="Send Message">
+                    <button ng-click="uploadFile()">upload me</button>
+                </div>
+            </div>
+        </form>
     </div>
-    Multiple files
-    <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div>
-    Drop files:
-    <div ngf-drop ng-model="files" class="drop-box">Drop</div>
-    <button type="submit" ng-click="submit()">submit</button>
-</form>
-<br><br><br><br>
-Upload right away after file selection:
-<div class="button" ngf-select="upload($file)">Upload on file select</div>
-<div class="button" ngf-select="uploadFiles($files)" multiple="multiple">Upload on file select</div>
-Drop File:
-<div ngf-drop="uploadFiles($files)" class="drop-box"
-     ngf-drag-over-class="'dragover'" ngf-multiple="true"
-     ngf-pattern="'image/*,application/pdf'">Drop Images or PDFs files here</div>
-<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-
-Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">
-Audio preview: <audio controls ngf-src="file"></audio>
-Video preview: <video controls ngf-src="file"></video>
 
 
+    <!--1111111111111111111111111-->
+    <input type="file" ng-model="myFile" class="form-control" accept="image/*"
+           onchange="angular.element(this).scope().uploadedFile(this)">
+
+    <br/>
+
+
+</div>
+<div class="container">
+    <div id="fh5co-main">
+        <div class="fh5co-narrow-content">
+            <div class="row">
+                <div class="col-md-6 col-md-push-1 animate-box" data-animate-effect="fadeInLeft">
+                    <img src="../public/images/instagram/camera.jpg" alt="Free HTML5 Bootstrap Template"
+                         class="img-responsive">
+                </div>
+                <div class="col-md-5">
+                    <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
+                        {{User.fullname}}
+                    </h2>
+                    <p class="fh5co-lead animate-box" data-animate-effect="fadeInLeft">
+                        {{User.introduce}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="fh5co-narrow-content fh5co-border-bottom">
+            <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
+                Thông tin:
+            </h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                        <div class="fh5co-icon">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                        </div>
+                        <div class="fh5co-text">
+                            <h3>Số điện thoại:</h3>
+                            <p>{{User.phone}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                        <div class="fh5co-icon">
+                            <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                        </div>
+                        <div class="fh5co-text">
+                            <h3>Sinh Nhật:</h3>
+                            <p>{{User.birthday}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                        <div class="fh5co-icon">
+                            <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                        </div>
+                        <div class="fh5co-text">
+                            <h3>Địa chỉ:</h3>
+                            <p>{{User.address}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                        <div class="fh5co-icon">
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                        </div>
+                        <div class="fh5co-text">
+                            <h3>Thống kê:</h3>
+                            <p>{{User.introduce}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fh5co-narrow-content  animate-box fh5co-border-bottom" data-animate-effect="fadeInLeft">
+            <h2 class="fh5co-heading">Hình ảnh:</span></h2>
+            <div class="row">
+                <div class="col-md-4 fh5co-staff">
+                    <img src="../public/profile/images/person3.jpg" alt="Free HTML5 Bootstrap Template"
+                         class="img-responsive">
+                    <h3>Tiêu đề hình</h3>
+                    <h4>Thích 001 - Bình Luận 001</h4>
+                    <p>Nội dung</p>
+                    <ul class="fh5co-social">
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 fh5co-staff">
+                    <img src="../public/profile/images/person3.jpg" alt="Free HTML5 Bootstrap Template"
+                         class="img-responsive">
+                    <h3>Tiêu đề hình</h3>
+                    <h4>Thích 001 - Bình Luận 001</h4>
+                    <p>Nội dung</p>
+                    <ul class="fh5co-social">
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 fh5co-staff">
+                    <img src="../public/profile/images/person3.jpg" alt="Free HTML5 Bootstrap Template"
+                         class="img-responsive">
+                    <h3>Tiêu đề hình</h3>
+                    <h4>Thích 001 - Bình Luận 001</h4>
+                    <p>Nội dung</p>
+                    <ul class="fh5co-social">
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr/>
+<!--{{profile}}-->
+<!--<form name="form">-->
+<!--Single Image with validations-->
+<!--<div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"-->
+<!--ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"-->
+<!--ngf-resize="{width: 100, height: 100}">Select-->
+<!--</div>-->
+<!--Multiple files-->
+<!--<div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div>-->
+<!--Drop files:-->
+<!--<div ngf-drop ng-model="files" class="drop-box">Drop</div>-->
+<!--<button type="submit" ng-click="submit()">submit</button>-->
+<!--</form>-->
+<!--<br><br><br><br>-->
+<!--Upload right away after file selection:-->
+<!--<div class="button" ngf-select="upload($file)">Upload on file select</div>-->
+<!--<div class="button" ngf-select="uploadFiles($files)" multiple="multiple">Upload on file select</div>-->
+<!--Drop File:-->
+<!--<div ngf-drop="uploadFiles($files)" class="drop-box"-->
+<!--ngf-drag-over-class="'dragover'" ngf-multiple="true"-->
+<!--ngf-pattern="'image/*,application/pdf'">Drop Images or PDFs files here-->
+<!--</div>-->
+<!--<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>-->
+
+<!--Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">-->
+<!--Audio preview:-->
+<!--<audio controls ngf-src="file"></audio>-->
+<!--Video preview:-->
+<!--<video controls ngf-src="file"></video>-->
+
+<!-- jQuery -->
+<script src="../public/profile/js/jquery.min.js"></script>
+<!-- jQuery Easing -->
+<script src="../public/profile/js/jquery.easing.1.3.js"></script>
+<!-- Bootstrap -->
+<script src="../public/profile/js/bootstrap.min.js"></script>
+<!-- Carousel -->
+<script src="../public/profile/js/owl.carousel.min.js"></script>
+<!-- Stellar -->
+<script src="../public/profile/js/jquery.stellar.min.js"></script>
+<!-- Waypoints -->
+<script src="../public/profile/js/jquery.waypoints.min.js"></script>
+<!-- Counters -->
+<script src="../public/profile/js/jquery.countTo.js"></script>
+<!-- MAIN JS -->
+<script src="../public/profile/js/main.js"></script>
 </body>
 </html>
