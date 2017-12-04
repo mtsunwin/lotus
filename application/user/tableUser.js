@@ -125,5 +125,31 @@ exports.findItemhadExisted = function (AWS, _username, callback) {
         else
             callback(null, data);
     });
-}
+};
+
+/**
+ * Kiểm tra đăng nhập
+ * */
+exports.checkLogin = function (AWS, _username, _password, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name,
+        KeyConditionExpression:
+            "#username = :username and #password = :pass",
+        ExpressionAttributeNames: {
+            "#username": "username",
+            "#password": "password"
+        },
+        ExpressionAttributeValues: {
+            ":username": _username,
+            ":pass": _password
+        }
+    };
+    docClient.query(params, function (err, data) {
+        if (err)
+            callback(err);
+        else
+            callback(null, data);
+    });
+};
 
