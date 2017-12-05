@@ -50,11 +50,11 @@ exports.createTableImage = function (AWS, _id) {
  * }
  * */
 //Add hinh vao bucket mang id cua user
-exports.insertImage = function (_id, images, callback) {
-    bucket.putItem(_id, _obj, function () {
+exports.insertImage = function (_username, images, callback) {
+    bucket.putItem(_username, _obj, function () {
         var docClient = new AWS.DynamoDB()
         var params = {
-            TableName: "Image_" + _id,
+            TableName: "Image_" + _username,
             Item: {
                 "id": {S: _obj.id},
                 "date": {S: _obj.date},
