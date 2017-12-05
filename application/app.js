@@ -6,10 +6,12 @@ const url = require("url");
 const bodyParser = require("body-parser");
 const AWS = require('aws-sdk');
 const uuidv4 = require('uuid/v4');
+var sys_username;
 
 var uploadFile =require('./uploadFile');
 var listImage= require('./image/listImage');
 var bucket =require('./image/bucket');
+
 // var multer = require('multer');
 //
 let tbName_User = "user";
@@ -23,6 +25,7 @@ AWS.config.secretAccessKey = "AWSSecretKey=k6GQc/FMSzBtdlEIrY89bSU3DNkPaHwhuPrBu
 
 // Folder public
 var app = express();
+var session = require('express-session');
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -31,43 +34,21 @@ app.use("/public/js/", express.static("../node_modules/bootstrap/dist/js/"));
 // app.set("views", "./views");
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-/**
- * ciphertrick.com
- */
-// app.use(function (req, res, next) {
-//     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-//     res.header("Access-Control-Allow-Origin", "http://localhost");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
-// var storage = multer.diskStorage({ //multers disk storage settings
-//     destination: function (req, file, cb) {
-//         cb(null, '../public')
-//     },
-//     filename: function (req, file, cb) {
-//         var datetimestamp = Date.now();
-//         cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1])
-//     }
-// });
-// var upload = multer({ //multer settings
-//     storage: storage
-// }).single('file');
-//
-// app.post('/upload/', function (req, res) {
-//     console.log("oke 1", req);
-//     // upload(req, res, function (err) {
-//     //     if (err) {
-//     //         res.json({error_code: 1, err_desc: err});
-//     //         return;
-//     //     }
-//     //     res.json({error_code: 0, err_desc: null});
-//     // });
-// });
-// ------END ciphertrick.com----------
-
+app.use(session({
+    secret: uuidv4(),
+    resave: true,
+    saveUninitialized: true
+}));
+var auth = function (req, res, next) {
+    if (req.session && req.session.user === sys_username && req.session.admin) {
+        return next();
+    } else {
+        return res.redirect('/');
+    }
+};
 // create server
 http.createServer(app).listen(9091);
-// controllers HOME
+
 app.get("/", function (request, response) {
     fs.readFile("../views/index.html", function (err, data) {
         if (err) {
@@ -80,7 +61,8 @@ app.get("/", function (request, response) {
         }
     });
 });
-app.get("/home", function (request, response) {
+
+app.get("/home", auth, function (request, response) {
     fs.readFile("../views/newfeed.html", function (err, data) {
         if (err) {
             response.writeHead(404, {"content-type": "text/html"});
@@ -93,7 +75,7 @@ app.get("/home", function (request, response) {
     });
 });
 
-app.get("/profile", function (request, response) {
+app.get("/profile", auth, function (request, response) {
     fs.readFile("../views/profile.html", function (err, data) {
         if (err) {
             response.writeHead(404, {"content-type": "text/html"});
@@ -151,6 +133,7 @@ app.post("/insertuser", function (req, resp) {
         }
     });
 });
+
 /**
  * Check is login
  * ------input-----
@@ -161,10 +144,28 @@ app.post("/insertuser", function (req, resp) {
  * 2 false -> sai đăng nhập thất bại
  *
  */
-app.post("/login", function (req, resp) {
+app.post("/login", function (req, response) {
     var username = req.body.username;
     var password = req.body.password;
-
+    console.log(username + " - " + password);
+    let dt = require("../application/user/tableUser");
+    dt.checkLogin(AWS, username, password, function (err, data) {
+        if (err) {
+            console.log("lỗi", data);
+        } else {
+            sys_username = data.Items[0].username;
+            req.session.user = data.Items[0].username;
+            req.session.admin = true;
+            return response.redirect('/home');
+        }
+    });
+});
+/**
+ * Logout
+ */
+app.get('/logout', function (req, res) {
+    req.session.destroy();
+    res.send("logout success!");
 });
 
 app.post("/fileupload", function (req, resp) {
