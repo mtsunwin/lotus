@@ -1,3 +1,6 @@
+var bucket= require('application/Bucket/bucket')
+var diacritics = require('diacritic');
+var aws = require("aws-sdk");
 /**
  * NGHIA
  * Tạo bảng Album by id user
@@ -42,6 +45,8 @@ exports.createTableAlbum = function (AWS, _id) {
  *}
  * }
  * */
+
+/**
 exports.insertAlbum= function (AWS,_id,_obj) {
     var docClient= new AWS.DynamoDB();
     var params = {
@@ -64,6 +69,7 @@ exports.insertAlbum= function (AWS,_id,_obj) {
         }
     })
 }
+ **/
 exports.getListUser = function (AWS, _nameTable, callback) {
     var db = new AWS.DynamoDB();
     db.scan({
@@ -93,5 +99,4 @@ exports.getListAlbum = function (AWS, _nameTable, callback) {
             callback(null, data.Items);
         }
     });
-};
 }
