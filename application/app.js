@@ -7,6 +7,11 @@ const bodyParser = require("body-parser");
 const AWS = require('aws-sdk');
 const uuidv4 = require('uuid/v4');
 var sys_username;
+
+
+var uploadFile =require('application/uploadFile');
+var listImage= require('application/image/listImage');
+
 // var multer = require('multer');
 //
 let tbName_User = "user";
@@ -162,7 +167,29 @@ app.get('/logout', function (req, res) {
 });
 
 app.post("/fileupload", function (req, resp) {
-    console.log("tmt thang", req.file);
+    try {
+        uploadFile.uploadFiles(req,function (err,fields,files) {
+            if(err){
+                    resp.writeHead(500,{'content-type':'text/plain'});
+                    resp.end('fail');
+            }
+            else{
+                listImage.insertImage('dien cai username vao',files.Image,function (results) {
+                    if(results!=0){
+                        resp.writeHead(500,{'content-type':'text/plain'});
+                        resp.end("Add image fail");
+                    }else{
+                        resp.writeHead(200,{'content-type':'text/plain'});
+                        resp.end("Add image success");
+                    }
+                });
+            }
+        })
+    }catch(exception) {
+        console.log("->Exception");
+        resp.writeHead();
+        resp.end();
+    }
 });
 
 
