@@ -8,9 +8,9 @@ const AWS = require('aws-sdk');
 const uuidv4 = require('uuid/v4');
 var sys_username;
 
-var uploadFile =require('./uploadFile');
-var listImage= require('./image/listImage');
-var bucket =require('./image/bucket');
+var uploadFile = require('./uploadFile');
+var listImage = require('./image/listImage');
+var bucket = require('./image/bucket');
 
 // var multer = require('multer');
 //
@@ -77,6 +77,7 @@ app.get("/home", auth, function (request, response) {
 });
 
 app.get("/profile", auth, function (request, response) {
+    console.log("->>>", request.session.IdUser);
     fs.readFile("../views/profile.html", function (err, data) {
         if (err) {
             response.writeHead(404, {"content-type": "text/html"});
@@ -154,8 +155,10 @@ app.post("/login", function (req, response) {
         if (err) {
             console.log("lỗi", data);
         } else {
-            sys_username = data.Items[0].username;
+            console.log(data.Items[0]);
             req.session.user = data.Items[0].username;
+            req.session.idUser = data.Items[0]._id;
+            sys_username = data.Items[0].username;
             req.session.admin = true;
             return response.redirect('/home');
         }
@@ -171,24 +174,24 @@ app.get('/logout', function (req, res) {
 
 app.post("/fileupload", function (req, resp) {
     try {
-        uploadFile.uploadFiles(req,function (err,fields,files) {
-            if(err){
-                    resp.writeHead(500,{'content-type':'text/plain'});
-                    resp.end('fail');
+        uploadFile.uploadFiles(req, function (err, fields, files) {
+            if (err) {
+                resp.writeHead(500, {'content-type': 'text/plain'});
+                resp.end('fail');
             }
-            else{
-                listImage.insertImage('dien cai username vao',files.Image,function (results) {
-                    if(results!=0){
-                        resp.writeHead(500,{'content-type':'text/plain'});
+            else {
+                listImage.insertImage('dien cai username vao', files.Image, function (results) {
+                    if (results != 0) {
+                        resp.writeHead(500, {'content-type': 'text/plain'});
                         resp.end("Add image fail");
-                    }else{
-                        resp.writeHead(200,{'content-type':'text/plain'});
+                    } else {
+                        resp.writeHead(200, {'content-type': 'text/plain'});
                         resp.end("Add image success");
                     }
                 });
             }
         })
-    }catch(exception) {
+    } catch (exception) {
         console.log("->Exception");
         resp.writeHead();
         resp.end();
