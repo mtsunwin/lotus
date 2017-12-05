@@ -7,8 +7,9 @@ const bodyParser = require("body-parser");
 const AWS = require('aws-sdk');
 const uuidv4 = require('uuid/v4');
 
-var uploadFile =require('application/uploadFile');
-var listImage= require('application/image/listImage');
+var uploadFile =require('./uploadFile');
+var listImage= require('./image/listImage');
+var bucket =require('./image/bucket');
 // var multer = require('multer');
 //
 let tbName_User = "user";
@@ -128,6 +129,7 @@ app.post("/insertuser", function (req, resp) {
         password: req.body.password
     };
     if (obj.name.length == 0 || obj.nickname.length == 0 || obj.username.length == 0 || obj.password.length == 0) {
+
         resp.writeHead(200, {"content-type": "text/html"});
         resp.end("0");
         return;
@@ -141,6 +143,7 @@ app.post("/insertuser", function (req, resp) {
                     resp.writeHead(200, {"content-type": "text/html"});
                     resp.end("1");
                 } else {
+
                     resp.writeHead(200, {"content-type": "text/html"});
                     resp.end("0");
                 }

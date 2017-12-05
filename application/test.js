@@ -1,3 +1,3 @@
-var bucket =require('./bucket/bucket')
+var bucket =require('./image/bucket')
 
 bucket.getListBucket();
