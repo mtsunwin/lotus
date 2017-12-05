@@ -1,4 +1,4 @@
-var bucket= require('application/Bucket/bucket')
+var bucket= require('application/image/bucket')
 var diacritics = require('diacritic');
 var aws = require("aws-sdk");
 /**
