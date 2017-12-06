@@ -2,7 +2,7 @@ const table_name = "user";
 const table_id = "_id";
 const table_username = "username";
 const table_password = "password";
-
+var mt_listFriends = require('./tableListFriends');
 /**
  * Tạo Table User
  * @param AWS
@@ -29,7 +29,6 @@ exports.createTableUser = function (AWS) {
             console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
             return false;
         } else {
-            console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
             return true;
         }
     });
@@ -73,10 +72,13 @@ exports.insertUser = function (AWS, _obj, callback) {
         }
     };
     docClient.putItem(params, function (err, data) {
-        if (err)
+        if (err) {
             callback(err);
-        else
-            callback(null, data);
+        } else {
+            if (mt_listFriends.createTableListFriends(AWS, _obj.id)) {
+                callback(null, data);
+            }
+        }
 
     });
 };
