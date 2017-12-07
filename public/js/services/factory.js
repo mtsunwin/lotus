@@ -44,6 +44,17 @@ angular.module('myApp.service', [])
                             alert("Error");
                         });
                 }
+            },
+            findFriends: function (_keySearch) {
+                $http({
+                    method: "POST",
+                    url: "/findfriends",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        getkey: _keySearch
+                    })
+                }).then(callback);
             }
         };
     }]);

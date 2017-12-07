@@ -197,7 +197,15 @@ app.post("/fileupload", function (req, resp) {
         resp.end();
     }
 });
-
+/**
+ * Tìm kiếm bạn bè
+ * ---input-----
+ * getkey -> username or nickname
+ */
+app.post("/findfriends", function (req, resp) {
+    var key = req.body.getkey;
+    console.log(key);
+});
 
 // SYSTEM TEST
 app.get("/sys", function (req, resp) {

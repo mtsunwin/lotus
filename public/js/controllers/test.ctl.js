@@ -1,6 +1,12 @@
 'use strict'
-
 angular.module('myApp.controller.test', [])
-    .controller('profile', ["$scope", "Upload", function ($scope, Upload) {
-        $scope.profile = "oke";
+    .controller('testertmt', ["$scope", "Service", function ($scope, Service) {
+        $scope.narkeyname = "";
+        $scope.myFunct = function (keyEvent) {
+            if (keyEvent.which === 13) {
+                Service.findFriends($scope.narkeyname, function (data) {
+
+                });
+            }
+        }
     }]);

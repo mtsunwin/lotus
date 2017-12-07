@@ -61,3 +61,4 @@ exports.getListFriends = function (AWS, _id) {
         }
     });
 };
+
