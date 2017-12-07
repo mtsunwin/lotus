@@ -62,8 +62,7 @@ exports.insertImage = function (_username, images, callback) {
                 "name": {S: typeof (_obj.name) != 'undefined' ? _obj.name : 'null'},
                 "description": {S: typeof (_obj.description) != 'undefined' ? _obj.description : 'null'},
                 "location": {S: typeof (_obj.location) != 'undefined' ? _obj.comment : 'null'},
-                "comment": {M: typeof (_obj.comment) != 'undefined' ? _obj.comment : 'null'},
-                "status": {M: typeof (_obj.status) != 'undefined' ? _obj.status : 'null'},
+
 
             }
         }
