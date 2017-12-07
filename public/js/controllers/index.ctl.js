@@ -35,7 +35,11 @@ angular.module('myApp.controller', [])
                 password: ""
             },
             buttonLogin: function () {
-                Service.checkLogin(this.loginAccount.username, this.loginAccount.password);
+                Service.checkLogin(this.loginAccount.username, this.loginAccount.password, function (data) {
+                    if (data.data.status == 1) {
+                        window.location.assign('/home');
+                    }
+                });
             }
         }
     }]);

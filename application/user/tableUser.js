@@ -108,7 +108,6 @@ exports.getListUser = function (AWS, _nameTable, callback) {
  *   Kiểm tra địa chỉ email của người dùng
  **/
 exports.findItemhadExisted = function (AWS, _username, callback) {
-    console.log("tmt findItemhadExisted: ", _username);
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
         TableName: table_name,
@@ -155,3 +154,23 @@ exports.checkLogin = function (AWS, _username, _password, callback) {
     });
 };
 
+exports.findFrieds = function (AWS, _username, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name,
+        KeyConditionExpression:
+            "#username = :username",
+        ExpressionAttributeNames: {
+            "#username": "username"
+        },
+        ExpressionAttributeValues: {
+            ":username": _username
+        }
+    };
+    docClient.query(params, function (err, data) {
+        if (err)
+            callback(err);
+        else
+            callback(null, data);
+    });
+}

@@ -17,7 +17,7 @@ angular.module('myApp.service', [])
                     }),
                 }).then(callback);
             },
-            checkLogin: function (_username, _password) {
+            checkLogin: function (_username, _password, callback) {
                 $http({
                     method: "POST",
                     url: "/login",
@@ -27,7 +27,7 @@ angular.module('myApp.service', [])
                         username: _username,
                         password: _password
                     }),
-                });
+                }).then(callback);
             },
             service: function ($http) {
                 this.uploadFiletoServer = function (file, uploadUrl) {
@@ -45,7 +45,7 @@ angular.module('myApp.service', [])
                         });
                 }
             },
-            findFriends: function (_keySearch) {
+            findFriends: function (_keySearch, callback) {
                 $http({
                     method: "POST",
                     url: "/findfriends",

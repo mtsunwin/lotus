@@ -5,7 +5,7 @@ angular.module('myApp.controller.test', [])
         $scope.myFunct = function (keyEvent) {
             if (keyEvent.which === 13) {
                 Service.findFriends($scope.narkeyname, function (data) {
-
+                    console.log(data);
                 });
             }
         }

@@ -149,18 +149,19 @@ app.post("/insertuser", function (req, resp) {
 app.post("/login", function (req, response) {
     var username = req.body.username;
     var password = req.body.password;
-    console.log(username + " - " + password);
-    let dt = require("../application/user/tableUser");
+    var dt = require("../application/user/tableUser");
+    response.setHeader('Content-Type', 'application/json');
     dt.checkLogin(AWS, username, password, function (err, data) {
         if (err) {
             console.log("lỗi", data);
+            response.send(JSON.stringify({status: 0}));
         } else {
             console.log(data.Items[0]);
             req.session.user = data.Items[0].username;
             req.session.idUser = data.Items[0]._id;
             sys_username = data.Items[0].username;
             req.session.admin = true;
-            return response.redirect('/home');
+            response.send(JSON.stringify({status: 1}));
         }
     });
 });
@@ -201,10 +202,20 @@ app.post("/fileupload", function (req, resp) {
  * Tìm kiếm bạn bè
  * ---input-----
  * getkey -> username or nickname
+ * --output---
+ * list username trùng
  */
 app.post("/findfriends", function (req, resp) {
     var key = req.body.getkey;
-    console.log(key);
+    var dt = require("../application/user/tableUser");
+    dt.findFrieds(AWS, key, function (err, data) {
+        if (!err) {
+            console.log("thangg ", data);
+            // data
+            resp.setHeader('Content-Type', 'application/json');
+            resp.send(JSON.stringify({a: 1}, null, 3));
+        }
+    });
 });
 
 // SYSTEM TEST
