@@ -8,5 +8,9 @@ angular.module('myApp.controller.test', [])
                     console.log(data);
                 });
             }
+        };
+        $scope.listFind = [];
+        $scope.onExit = function () {
+            window.location.assign('/logout');
         }
     }]);

@@ -91,6 +91,22 @@ app.get("/profile", auth, function (request, response) {
 });
 
 /**
+ * Logout
+ */
+app.get('/logout', function (req, res) {
+    req.session.destroy();
+    fs.readFile("../views/index.html", function (err, data) {
+        if (err) {
+            res.writeHead(404, {"content-type": "text/html"});
+            res.end("not found");
+        } else {
+            res.writeHead(200, {"content-type": "text/html"});
+            res.write(data);
+            res.end();
+        }
+    });
+});
+/**
  * Add User in Collection
  * ------- 2 steps -------
  * 1. check user has existed in collection
@@ -164,13 +180,6 @@ app.post("/login", function (req, response) {
             response.send(JSON.stringify({status: 1}));
         }
     });
-});
-/**
- * Logout
- */
-app.get('/logout', function (req, res) {
-    req.session.destroy();
-    res.send("logout success!");
 });
 
 app.post("/fileupload", function (req, resp) {

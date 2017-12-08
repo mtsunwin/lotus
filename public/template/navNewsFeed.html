@@ -3,13 +3,31 @@
         <div class="col-xs-2 col-md-4 col-sm-2 text_tmt marginTop_10_tmt marginBottom_2_tmt">
             <a href="/home" class="tag_a"><span class="text_head_bold_tmt">Lotus</span></a>
         </div>
-        <div class="col-md-4 col-xs-12 col-sm-8">
+        <div class="col-md-4 col-xs-12 col-sm-8" style="position: relative;">
             <input type="text" class="form-control" placeholder="Tìm kiếm..."
                    style="height: 100%; color:#fff; height: 35px;" ng-keypress="myFunct($event)" ng-model="narkeyname"/>
+            <div style="position: absolute; height: 200px; width: 300px; background: #ccc; z-index: 5">
+                <ul ng-if="listFind.length > 0">
+                    <li>Thắng</li>
+                    <li>Thắng</li>
+                    <li>Thắng</li>
+                </ul>
+            </div>
         </div>
         <div class="col-md-4 col-xs-12 col-sm-2 paddingTop_4_tmt">
-            <a href="/profile" class="tag_a"><i class="fa fa-cog" aria-hidden="true"
-                                                style="float: right; font-size: 30px;margin-right: 10px"></i></a>
+            <div>
+                <span data-toggle="dropdown" style="color: #fff;">
+                    <i class="fa fa-cog" aria-hidden="true"
+                       style="float: right; font-size: 30px;margin-right: 10px"></i>
+                </span>
+                <ul class="dropdown-menu" style="top: 0px; float: right; left: 0;">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#" ng-click="onExit()">Đăng xuất</a></li>
+                </ul>
+            </div>
             <a href="/profile" class="tag_a"><i class="fa fa-user" aria-hidden="true"
                                                 style="float: right; font-size: 30px; margin-right: 20px"></i></a>
         </div>
