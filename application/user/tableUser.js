@@ -165,12 +165,39 @@ exports.findFrieds = function (AWS, _username, callback) {
         },
         ExpressionAttributeValues: {
             ":username": _username
-        }
+        },
+        Limit: 8,
+        Select: "SPECIFIC_ATTRIBUTES",
+        ScanIndexForward: false,
     };
+
     docClient.query(params, function (err, data) {
         if (err)
             callback(err);
         else
             callback(null, data);
+    });
+}
+exports.scanUser=function(AWS,params,callback){
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var paramsUser={
+        ProjectionExpression:"username,nickname",
+        ScanIndexForward: false,
+        FilterExpression: "contains(username, :key) or contains(:key,username)  or contains(nickname, :key) or contains(:key,nickname) or contains(KeyWordsContains, :keyLowerCase) or contains(:keyLowerCase,KeyWordsContains)",
+        ExpressionAttributeValues:{
+            ":key":params,
+            ":keyLowerCase": params.toLowerCase()
+        },
+        limit: 10,
+        TableName:table_name
+    };
+    docClient.scan(paramsUser, function (err, data) {
+        if (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+            callback(null);
+        } else {
+            console.log("Query succeeded.");
+            callback(null,data);
+        }
     });
 }
