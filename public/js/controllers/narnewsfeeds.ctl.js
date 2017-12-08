@@ -2,14 +2,20 @@
 angular.module('myApp.controller.test', [])
     .controller('testertmt', ["$scope", "Service", function ($scope, Service) {
         $scope.narkeyname = "";
+        $scope.listFind = [];
         $scope.myFunct = function (keyEvent) {
+            $scope.listFind = [];
             if (keyEvent.which === 13) {
                 Service.findFriends($scope.narkeyname, function (data) {
-                    console.log(data);
+                    if (typeof (data.data.a) != 'undefined') {
+                        var count = data.data.a.Count;
+                        for (var i = 0; i < count; i++) {
+                            $scope.listFind.push(data.data.a.Items[i]);
+                        }
+                    }
                 });
             }
         };
-        $scope.listFind = [];
         $scope.onExit = function () {
             window.location.assign('/logout');
         }

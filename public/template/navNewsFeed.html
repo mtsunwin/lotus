@@ -8,9 +8,7 @@
                    style="height: 100%; color:#fff; height: 35px;" ng-keypress="myFunct($event)" ng-model="narkeyname"/>
             <div style="position: absolute; height: 200px; width: 300px; background: #ccc; z-index: 5">
                 <ul ng-if="listFind.length > 0">
-                    <li>Thắng</li>
-                    <li>Thắng</li>
-                    <li>Thắng</li>
+                    <li ng-repeat="da in listFind">{{da.nickname}}</li>
                 </ul>
             </div>
         </div>
