@@ -214,19 +214,36 @@ app.post("/fileupload", function (req, resp) {
  * --output---
  * list username trùng
  */
+/*
 app.post("/findfriends", function (req, resp) {
     var key = req.body.getkey;
     var dt = require("../application/user/tableUser");
     dt.findFrieds(AWS, key, function (err, data) {
         if (!err) {
             console.log("thangg ", data);
+            var friend=  data
+            console.log("nghia",friend);
             // data
             resp.setHeader('Content-Type', 'application/json');
-            resp.send(JSON.stringify({a: 1}, null, 3));
+            resp.send(JSON.stringify({a: friend}, null, 3));
         }
     });
 });
-
+*/
+app.post("/findfriends", function (req, resp) {
+    var key = req.body.getkey;
+    var dt = require("../application/user/tableUser");
+    dt.scanUser(AWS, key, function (err, data) {
+        if (!err) {
+            //console.log("thangg ", data);
+            var friend=  data
+            console.log("nghia",friend);
+            // data
+            resp.setHeader('Content-Type', 'application/json');
+            resp.send(JSON.stringify({a: friend}, null, 3));
+        }
+    });
+});
 // SYSTEM TEST
 app.get("/sys", function (req, resp) {
     fs.readFile("../application/views/index.html", function (err, data) {
