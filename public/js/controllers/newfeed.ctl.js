@@ -27,4 +27,4 @@ angular.module('myApp.controller.newfeed', [])
                 image: '../public/images/instagram/profile.jpg',
                 countLike: 1200
             }];
-    }])
+    }]);

@@ -9,9 +9,9 @@ aws.config.accessKeyId = "AWSAccessKeyId=AKIAJXJSIQBQMRMTKIOQ";
 aws.config.secretAccessKey = "AWSSecretKey=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";
 var s3 = new aws.S3();
 //getlist
-exports.getListBucket = function(){
+exports.getListBucket = function () {
     var params = {};
-    s3.listBuckets(params, function(err,data){
+    s3.listBuckets(params, function (err, data) {
         if (err) console.log("Get bucket fail: " + err);
         else console.log("Get bucket success: " + JSON.stringify(data, null, 2));
     })
@@ -24,6 +24,7 @@ exports.createBucket = function (bucketName, callback) {
             console.log("--> CreateBucket error: " + err);
             callback(false);
         } else {
+            console.log('successful', data.location);
             console.log("--> CreateBucket create success.");
             callback(true);
         }
@@ -65,6 +66,7 @@ exports.putItem = function (bucketName, image, callback) {
         }
     });
 };
+/*
 //add nhieu image vao bucket
 exports.putItems = function (bucketName, images, callback) {
     var _images = [];
@@ -119,6 +121,7 @@ exports.putItems = function (bucketName, images, callback) {
         callback(null);
     }
 };
+*/
 //xoa bucket
 exports.removeBucket = function (bucketName) {
     var _bucketName = removeVNMark(bucketName);
@@ -142,7 +145,7 @@ exports.removeBucket = function (bucketName) {
             else {
                 s3.deleteBucket({Bucket: _bucketName}, function (err, data) {
                     if (err) {
-                        console.log("--> Delete bucket error: "+ err);
+                        console.log("--> Delete bucket error: " + err);
                     } else {
                         console.log("--> Delete bucket success");
                     }
@@ -151,9 +154,10 @@ exports.removeBucket = function (bucketName) {
         });
     });
 };
+
 //xoa ki tu rong
 function removeVNMark(str) {
-    if(str.trim() != null || str.trim() !=""){
+    if (str.trim() != null || str.trim() != "") {
         var noneSign = diacritics.clean(str).trim();
         var newStr = "";
         for (var i = 0; i < noneSign.length; i++) {

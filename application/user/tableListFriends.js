@@ -1,7 +1,7 @@
 const table_name = "listFriends";
 const col_username = "usernamefriend";
 const col_nickname = "usernickname";
-exports.createTableListFriends = function (AWS, _id) {
+exports.createTableListFriends = function (AWS, _id, callback) {
     var dynamodb = new AWS.DynamoDB();
     var params = {
         TableName: table_name + "_" + _id,
@@ -18,17 +18,8 @@ exports.createTableListFriends = function (AWS, _id) {
             WriteCapacityUnits: 10
         }
     };
-    dynamodb.createTable(params, function (err, data) {
-        if (err) {
-            console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
-            return false;
-        } else {
-            console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
-            return true;
-        }
-    });
+    dynamodb.createTable(params, callback);
 };
-
 
 exports.insertFriend = function (AWS, _id, _username, _nickname, _time) {
     var docClient = new AWS.DynamoDB();

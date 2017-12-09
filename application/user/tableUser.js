@@ -52,34 +52,39 @@ exports.createTableUser = function (AWS) {
  * }
  * */
 exports.insertUser = function (AWS, _obj, callback) {
-    var docClient = new AWS.DynamoDB();
-    var params = {
-        TableName: table_name,
-        Item: {
-            "_id": {S: _obj.id},
-            "fullname": {S: _obj.name},
-            "nickname": {S: _obj.nickname},
-            "datacreate": {S: typeof (_obj.datecreate) != 'undefined' ? _obj.datecreate : 'null'},
-            "localcreate": {S: typeof (_obj.localcreate) != 'undefined' ? _obj.localcreate : 'null'},
-            "ipdevice": {S: typeof (_obj.ip) != 'undefined' ? _obj.ip : 'null'},
-            "phone": {S: typeof (_obj.phone) != 'undefined' ? _obj.phone : 'null'},
-            "email": {S: typeof (_obj.email) != 'undefined' ? _obj.email : 'null'},
-            "birthday": {S: typeof (_obj.birthday) != 'undefined' ? _obj.birthday : 'null'},
-            "username": {S: _obj.username},
-            "password": {S: _obj.password},
-            "accountFacebook": {S: typeof (_obj.accountFacebook) != 'undefined' ? _obj.accountFacebook : 'null'},
-            "accountGoogle": {S: typeof (_obj.accountGoogle) != 'undefined' ? _obj.accountGoogle : 'null'}
-        }
-    };
-    docClient.putItem(params, function (err, data) {
-        if (err) {
-            callback(err);
+    this.findItemhadExisted(AWS, _obj.username, function (err, data) {
+        if (!err && data.Count == 0) {
+            console.log("run this", data);
+            var docClient = new AWS.DynamoDB();
+            var params = {
+                TableName: table_name,
+                Item: {
+                    "_id": {S: _obj.id},
+                    "fullname": {S: _obj.name},
+                    "nickname": {S: _obj.nickname},
+                    "datacreate": {S: typeof (_obj.datecreate) != 'undefined' ? _obj.datecreate : 'null'},
+                    "localcreate": {S: typeof (_obj.localcreate) != 'undefined' ? _obj.localcreate : 'null'},
+                    "ipdevice": {S: typeof (_obj.ip) != 'undefined' ? _obj.ip : 'null'},
+                    "phone": {S: typeof (_obj.phone) != 'undefined' ? _obj.phone : 'null'},
+                    "email": {S: typeof (_obj.email) != 'undefined' ? _obj.email : 'null'},
+                    "birthday": {S: typeof (_obj.birthday) != 'undefined' ? _obj.birthday : 'null'},
+                    "username": {S: _obj.username},
+                    "password": {S: _obj.password},
+                    "accountFacebook": {S: typeof (_obj.accountFacebook) != 'undefined' ? _obj.accountFacebook : 'null'},
+                    "accountGoogle": {S: typeof (_obj.accountGoogle) != 'undefined' ? _obj.accountGoogle : 'null'},
+                    "avatar": {S: 'null'}
+                }
+            };
+            docClient.putItem(params, function (err, data) {
+                if (!err)
+                    mt_listFriends.createTableListFriends(AWS, _obj.id, function (err2, data2) {
+                        if (!err2)
+                            callback(true);
+                    });
+            });
         } else {
-            if (mt_listFriends.createTableListFriends(AWS, _obj.id)) {
-                callback(null, data);
-            }
+            callback(false);
         }
-
     });
 };
 /**
@@ -88,7 +93,6 @@ exports.insertUser = function (AWS, _obj, callback) {
  * @param callback: trả kết quả về hàm
  **/
 exports.getListUser = function (AWS, _nameTable, callback) {
-    console.log("tmt ", _nameTable);
     var db = new AWS.DynamoDB();
     db.scan({
         TableName: _nameTable,
@@ -108,6 +112,7 @@ exports.getListUser = function (AWS, _nameTable, callback) {
  *   Kiểm tra địa chỉ email của người dùng
  **/
 exports.findItemhadExisted = function (AWS, _username, callback) {
+    var bool = false;
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
         TableName: table_name,
@@ -120,12 +125,7 @@ exports.findItemhadExisted = function (AWS, _username, callback) {
             ":username": _username
         }
     };
-    docClient.query(params, function (err, data) {
-        if (err)
-            callback(err);
-        else
-            callback(null, data);
-    });
+    docClient.query(params, callback);
 };
 
 /**
@@ -170,26 +170,26 @@ exports.findFrieds = function (AWS, _username, callback) {
         Select: "SPECIFIC_ATTRIBUTES",
         ScanIndexForward: false,
     };
-
     docClient.query(params, function (err, data) {
         if (err)
             callback(err);
         else
             callback(null, data);
     });
-}
-exports.scanUser=function(AWS,params,callback){
+};
+
+exports.scanUser = function (AWS, params, callback) {
     var docClient = new AWS.DynamoDB.DocumentClient();
-    var paramsUser={
-        ProjectionExpression:"username,nickname",
+    var paramsUser = {
+        // ProjectionExpression:"username,nickname",
         ScanIndexForward: false,
         FilterExpression: "contains(username, :key) or contains(:key,username)  or contains(nickname, :key) or contains(:key,nickname) or contains(KeyWordsContains, :keyLowerCase) or contains(:keyLowerCase,KeyWordsContains)",
-        ExpressionAttributeValues:{
-            ":key":params,
+        ExpressionAttributeValues: {
+            ":key": params,
             ":keyLowerCase": params.toLowerCase()
         },
         limit: 10,
-        TableName:table_name
+        TableName: table_name
     };
     docClient.scan(paramsUser, function (err, data) {
         if (err) {
@@ -197,7 +197,7 @@ exports.scanUser=function(AWS,params,callback){
             callback(null);
         } else {
             console.log("Query succeeded.");
-            callback(null,data);
+            callback(null, data);
         }
     });
 }

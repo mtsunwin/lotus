@@ -29,6 +29,7 @@ angular.module('myApp.service', [])
                     }),
                 }).then(callback);
             },
+            // Upload Images
             service: function ($http) {
                 this.uploadFiletoServer = function (file, uploadUrl) {
                     var fd = new FormData();
@@ -49,6 +50,17 @@ angular.module('myApp.service', [])
                 $http({
                     method: "POST",
                     url: "/findfriends",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        getkey: _keySearch
+                    })
+                }).then(callback);
+            },
+            getOwnInfor: function (callback) {
+                $http({
+                    method: "POST",
+                    url: "/getinfo",
                     headers: {"content-type": "application/json"},
                     dataType: "json",
                     data: JSON.stringify({

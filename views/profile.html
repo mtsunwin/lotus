@@ -42,23 +42,25 @@
 </head>
 <body ng-app="myApp" ng-controller="profile">
 <navnewsfeed></navnewsfeed>
-
-<div class="container marginTop_10_tmt">
+<!--POST-->
+<div class="container marginTop_10_tmt" ng-if="checkOwnPage">
     <div class="fh5co-narrow-content animate-box" data-animate-effect="fadeInLeft">
         <div class="row">
-            <div class="col-md-4">
-                <h1>Hôm nay có gì mới?</h1>
+            <div class="col-md-5" style="padding-top: 10px;padding-bottom: 5px;">
+                <h1 style="margin:0;">Hôm nay có gì mới?</h1>
             </div>
         </div>
         <form action="">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <div class="form-group">
                         <textarea name="" id="message" cols="30" rows="7" class="form-control"
                                   placeholder="Message"></textarea>
                     </div>
                 </div>
-                <div class="col-md-4">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <span class="thumbnail">
                         <img ng-src="{{src}}" alt="...">
                     </span>
@@ -66,19 +68,22 @@
             </div>
             <div class="row">
                 <div class="form-group" style="float: right">
-                    <input type="submit" class="btn btn-primary btn-md" value="Send Message">
-                    <button ng-click="uploadFile()">upload me</button>
+                    <label class="custom-file-upload btn btn-primary btn-md">
+                        <input id="inputUpImg" type="file" ng-model="myFile"
+                               onchange="angular.element(this).scope().uploadedFile(this)"/>
+                        Thêm ảnh
+                    </label>
+                    <input type="button" ng-click="uploadFile()" class="btn btn-primary btn-md" value="Đăng bài viết">
                 </div>
             </div>
         </form>
     </div>
-
     <!--1111111111111111111111111-->
-    <input type="file" ng-model="myFile" class="form-control" accept="image/*"
-           onchange="angular.element(this).scope().uploadedFile(this)">
+    <!--<input type="file" ng-model="myFile" class="form-control" accept="image/*"-->
+    <!--onchange="angular.element(this).scope().uploadedFile(this)">-->
     <br/>
-
 </div>
+<!--PROFILE-->
 <div class="container">
     <div id="fh5co-main">
         <div class="fh5co-narrow-content">
@@ -90,6 +95,8 @@
                 <div class="col-md-5">
                     <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
                         {{User.fullname}}
+                        <input type="button" class="btn btn-primary btn-md"
+                               value="Theo dõi người này">
                     </h2>
                     <p class="fh5co-lead animate-box" data-animate-effect="fadeInLeft">
                         {{User.introduce}}
@@ -150,7 +157,7 @@
         </div>
         <div class="fh5co-narrow-content fh5co-border-bottom">
             <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
-                Danh sách bạn bè:
+                Người đang theo dõi:
             </h2>
             <div class="row animate-box" style="height: 300px;" data-animate-effect="fadeInLeft">
                 <ul>

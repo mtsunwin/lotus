@@ -18,16 +18,20 @@ angular.module('myApp.controller', [])
                 password: ""
             },
             buttonCreateAccount: function () {
-                Service.registerAccount(this.createAccount.username, this.createAccount.name, this.createAccount.nickname, this.createAccount.password, function (data) {
-                    console.log("tai sao?", data.data);
-                    if (data.data == 1) {
-                        alert("thành công 2");
-                        $scope.registerAccount.click();
-                    } else {
-                        alert("thất bại");
-                    }
-                });
-            }
+                Service.registerAccount(
+                    $scope.registerAccount.createAccount.username,
+                    $scope.registerAccount.createAccount.name,
+                    $scope.registerAccount.createAccount.nickname,
+                    $scope.registerAccount.createAccount.password,
+                    function (data) {
+                        if (data.data.status) {
+                            $scope.registerAccount.click();
+                        } else {
+                            alert("Sai!");
+                        }
+                    });
+            },
+
         };
         $scope.login = {
             loginAccount: {
