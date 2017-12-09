@@ -1,20 +1,23 @@
 var aws = require('aws-sdk');
 var fs = require('fs');
-var diacritics = require('diacritics');
+var diacritics = require('diacritic');
 aws.config.update({
-    region: "us-west-2",
-    endpoint: "http://localhost:8000"
+    region: "ap-southeast-1",
+
 });
-aws.config.accessKeyId = "AWSAccessKeyId=AKIAJXJSIQBQMRMTKIOQ";
-aws.config.secretAccessKey = "AWSSecretKey=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";
+aws.config.accessKeyId = "AWSAccessKeyId=AKIAJJXIY3275CEHFILQ";
+aws.config.secretAccessKey = "AWSSecretKey=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";
 var s3 = new aws.S3();
 //getlist
 exports.getListBucket = function(){
     var params = {};
-    s3.listBuckets(params, function(err,data){
-        if (err) console.log("Get bucket fail: " + err);
-        else console.log("Get bucket success: " + JSON.stringify(data, null, 2));
-    })
+    s3.listBuckets(params,function(err, data) {
+        if (err) {
+            console.log("Error get list bucket", JSON.stringify(err, null, 2));
+        } else {
+            console.log("Bucket List", JSON.stringify(data, null, 2));
+        }
+    });
 };
 //tao bucket de luu tru hinh anh
 exports.createBucket = function (bucketName, callback) {
@@ -29,6 +32,7 @@ exports.createBucket = function (bucketName, callback) {
         }
     });
 };
+
 //add 1 hinh vao bucket
 exports.putItem = function (bucketName, image, callback) {
     var _bucketName = removeVNMark(bucketName);
@@ -151,17 +155,12 @@ exports.removeBucket = function (bucketName) {
         });
     });
 };
+
 //xoa ki tu rong
 function removeVNMark(str) {
-    if(str.trim() != null || str.trim() !=""){
+    if (str.trim() != null || str.trim() != "") {
         var noneSign = diacritics.clean(str).trim();
-        var newStr = "";
-        for (var i = 0; i < noneSign.length; i++) {
-            if (noneSign[i] != ' ') {
-                newStr += noneSign[i];
-            }
-        }
-        return newStr;
+        return noneSign;
     }
     return str;
 }

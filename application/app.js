@@ -21,6 +21,7 @@ AWS.config.update({
     region: "us-west-2",
     endpoint: "http://localhost:8000"
 });
+
 AWS.config.accessKeyId = "AWSAccessKeyId=AKIAJXJSIQBQMRMTKIOQ";
 AWS.config.secretAccessKey = "AWSSecretKey=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";
 
@@ -122,12 +123,21 @@ app.post("/insertuser", function (req, resp) {
     var checked = true;
     dt.findItemhadExisted(AWS, req.body.username, function (err, data) {
         if (!err && data.Count == 0) {
-            dt.insertUser(AWS, obj, function (err, da) {
+            dt.insertUser(AWS, obj, function (err, data) {
                 if (!err) {
                     resp.writeHead(200, {"content-type": "text/html"});
                     resp.end("1");
-                } else {
+                }
 
+            });
+            var dt2= require('../application/image/bucket');
+            var bucketname =obj.id;
+            dt2.createBucket(bucketname.replace("-","thangnghia"),function(ResultCreate){
+                if(!ResultCreate){
+                    resp.writeHead(200, {"content-type": "text/html"});
+                }
+                else{
+                    dt2.getListBucket();
                     resp.writeHead(200, {"content-type": "text/html"});
                     resp.end("0");
                 }
