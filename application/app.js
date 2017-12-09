@@ -12,15 +12,19 @@ var listImage = require('./image/listImage');
 var bucket = require('./image/bucket');
 // var multer = require('multer');
 //
-
+AWS.events.on('httpError', function() {
+    if (this.response.error && this.response.error.code === 'UnknownEndpoint') {
+        this.response.error.retryable = true;
+    }
+});
 let tbName_User = "user";
 // service
 AWS.config.update({
-    region: "us-west-2",
+    region: "ap-southeast-1",
     endpoint: "http://localhost:8000"
 });
-AWS.config.accessKeyId = "AWSAccessKeyId=AKIAJXJSIQBQMRMTKIOQ";
-AWS.config.secretAccessKey = "AWSSecretKey=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";
+AWS.config.accessKeyId = "AWSAccessKeyId=AKIAJJXIY3275CEHFILQ";
+AWS.config.secretAccessKey = "AWSSecretKey=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";
 
 // Folder public
 var app = express();
@@ -145,12 +149,22 @@ app.post("/insertuser", function (req, resp) {
         resp.send(JSON.stringify({status: false}));
     }
     var dt = require("../application/user/tableUser");
-    // console.log("tmtt", dt.insertUser(AWS, obj));
     dt.insertUser(AWS, obj, function (err) {
         console.log("ttt", err);
-        if (err) {
-            resp.setHeader('Content-Type', 'application/json');
-            resp.send(JSON.stringify({status: true}));
+        if (err) { // đúng
+            var dt2 = require('../application/image/bucket');
+            var bucketname = obj.id;
+            dt2.createBucket(AWS, bucketname.replace("-", "thangnghia"), function (ResultCreate) {
+                if (!ResultCreate) {
+                    resp.setHeader('Content-Type', 'application/json');
+                    resp.send(JSON.stringify({status: false}));
+                }
+                else {
+                    dt2.getListBucket(AWS);
+                    resp.setHeader('Content-Type', 'application/json');
+                    resp.send(JSON.stringify({status: true}));
+                }
+            });
         } else {
             console.log("oke chưa");
             resp.setHeader('Content-Type', 'application/json');
