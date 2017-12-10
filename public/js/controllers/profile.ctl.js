@@ -16,10 +16,14 @@ angular.module('myApp.controller.profile', [])
             introduce: "Cập nhật thông tin giới thiệu về mình..",
         };
         Service.getOwnInfor(function (data) {
+            console.log("this data", data);
             $scope.User.fullname = data.data.user.nickname;
             $scope.User.phone = data.data.user.phone;
             $scope.User.email = data.data.user.email;
             $scope.User.birthday = data.data.user.birthday;
+        });
+        Service.getListFriend(function (data) {
+            console.log("friendsss", data);
         });
         $scope.checkOwnPage = false;
         if (typeof (paramValue) != 'undefined') {

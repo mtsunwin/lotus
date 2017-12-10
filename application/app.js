@@ -233,31 +233,83 @@ app.post("/findfriends", function (req, resp) {
         }
     });
 });
-
-app.post("/getListFriends", function (req, res) {
-
+/**
+ * Lấy danh sách bạn bè
+ * --output---
+ * Json danh sách bạn bè
+ */
+app.post("/getListFriends", auth, function (req, res) {
+    var dt = require("../application/user/tableListFriends");
+    dt.getListFriends(AWS, req.session.infoUser._id, function (err, data) {
+        if (!err) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({listFriends: data}));
+        }
+    })
 });
-
+/**
+ * Lấy thông tin người đang đăng nhập
+ */
 app.post("/getinfo", auth, function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({user: req.session.infoUser}));
 });
-
+/**
+ * Lưu tin tức người dùng đăng tải
+ * ---input----
+ * file -> image
+ * context -> nội dung
+ */
 app.post("/getImage", auth, function (req, res) {
     var dt = require("../application/image/s3_listbuckets");
+    var dt2 = require("../application/newFeed/newfeed");
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
-        dt.putItem(AWS, fs, files.getImage, function (data) {
-            console.log("data ", data);
-            var dt2 = require("../application/newFeed/newfeed");
+        if (files.getImage.size > 0) {
+            dt.putItem(AWS, fs, files.getImage, function (data) {
+                dt2.insertNew(
+                    AWS,
+                    req.session.allInfor._id,
+                    uuidv4(),
+                    req.session.allInfor.username,
+                    data.url,
+                    (fields.message.length > 0) ? fields.message : 'null',
+                    getDateTime(),
+                    function (err1, data1) {
+                        if (!err1) {
+                            fs.readFile("../views/profile.html", function (err, data) {
+                                if (err) {
+                                    res.writeHead(404, {"content-type": "text/html"});
+                                    res.end("not found");
+                                } else {
+                                    res.writeHead(200, {"content-type": "text/html"});
+                                    res.write(data);
+                                    res.end();
+                                }
+                            });
+                        } else {
+                            fs.readFile("../views/error.html", function (err, data) {
+                                if (err) {
+                                    res.writeHead(404, {"content-type": "text/html"});
+                                    res.end("not found");
+                                } else {
+                                    res.writeHead(200, {"content-type": "text/html"});
+                                    res.write(data);
+                                    res.end();
+                                }
+                            });
+                        }
+                    });
+            });
+        } else if (fields.message.length > 0) {
             dt2.insertNew(
                 AWS,
                 req.session.allInfor._id,
                 uuidv4(),
                 req.session.allInfor.username,
-                data.url,
+                'null',
                 fields.message,
-                new Date(),
+                getDateTime(),
                 function (err1, data1) {
                     if (!err1) {
                         fs.readFile("../views/profile.html", function (err, data) {
@@ -283,9 +335,28 @@ app.post("/getImage", auth, function (req, res) {
                         });
                     }
                 });
-        });
+        }
     });
 });
+/**
+ * Lấy ngày tháng hiện tại
+ * @return {string}
+ */
+var getDateTime = function () {
+    var date = new Date();
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+    var min = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+    var sec = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+    var day = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+    return year + ":" + month + ":" + day + "-" + hour + ":" + min + ":" + sec;
+}
 
 /**
  * system

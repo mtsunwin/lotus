@@ -35,9 +35,15 @@ exports.createTableNewsFeeds = function (AWS, _id, callback) {
 exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _status, _time, callback) {
     var docClient = new AWS.DynamoDB();
     var name = table_name + "_" + _id;
-    console.log("name table", name);
-    console.log("_id", _id);
-    console.log("_idNew", _idNewFeed);
+
+    console.log("nametable:", name);
+    console.log("_id:", _id);
+    console.log("_idNew:", _idNewFeed);
+    console.log("_username:", _username);
+    console.log("_ImageName:", _ImageName);
+    console.log("_status:", _status);
+    console.log("_time:", _time + " ");
+
     var params = {
         TableName: name,
         Item: {
@@ -51,17 +57,17 @@ exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _stat
     docClient.putItem(params, callback);
 }
 
-exports.getListNewFeed = function (AWS, _id) {
+exports.getListNewFeed = function (AWS, _id, callback) {
     var db = new AWS.DynamoDB();
     db.scan({
         TableName: table_name + "_" + _id,
         Limit: 50
     }, function (err, data) {
         if (err) {
-            console.log(err);
+            callback(false);
         }
         else {
-            console.log(data.Items);
+            callback(data);
         }
     })
 }

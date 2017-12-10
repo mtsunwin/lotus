@@ -38,18 +38,11 @@ exports.insertFriend = function (AWS, _id, _username, _nickname, _time) {
     });
 };
 
-exports.getListFriends = function (AWS, _id) {
+exports.getListFriends = function (AWS, _id, callback) {
     var db = new AWS.DynamoDB();
     db.scan({
         TableName: table_name + "_" + _id,
         Limit: 50
-    }, function (err, data) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log(data.Items);
-        }
-    });
+    }, callback);
 };
 

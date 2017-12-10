@@ -29,23 +29,6 @@ angular.module('myApp.service', [])
                     }),
                 }).then(callback);
             },
-            // Upload Images
-            service: function ($http) {
-                this.uploadFiletoServer = function (file, uploadUrl) {
-                    var fd = new FormData();
-                    fd.append('file', file);
-                    $http.post(uploadUrl, fd, {
-                        transformRequest: angular.identity,
-                        headers: {'Content-Type': undefined, 'Process-Data': false}
-                    })
-                        .success(function (data) {
-                            alert(data);
-                        })
-                        .error(function () {
-                            alert("Error");
-                        });
-                }
-            },
             findFriends: function (_keySearch, callback) {
                 $http({
                     method: "POST",
@@ -62,10 +45,15 @@ angular.module('myApp.service', [])
                     method: "POST",
                     url: "/getinfo",
                     headers: {"content-type": "application/json"},
-                    dataType: "json",
-                    data: JSON.stringify({
-                        getkey: _keySearch
-                    })
+                    dataType: "json"
+                }).then(callback);
+            },
+            getListFriend: function (callback) {
+                $http({
+                    method: "POST",
+                    url: "/getListFriends",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json"
                 }).then(callback);
             }
         };
