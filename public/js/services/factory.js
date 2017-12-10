@@ -40,7 +40,7 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
-            getOwnInfor: function (_keySearch, callback) {
+            getOwnInfor: function (callback) { // get thong tin của mình
                 $http({
                     method: "POST",
                     url: "/getinfo",
@@ -52,6 +52,14 @@ angular.module('myApp.service', [])
                 $http({
                     method: "POST",
                     url: "/getListFriends",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json"
+                }).then(callback);
+            },
+            getNewsFeeds: function (callback) {
+                $http({
+                    method: "POST",
+                    url: "/getNewsFeeds",
                     headers: {"content-type": "application/json"},
                     dataType: "json"
                 }).then(callback);

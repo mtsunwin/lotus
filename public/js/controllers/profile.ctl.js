@@ -3,6 +3,7 @@ angular.module('myApp.controller.profile', [])
     .controller('profile', ["$scope", "Service", "$location", function ($scope, Service, $location) {
         var paramValue = $location.search().name;
         var objUser = [];
+        $scope.follow = false;
         $scope.User = {
             avatar: '../public/images/instagram/profile.jpg',
             fullname: 'Minh Thang',
@@ -23,7 +24,7 @@ angular.module('myApp.controller.profile', [])
             $scope.User.birthday = data.data.user.birthday;
         });
         Service.getListFriend(function (data) {
-            console.log("friendsss", data);
+            $scope.listFriend = data.data.listFriends;
         });
         $scope.checkOwnPage = false;
         if (typeof (paramValue) != 'undefined') {
@@ -37,6 +38,7 @@ angular.module('myApp.controller.profile', [])
                     $scope.User.phone = data.data.a.Items[0].phone;
                     $scope.User.email = data.data.a.Items[0].email;
                     $scope.User.username = data.data.a.Items[0].username;
+
                 } else {
                     window.location.assign('/err');
                 }

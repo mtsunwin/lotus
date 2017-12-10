@@ -22,7 +22,6 @@ AWS.events.on('httpError', function () {
     }
 });
 AWS.config.update({region: 'ap-southeast-1'});
-
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -190,31 +189,6 @@ app.post("/login", function (req, res) {
     });
 });
 
-app.post("/fileupload", function (req, resp) {
-    try {
-        uploadFile.uploadFiles(req, function (err, fields, files) {
-            if (err) {
-                resp.writeHead(500, {'content-type': 'text/plain'});
-                resp.end('fail');
-            }
-            else {
-                listImage.insertImage('dien cai username vao', files.Image, function (results) {
-                    if (results != 0) {
-                        resp.writeHead(500, {'content-type': 'text/plain'});
-                        resp.end("Add image fail");
-                    } else {
-                        resp.writeHead(200, {'content-type': 'text/plain'});
-                        resp.end("Add image success");
-                    }
-                });
-            }
-        })
-    } catch (exception) {
-        console.log("->Exception");
-        resp.writeHead();
-        resp.end();
-    }
-});
 /**
  * Tìm kiếm bạn bè
  * ---input-----
@@ -247,10 +221,18 @@ app.post("/getListFriends", auth, function (req, res) {
         }
     })
 });
+
+app.post("/getNewsFeeds", auth, function (req, res) {
+    var dt = require("../application/newFeed/newfeed");
+    var list = dt.getListNewFeedFriend(AWS, req.session.infoUser._id);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({listNews: list}));
+});
 /**
  * Lấy thông tin người đang đăng nhập
  */
 app.post("/getinfo", auth, function (req, res) {
+    console.log("oke ", req.session.infoUser);
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({user: req.session.infoUser}));
 });

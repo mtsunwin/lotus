@@ -94,7 +94,7 @@
                     <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
                         {{User.fullname}}
                         <input type="button" class="btn btn-primary btn-md"
-                               value="Theo dõi người này">
+                               value="Theo dõi người này" ng-show="follow">
                     </h2>
                     <p class="fh5co-lead animate-box" data-animate-effect="fadeInLeft">
                         {{User.introduce}}
@@ -157,14 +157,10 @@
             <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
                 Người đang theo dõi:
             </h2>
-            <div class="row animate-box" style="height: 300px;" data-animate-effect="fadeInLeft">
+            <div class="row animate-box" style="height: 300px;" data-animate-effect="fadeInLeft"
+                 ng-if="listFriend.Count > 0">
                 <ul>
-                    <li>Ahihi</li>
-                    <li>Ahihi</li>
-                    <li>Ahihi</li>
-                    <li>Ahihi</li>
-                    <li>Ahihi</li>
-                    <li>Ahihi</li>
+                    <li>Data</li>
                 </ul>
             </div>
         </div>

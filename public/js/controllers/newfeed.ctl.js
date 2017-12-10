@@ -1,6 +1,9 @@
 'use strict'
 angular.module('myApp.controller.newfeed', [])
-    .controller('newfeed', ["$scope", function ($scope) {
+    .controller('newfeed', ["$scope", "Service", function ($scope, Service) {
+        Service.getNewsFeeds(function (data) {
+            console.log("news ", data);
+        });
         $scope.listnews = [
             {
                 avatar: '../public/images/instagram/profile.jpg',
