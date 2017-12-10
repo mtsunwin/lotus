@@ -72,7 +72,6 @@ app.get("/home", auth, function (req, res) {
 });
 
 app.get("/profile", auth, function (req, res) {
-    console.log("->>>", req.session.idUser);
     fs.readFile("../views/profile.html", function (err, data) {
         if (err) {
             res.writeHead(404, {"content-type": "text/html"});
@@ -147,14 +146,14 @@ app.post("/insertuser", function (req, resp) {
     dt.insertUser(AWS, obj, function (err) {
         console.log("ttt", err);
         if (err) { // đúng
-            dt.createTableNewsFeed(AWS, obj.id, function (err, data) {
-                if (!err) {
+            var dt2 = require("../application/newFeed/newfeed");
+            dt2.createTableNewsFeeds(AWS, obj.id, function (err2, data2) {
+                if (!err2) {
                     resp.setHeader('Content-Type', 'application/json');
                     resp.send(JSON.stringify({status: true}));
                 }
-            })
+            });
         } else {
-            console.log("oke chưa");
             resp.setHeader('Content-Type', 'application/json');
             resp.send(JSON.stringify({status: false}));
         }
@@ -177,10 +176,11 @@ app.post("/login", function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     dt.checkLogin(AWS, username, password, function (err, data) {
         if (err) {
-            console.log("lỗi", data);
+            console.log("lỗi", err);
             res.send(JSON.stringify({status: 0}));
         } else {
             console.log(data.Items[0]);
+            req.session.allInfor = data.Items[0];
             req.session.user = data.Items[0].username;
             req.session.infoUser = data.Items[0];
             sys_username = data.Items[0].username;
@@ -248,12 +248,13 @@ app.post("/getImage", auth, function (req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
         dt.putItem(AWS, fs, files.getImage, function (data) {
+            console.log("data ", data);
             var dt2 = require("../application/newFeed/newfeed");
             dt2.insertNew(
                 AWS,
-                req.session.idUser._id,
+                req.session.allInfor._id,
                 uuidv4(),
-                req.session.idUser.username,
+                req.session.allInfor.username,
                 data.url,
                 fields.message,
                 new Date(),
@@ -269,9 +270,19 @@ app.post("/getImage", auth, function (req, res) {
                                 res.end();
                             }
                         });
+                    } else {
+                        fs.readFile("../views/error.html", function (err, data) {
+                            if (err) {
+                                res.writeHead(404, {"content-type": "text/html"});
+                                res.end("not found");
+                            } else {
+                                res.writeHead(200, {"content-type": "text/html"});
+                                res.write(data);
+                                res.end();
+                            }
+                        });
                     }
                 });
-
         });
     });
 });
