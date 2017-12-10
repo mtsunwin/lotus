@@ -1,7 +1,7 @@
 const table_name = "listNewFeed";
 const col_username = "username";
 const col_id = "id";
-
+var tableFriend= require('../user/tableListFriends');
 exports.createTableNewsFeeds = function (AWS, _id, callback) {
     var dynamodb = new AWS.DynamoDB();
     var params = {
@@ -64,4 +64,16 @@ exports.getListNewFeed = function (AWS, _id) {
             console.log(data.Items);
         }
     })
+}
+exports.getListNewFeedFriend=function(AWS,_id){
+    var listfriend= tableFriend.getListFriends(AWS,_id);
+    var list= listfriend.items;
+    console.log('getList',list);
+    var listNewfeed;
+    list.forEach(function callback(currentValue, index, array){
+        var friend = list.get(index);
+        listNewfeed.add(this.getListNewFeed(AWS,friend.id))
+    })
+    console.log('getListNewFeedFriend',listNewfeed);
+    return listNewfeed;
 }
