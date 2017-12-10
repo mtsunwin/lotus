@@ -29,7 +29,7 @@ angular.module('myApp.service', [])
                     }),
                 }).then(callback);
             },
-            findFriends: function (_keySearch, callback) {
+            findFriends: function (_keySearch, callback) { // Tìm kiếm bạn bè
                 $http({
                     method: "POST",
                     url: "/findfriends",
@@ -63,6 +63,17 @@ angular.module('myApp.service', [])
                     headers: {"content-type": "application/json"},
                     dataType: "json"
                 }).then(callback);
-            }
+            },
+            goFriends: function (_username, callback) { // truy cập profile
+                $http({
+                    method: "POST",
+                    url: "/findFrieds",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        usernametmt: _username
+                    })
+                }).then(callback);
+            },
         };
     }]);
