@@ -50,11 +50,11 @@
                 <h1 style="margin:0;">Hôm nay có gì mới?</h1>
             </div>
         </div>
-        <form action="">
+        <form action="getImage" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <textarea name="" id="message" cols="30" rows="7" class="form-control"
+                        <textarea name="message" id="message" cols="30" rows="7" class="form-control"
                                   placeholder="Message"></textarea>
                     </div>
                 </div>
@@ -70,17 +70,15 @@
                 <div class="form-group" style="float: right">
                     <label class="custom-file-upload btn btn-primary btn-md">
                         <input id="inputUpImg" type="file" ng-model="myFile"
+                               name="getImage"
                                onchange="angular.element(this).scope().uploadedFile(this)"/>
                         Thêm ảnh
                     </label>
-                    <input type="button" ng-click="uploadFile()" class="btn btn-primary btn-md" value="Đăng bài viết">
+                    <input type="submit" class="btn btn-primary btn-md" value="Đăng bài viết">
                 </div>
             </div>
         </form>
     </div>
-    <!--1111111111111111111111111-->
-    <!--<input type="file" ng-model="myFile" class="form-control" accept="image/*"-->
-    <!--onchange="angular.element(this).scope().uploadedFile(this)">-->
     <br/>
 </div>
 <!--PROFILE-->

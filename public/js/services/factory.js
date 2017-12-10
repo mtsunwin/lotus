@@ -57,7 +57,7 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
-            getOwnInfor: function (callback) {
+            getOwnInfor: function (_keySearch, callback) {
                 $http({
                     method: "POST",
                     url: "/getinfo",

@@ -44,7 +44,8 @@ angular.module('myApp.controller.profile', [])
             $scope.myFile = $scope.files[0];
             var file = $scope.myFile;
             var url = "URL THIS";
-            Service.uploadFiletoServer(file, url);
+            console.log(file);
+            // Service.uploadFiletoServer(file, url);
         };
         $scope.uploadedFile = function (element) {
             var reader = new FileReader();

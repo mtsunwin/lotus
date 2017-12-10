@@ -87,6 +87,11 @@ exports.insertUser = function (AWS, _obj, callback) {
         }
     });
 };
+
+exports.createTableNewsFeed = function (AWS, _id, callback) {
+    var dt = require("../application/newFeed/newfeed");
+    dt.createTableNewsFeeds(AWS, _id, callback);
+}
 /**
  * Lây dánh sách USER
  * @param _nameTabe: tên bảng

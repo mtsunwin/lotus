@@ -2,8 +2,7 @@ const table_name = "listNewFeed";
 const col_username = "username";
 const col_id = "id";
 
-
-exports.createTableNewsFeed = function (AWS, _id) {
+exports.createTableNewsFeeds = function (AWS, _id, callback) {
     var dynamodb = new AWS.DynamoDB();
     var params = {
         TableName: table_name + "_" + _id,
@@ -20,15 +19,7 @@ exports.createTableNewsFeed = function (AWS, _id) {
             WriteCapacityUnits: 10
         }
     };
-    dynamodb.createTable(params, function (err, data) {
-        if (err) {
-            console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
-            return false;
-        } else {
-            console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
-            return true;
-        }
-    });
+    dynamodb.createTable(params, callback);
 }
 
 //them tin vào id cua user
@@ -38,30 +29,28 @@ exports.createTableNewsFeed = function (AWS, _id) {
 * username người tạo:S
 * imageName:S
 * time thời gian tạo:S
-* comment:M
 * status dòng cảm nghĩ: S
 * total like tổng like:N
 * */
-exports.insertNew = function (AWS, _id, _username, _obj, _time) {
+exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _status, _time, callback) {
     var docClient = new AWS.DynamoDB();
+    var name = table_name + "_" + _id;
+    console.log("name table", name);
+    console.log("_id", _id);
+    console.log("_idNew", _idNewFeed);
     var params = {
-        TableName: table_name + "_" + _id,
+        TableName: name,
         Item: {
             "username": {S: _username},
             "id": {S: _idNewFeed},
-            "imageName": {S: _obj.ImageName},
+            "imageName": {S: _ImageName},
             "time": {S: _time},
-            "comment": {M: typeof (_obj.comment) != 'undefined' ? _obj.comment : 'null'},
-            "status": {S: _obj.status},
-            "totalLike": {N: _obj.totalLike},
+            "status": {S: _status}
         }
     }
-    docClient.putItem(params, function (err, data) {
-        if (!err) return true;
-        else
-            return false;
-    });
+    docClient.putItem(params, callback);
 }
+
 exports.getListNewFeed = function (AWS, _id) {
     var db = new AWS.DynamoDB();
     db.scan({

@@ -6,35 +6,28 @@ const url = require("url");
 const bodyParser = require("body-parser");
 const AWS = require('aws-sdk');
 const uuidv4 = require('uuid/v4');
+
+var app = express();
+var formidable = require('formidable');
+
+var session = require('express-session');
 var sys_username;
 var uploadFile = require('./uploadFile');
 var listImage = require('./image/listImage');
-var bucket = require('./image/bucket');
 // var multer = require('multer');
 //
-AWS.events.on('httpError', function() {
+AWS.events.on('httpError', function () {
     if (this.response.error && this.response.error.code === 'UnknownEndpoint') {
         this.response.error.retryable = true;
     }
 });
-let tbName_User = "user";
-// service
-AWS.config.update({
-    region: "ap-southeast-1",
-    endpoint: "http://localhost:8000"
-});
-AWS.config.accessKeyId = "AWSAccessKeyId=AKIAJJXIY3275CEHFILQ";
-AWS.config.secretAccessKey = "AWSSecretKey=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";
+AWS.config.update({region: 'ap-southeast-1'});
 
-// Folder public
-var app = express();
-var session = require('express-session');
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
 app.use("/public/css/", express.static("../node_modules/bootstrap/dist/css/"));
 app.use("/public/js/", express.static("../node_modules/bootstrap/dist/js/"));
-// app.set("views", "./views");
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(session({
@@ -42,6 +35,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 var auth = function (req, res, next) {
     if (req.session && req.session.user === sys_username && req.session.admin) {
         return next();
@@ -51,7 +45,6 @@ var auth = function (req, res, next) {
 };
 // create server
 http.createServer(app).listen(9091);
-
 app.get("/", function (req, res) {
     fs.readFile("../views/index.html", function (err, data) {
         if (err) {
@@ -108,7 +101,9 @@ app.get('/logout', function (req, res) {
         }
     });
 });
-
+/**
+ * Thông báo lỗi
+ */
 app.get("/err", function (req, res) {
     fs.readFile("../views/error.html", function (err, data) {
         if (err) {
@@ -152,19 +147,12 @@ app.post("/insertuser", function (req, resp) {
     dt.insertUser(AWS, obj, function (err) {
         console.log("ttt", err);
         if (err) { // đúng
-            var dt2 = require('../application/image/bucket');
-            var bucketname = obj.id;
-            dt2.createBucket(AWS, bucketname.replace("-", "thangnghia"), function (ResultCreate) {
-                if (!ResultCreate) {
-                    resp.setHeader('Content-Type', 'application/json');
-                    resp.send(JSON.stringify({status: false}));
-                }
-                else {
-                    dt2.getListBucket(AWS);
+            dt.createTableNewsFeed(AWS, obj.id, function (err, data) {
+                if (!err) {
                     resp.setHeader('Content-Type', 'application/json');
                     resp.send(JSON.stringify({status: true}));
                 }
-            });
+            })
         } else {
             console.log("oke chưa");
             resp.setHeader('Content-Type', 'application/json');
@@ -172,15 +160,6 @@ app.post("/insertuser", function (req, resp) {
         }
     });
 });
-
-// var dt2 = require("../application/image/bucket");
-// dt2.createBucket(obj.username, function (_st) {
-//     console.log("tmt", _st);
-//     if (_st || _st == 'true') {
-//         resp.setHeader('Content-Type', 'application/json');
-//         resp.send(JSON.stringify({status: true}));
-//     }
-// });
 /**
  * Check is login
  * ------input-----
@@ -248,10 +227,7 @@ app.post("/findfriends", function (req, resp) {
     var dt = require("../application/user/tableUser");
     dt.scanUser(AWS, key, function (err, data) {
         if (!err) {
-            //console.log("thangg ", data);
             var friend = data;
-            console.log("nghia", friend);
-            // data
             resp.setHeader('Content-Type', 'application/json');
             resp.send(JSON.stringify({a: friend}, null, 3));
         }
@@ -267,56 +243,41 @@ app.post("/getinfo", auth, function (req, res) {
     res.send(JSON.stringify({user: req.session.infoUser}));
 });
 
-// SYSTEM TEST
-app.get("/sys", function (req, resp) {
-    fs.readFile("../application/views/index.html", function (err, data) {
-        if (err) {
-            resp.writeHead(404, {"content-type": "text/html"});
-            resp.end();
-        } else {
-            resp.writeHead(200, {"content-type": "text/html"});
-            resp.write(data);
-            resp.end();
-        }
+app.post("/getImage", auth, function (req, res) {
+    var dt = require("../application/image/s3_listbuckets");
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        dt.putItem(AWS, fs, files.getImage, function (data) {
+            var dt2 = require("../application/newFeed/newfeed");
+            dt2.insertNew(
+                AWS,
+                req.session.idUser._id,
+                uuidv4(),
+                req.session.idUser.username,
+                data.url,
+                fields.message,
+                new Date(),
+                function (err1, data1) {
+                    if (!err1) {
+                        fs.readFile("../views/profile.html", function (err, data) {
+                            if (err) {
+                                res.writeHead(404, {"content-type": "text/html"});
+                                res.end("not found");
+                            } else {
+                                res.writeHead(200, {"content-type": "text/html"});
+                                res.write(data);
+                                res.end();
+                            }
+                        });
+                    }
+                });
+
+        });
     });
 });
 
-app.get("/sys/listtable", function (req, resp) {
-    var dt = require("../application/user/listTable");
-    dt.getListTable(AWS, function (err, data) {
-        resp.writeHead(200, {"content-type": "text/html"});
-        for (var i in data)
-            resp.write(data[i] + "<br/>");
-        resp.end();
-    });
-});
-
-app.get("/sys/createtableuser", function (req, resp) {
-    resp.writeHead(200, {"content-type": "text/html"});
-    var dt = require("../application/user/tableUser");
-    if (dt.createTableUser(AWS)) {
-        resp.write("Tạo thành công");
-    }
-    resp.end();
-});
-
-app.get("/sys/listuser", function (req, resp) {
-    var dt = require("../application/user/tableUser");
-    var data = dt.getListUser(AWS, tbName_User, function (err, data) {
-        if (err) {
-            resp.writeHead(404, {"content-type": "text/html"});
-            resp.end("404 not found err: " + err);
-        } else {
-            resp.writeHead(200, {"content-type": "text/html"});
-            var str = "";
-            data.forEach(function (val) {
-                str += "Nickname:" + val.nickname.S + "<br/>";
-                str += "Fullname:" + val.fullname.S + "<br/>";
-                str += "Username:" + val.username.S + "<br/>";
-                str += "Password:" + val.password.S + "<br/>";
-                str += "--------------------<br/>";
-            });
-            resp.end(str);
-        }
-    });
-});
+/**
+ * system
+ * */
+var system_tmt = require('../application/system');
+system_tmt.init(app, fs, AWS);
