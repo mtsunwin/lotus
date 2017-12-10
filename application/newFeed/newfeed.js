@@ -75,15 +75,20 @@ exports.getListNewFeedFriend = function (AWS, _id) {
     tableFriend.getListFriends(AWS, _id, function (err, data) {
         if (!err) {
             console.log(data);
+            console.log("ListFriend:",data);
+            var list = [];
+            for(var i =0;i<data.length; i++){
+                list.add(data.getItem(i));
+            }
+            console.log('getList', list);
+            var listNewfeed = [];
+            list.forEach(function callback(currentValue, index, array) {
+                var friend = list.get(index);
+                listNewfeed.add(this.getListNewFeed(AWS, friend.id))
+            });
+            console.log('getListNewFeedFriend', listNewfeed);
+            return listNewfeed;
         }
     });
-    var list = listfriend.items;
-    console.log('getList', list);
-    var listNewfeed = [];
-    list.forEach(function callback(currentValue, index, array) {
-        var friend = list.get(index);
-        listNewfeed.add(this.getListNewFeed(AWS, friend.id))
-    });
-    console.log('getListNewFeedFriend', listNewfeed);
-    return listNewfeed;
+
 }
