@@ -75,9 +75,9 @@ exports.getListNewFeedFriend = function (AWS, _id) {
     tableFriend.getListFriends(AWS, _id, function (err, data) {
         if (!err) {
             console.log(data);
-            console.log("ListFriend:",data);
+            console.log("ListFriend:", data);
             var list = [];
-            for(var i =0;i<data.length; i++){
+            for (var i = 0; i < data.length; i++) {
                 list.add(data.getItem(i));
             }
             console.log('getList', list);
@@ -90,5 +90,4 @@ exports.getListNewFeedFriend = function (AWS, _id) {
             return listNewfeed;
         }
     });
-
 }

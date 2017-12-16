@@ -190,16 +190,13 @@ exports.findFrieds = function (AWS, _username, callback) {
         },
         ExpressionAttributeValues: {
             ":username": _username
-        },
-        Limit: 8,
-        Select: "SPECIFIC_ATTRIBUTES",
-        ScanIndexForward: false,
+        }
     };
     docClient.query(params, function (err, data) {
         if (err)
             callback(err);
         else
-            callback(null, data);
+            callback(null, data.Items[0]);
     });
 };
 

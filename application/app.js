@@ -84,7 +84,6 @@ app.get("/profile", auth, function (req, res) {
         }
     });
 });
-
 /**
  * Logout
  */
@@ -104,7 +103,7 @@ app.get('/logout', function (req, res) {
 /**
  * Thông báo lỗi
  */
-app.get("/err", function (req, res) {
+app.get("/err", auth, function (req, res) {
     fs.readFile("../views/error.html", function (err, data) {
         if (err) {
             res.writeHead(404, {"content-type": "text/html"});
@@ -205,7 +204,18 @@ app.post("/findfriends", function (req, resp) {
         if (!err) {
             var friend = data;
             resp.setHeader('Content-Type', 'application/json');
-            resp.send(JSON.stringify({a: friend}, null, 3));
+            resp.send(JSON.stringify({a: friend}));
+        }
+    });
+});
+
+app.post("/findFrieds", auth, function (req, res) {
+    var key = req.body.usernametmt;
+    var dt = require("../application/user/tableUser");
+    dt.findFrieds(AWS, key, function (err, data) {
+        if (!err) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({info: data}));
         }
     });
 });
