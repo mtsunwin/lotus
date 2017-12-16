@@ -23,8 +23,6 @@ AWS.events.on('httpError', function () {
 });
 AWS.config.update({region: 'ap-southeast-1'});
 
-AWS.config.accessKeyId = "AKIAI6CVLF5NXJ3X3AEA";
-AWS.config.secretAccessKey = "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";
 
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
