@@ -224,7 +224,7 @@ exports.scanUser = function (AWS, params, callback) {
     });
 }
 
-exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_email,_fb,_google,callback){
+exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_fb,_google,callback){
     var docClient= new AWS.DynamoDB.DocumentClient();
     var params={
         TableName:table_name,
@@ -234,7 +234,7 @@ exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_email,_fb,_g
         UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google ",
         ExpressionAttributeValues:{
             ":birthday":_birthday,
-            ":image":_image,
+            ":image":null,
             ":fb":_fb,
             ":google":_google,
         },

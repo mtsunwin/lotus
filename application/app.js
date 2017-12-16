@@ -43,6 +43,7 @@ var auth = function (req, res, next) {
         return res.redirect('/');
     }
 };
+
 // create server
 http.createServer(app).listen(9091);
 app.get("/", function (req, res) {
@@ -84,6 +85,19 @@ app.get("/profile", auth, function (req, res) {
             callPageErr(req, res);
         }
     }
+});
+app.get("/EditProfile",auth,function (req,res) {
+    fs.readFile("../views/editProfile.html", function (err, data) {
+        if (err) {
+            res.writeHead(404, {"content-type": "text/html"});
+            res.end("not found");
+        } else {
+            console.log("Da vao phan Edit profile");
+            res.writeHead(200, {"content-type": "text/html"});
+            res.write(data);
+            res.end();
+        }
+    });
 });
 /**
  * Logout
@@ -146,6 +160,7 @@ var callPageProfile = function (req, res) {
  * 1 if success
  * 0 if fail
  */
+
 app.post("/insertuser", function (req, resp) {
     var obj = {
         id: uuidv4(),
@@ -266,6 +281,24 @@ app.post("/getListFriends", auth, function (req, res) {
         }
     })
 });
+app.post("/EditProfile",auth,function (req,res) {
+    var _username=req.session.infoUser.username;
+    var dt=require("../application/user/tableUser");
+    var _phone= req.body.txtphoneNumber;
+    var _birthday= req.body.txtSinhNhat;
+    var _accountGG= req.body.accountGG;
+    var _accountFb= req.body.accountFb;
+    var _image=null;
+    dt.updateUser(AWS,_username,_phone,_birthday,_image,_accountFb,_accountGG,function (err,data) {
+        if (!err) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({listFriends: data}));
+        }
+        else console.log("Thanh cong update");
+    })
+
+
+})
 /**
  * Lấy danh sách các tin tức CỦA MÌNH đã đăng
  */
@@ -295,6 +328,7 @@ app.post("/getYourNewsFeeds", auth, function (req, res) {
 /**
  * Lấy thông tin người đang đăng nhập
  */
+
 app.post("/getinfo", auth, function (req, res) {
     console.log("oke ", req.session.infoUser);
     res.setHeader('Content-Type', 'application/json');
@@ -306,6 +340,7 @@ app.post("/getinfo", auth, function (req, res) {
  * file -> image
  * context -> nội dung
  */
+
 app.post("/getImage", auth, function (req, res) {
     var dt = require("../application/image/s3_listbuckets");
     var dt2 = require("../application/newFeed/newfeed");
