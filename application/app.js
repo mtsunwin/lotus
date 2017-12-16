@@ -97,7 +97,7 @@ app.get("/EditProfile",auth,function (req,res) {
             res.end();
         }
     });
-})
+});
 /**
  * Logout
  */
@@ -144,6 +144,7 @@ app.get("/err", auth, function (req, res) {
  * 1 if success
  * 0 if fail
  */
+
 app.post("/insertuser", function (req, resp) {
     var obj = {
         id: uuidv4(),
@@ -247,6 +248,24 @@ app.post("/getListFriends", auth, function (req, res) {
         }
     })
 });
+app.post("/EditProfile",auth,function (req,res) {
+    var _username=req.session.infoUser.username;
+    var dt=require("../application/user/tableUser");
+    var _phone= req.body.txtphoneNumber;
+    var _birthday= req.body.txtSinhNhat;
+    var _accountGG= req.body.accountGG;
+    var _accountFb= req.body.accountFb;
+    var _image=null;
+    dt.updateUser(AWS,_username,_phone,_birthday,_image,_accountFb,_accountGG,function (err,data) {
+        if (!err) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({listFriends: data}));
+        }
+        else console.log("Thanh cong update");
+    })
+
+
+})
 /**
  * Lấy danh sách các tin tức của mình đã đăng
  */
@@ -275,6 +294,7 @@ app.post("/getinfo", auth, function (req, res) {
  * file -> image
  * context -> nội dung
  */
+
 app.post("/getImage", auth, function (req, res) {
     var dt = require("../application/image/s3_listbuckets");
     var dt2 = require("../application/newFeed/newfeed");
