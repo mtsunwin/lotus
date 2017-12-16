@@ -295,6 +295,7 @@ app.post("/getListFriends", auth, function (req, res) {
         }
     })
 });
+
 app.post("/EditProfile", auth, function (req, res) {
     var parse = url.parse(req.url, true);
     console.log("new", parse);
