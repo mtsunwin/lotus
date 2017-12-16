@@ -127,7 +127,32 @@ exports.findItemhadExisted = function (AWS, _username, callback) {
     };
     docClient.query(params, callback);
 };
-
+exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_email,_fb,_google,callback){
+    var docClient= new AWS.DynamoDB.DocumentClient();
+    var params={
+        TableName:table_name,
+        Key:{
+            "username":table_username,
+        },
+        UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google ",
+        ExpressionAttributeValues:{
+            ":birthday":_birthday,
+            ":image":_image,
+            ":fb":_fb,
+            ":google":_google,
+        },
+        ReturnValues:"UPDATED_NEW"
+    };
+    console.log("Updating the item...");
+    docClient.update(params, function(err, data) {
+        if (err) {
+            callback(false);
+        } else {
+            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            callback(null,JSON.stringify(data, null, 2))
+        }
+    });
+}
 /**
  * Kiểm tra đăng nhập
  * */
@@ -195,6 +220,33 @@ exports.scanUser = function (AWS, params, callback) {
         } else {
             console.log("Query succeeded.");
             callback(null, data);
+        }
+    });
+}
+
+exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_email,_fb,_google,callback){
+    var docClient= new AWS.DynamoDB.DocumentClient();
+    var params={
+        TableName:table_name,
+        Key:{
+            "username":table_username,
+        },
+        UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google ",
+        ExpressionAttributeValues:{
+            ":birthday":_birthday,
+            ":image":_image,
+            ":fb":_fb,
+            ":google":_google,
+        },
+        ReturnValues:"UPDATED_NEW"
+    };
+    console.log("Updating the item...");
+    docClient.update(params, function(err, data) {
+        if (err) {
+            callback(false);
+        } else {
+            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            callback(null,JSON.stringify(data, null, 2))
         }
     });
 }

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lotus</title>
+    <link rel="stylesheet" href="../public/css/bootstrap.css">
+    <link rel="stylesheet" href="../public/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="../public/css/main.css">
+    <script src="../public/js/angular.min.js"></script>
+    <script src="../public/js/jquery.min.js"></script>
+    <script src="../public/js/bootstrap.min.js"></script>
+    <script src="../public/js/ng-file-upload.min.js"></script>
+    <script src="../public/js/ng-file-upload-shim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!--App-->
+    <script src="../public/js/app.js"></script>
+    <!--Services-->
+    <script src="../public/js/services/factory.js"></script>
+    <!--Controller-->
+    <script src="../public/js/controllers/profile.ctl.js"></script>
+    <script src="../public/js/controllers/narnewsfeeds.ctl.js"></script>
+    <!--Directive-->
+    <script src="../public/js/directive/narNewsFeeds.dir.js"></script>
+    <!--Font more-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic,700' rel='stylesheet'
+          type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="../public/profile/css/animate.css">
+    <!-- Icon Fonts-->
+    <link rel="stylesheet" href="../public/profile/css/font-awesome.min.css">
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" href="../public/profile/css/bootstrap.css">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="../public/profile/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../public/profile/css/owl.theme.default.min.css">
+    <!-- Theme style  -->
+    <link rel="stylesheet" href="../public/profile/css/style.css">
+    <!-- Modernizr JS -->
+    <script src="../public/profile/js/modernizr-2.6.2.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="profile">
+<navnewsfeed></navnewsfeed>
+<!--POST-->
+<div class="container marginTop_10_tmt" ng-if="checkOwnPage">
+    <div class="fh5co-narrow-content animate-box" data-animate-effect="fadeInLeft">
+        <div class="row">
+            <div class="col-md-5" style="padding-top: 10px;padding-bottom: 5px;">
+                <h1 style="margin:0;">Cập nhật ảnh đại diện</h1>
+            </div>
+        </div>
+        <form action="getImage" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="thumbnail">
+                        <img ng-src="{{src}}" alt="..." id="image">
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group" style="float: right">
+                    <label class="custom-file-upload btn btn-primary btn-md">
+                        <input id="inputUpImg" type="file" ng-model="myFile"
+                               name="getImage"
+                               onchange="angular.element(this).scope().uploadedFile(this)"/>
+                        Thêm ảnh
+                    </label>
+
+                </div>
+            </div>
+            <div id="fh5co-main">
+
+                <div class="fh5co-narrow-content fh5co-border-bottom">
+                    <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
+                        Thông tin:
+                    </h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                                <div class="fh5co-icon">
+                                    <i class="fa fa-phone" aria-hidden="true"></i>
+                                </div>
+                                <div class="fh5co-text">
+                                    <h3>Số điện thoại:</h3>
+                                    <input type="text" id="txtphoneNumber">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                                <div class="fh5co-icon">
+                                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                                </div>
+                                <div class="fh5co-text">
+                                    <h3>Sinh nhật:</h3>
+                                    <input type="date" id="txtSinhNhat">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                                <div class="fh5co-icon">
+                                    <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="fh5co-text">
+                                    <h3>Địa chỉ liên lạc:</h3>
+                                    <input type="email" id="txtEmail" placeholder="Email">
+                                    <input type="text" id="accountFb" placeholder="account FB" style="margin-top:20px">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                                <div class="fh5co-icon">
+                                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                </div>
+                                <div class="fh5co-text">
+                                    <h3>Thống kê:</h3>
+                                    <textarea type="text" id="txtThongke" style="width: 300px;height: 200px"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" style="float:right;width: 150px;height:80px" >Xác nhận</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+    <br/>
+</div>
+<!--PROFILE-->
+        <!-- jQuery -->
+<script src="../public/profile/js/jquery.min.js"></script>
+<!-- jQuery Easing -->
+<script src="../public/profile/js/jquery.easing.1.3.js"></script>
+<!-- Bootstrap -->
+<script src="../public/profile/js/bootstrap.min.js"></script>
+<!-- Carousel -->
+<script src="../public/profile/js/owl.carousel.min.js"></script>
+<!-- Stellar -->
+<script src="../public/profile/js/jquery.stellar.min.js"></script>
+<!-- Waypoints -->
+<script src="../public/profile/js/jquery.waypoints.min.js"></script>
+<!-- Counters -->
+<script src="../public/profile/js/jquery.countTo.js"></script>
+<!-- MAIN JS -->
+<script src="../public/profile/js/main.js"></script>
+</body>
+</html>
