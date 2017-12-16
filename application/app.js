@@ -44,6 +44,7 @@ var auth = function (req, res, next) {
         return res.redirect('/');
     }
 };
+
 // create server
 http.createServer(app).listen(9091);
 app.get("/", function (req, res) {
@@ -84,6 +85,19 @@ app.get("/profile", auth, function (req, res) {
         }
     });
 });
+app.get("/EditProfile",auth,function (req,res) {
+    fs.readFile("../views/editProfile.html", function (err, data) {
+        if (err) {
+            res.writeHead(404, {"content-type": "text/html"});
+            res.end("not found");
+        } else {
+            console.log("Da vao phan Edit profile");
+            res.writeHead(200, {"content-type": "text/html"});
+            res.write(data);
+            res.end();
+        }
+    });
+})
 /**
  * Logout
  */
@@ -249,6 +263,7 @@ app.post("/getNewsFeeds", auth, function (req, res) {
 /**
  * Lấy thông tin người đang đăng nhập
  */
+
 app.post("/getinfo", auth, function (req, res) {
     console.log("oke ", req.session.infoUser);
     res.setHeader('Content-Type', 'application/json');

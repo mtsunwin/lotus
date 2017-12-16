@@ -32,4 +32,29 @@ exports.putItem = function (AWS, fs, image, callback) {
             }
         }
     });
+
 };
+exports.deleteImage=function (AWS,fs,image,callback) {
+    var _bucketName = 'nghiabc';
+    var s3Bucket = new AWS.S3({params: {Bucket: _bucketName}});
+    var params2={
+        Bucket:_bucketName,
+        Delete:{
+            Objects:[
+                {
+                    Key:image.name,
+                }
+            ],
+        },
+    };
+    s3Bucket.deleteObject(params2,function (err,data) {
+        if (err) {
+            console.log(err, err.stack);
+        } // an error occurred
+        else    {
+            console.log(data);
+            callback(data);
+        }
+        // successful response
+    })
+}
