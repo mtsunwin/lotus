@@ -86,7 +86,7 @@ app.get("/profile", auth, function (req, res) {
         }
     }
 });
-app.get("/EditProfile",auth,function (req,res) {
+app.get("/EditProfile", auth, function (req, res) {
     fs.readFile("../views/editProfile.html", function (err, data) {
         if (err) {
             res.writeHead(404, {"content-type": "text/html"});
@@ -233,11 +233,27 @@ app.post("/findfriends", function (req, resp) {
     var dt = require("../application/user/tableUser");
     dt.scanUser(AWS, key, function (err, data) {
         if (!err) {
-            var friend = data;
             resp.setHeader('Content-Type', 'application/json');
-            resp.send(JSON.stringify({a: friend}));
+            resp.send(JSON.stringify({a: data}));
         }
     });
+});
+/**
+ * Thêm bạn
+ */
+app.post("/addfriends", function (req, resp) {
+    var idf = req.body.id;
+    var key = req.body.getkey;
+    var nickf = req.body.nickname;
+    if (key !== req.session.user) {
+        var dt = require("../application/user/tableListFriends");
+        dt.insertFriend(AWS, idf, key, nickf, getDateTime(), function (err, data) {
+            if (!err) {
+                resp.setHeader('Content-Type', 'application/json');
+                resp.send(JSON.stringify({a: data}));
+            }
+        });
+    }
 });
 /**
  * Tìm kiếm bạn bè TUYỆT ĐỐI
@@ -250,20 +266,18 @@ app.post("/findFrieds", auth, function (req, res) {
         if (!err) {
             var dt = require("../application/user/tableListFriends");
             dt.getListFriends(AWS, req.session.infoUser._id, function (err1, data1) {
-                    if (!err1) {
-                        if (data1.Items.length != 0) {
-                            for (var i = 0; i < data1.Items.length; i++) {
-                                if (data1.data.listFriends[i].username === data.username) {
-
-                                }
+                    if (!err1 && data1.Items.length != 0) {
+                        for (var i = 0; i < data1.Items.length; i++) {
+                            if (data1.data.listFriends[i].username === data.username) {
+                                res.setHeader('Content-Type', 'application/json');
+                                res.send(JSON.stringify({info: data, yourFriend: true}));
                             }
                         }
                     }
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send(JSON.stringify({info: data, yourFriend: false}));
                 }
             )
-            console.log("tmt2", data);
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({info: data}));
         }
     });
 });
@@ -281,15 +295,17 @@ app.post("/getListFriends", auth, function (req, res) {
         }
     })
 });
-app.post("/EditProfile",auth,function (req,res) {
-    var _username=req.session.infoUser.username;
-    var dt=require("../application/user/tableUser");
-    var _phone= req.body.txtphoneNumber;
-    var _birthday= req.body.txtSinhNhat;
-    var _accountGG= req.body.accountGG;
-    var _accountFb= req.body.accountFb;
-    var _image=null;
-    dt.updateUser(AWS,_username,_phone,_birthday,_image,_accountFb,_accountGG,function (err,data) {
+app.post("/EditProfile", auth, function (req, res) {
+    var parse = url.parse(req.url, true);
+    console.log("new", parse);
+    var _username = req.session.infoUser.username;
+    var dt = require("../application/user/tableUser");
+    var _phone = req.body.txtphoneNumber;
+    var _birthday = req.body.txtSinhNhat;
+    var _accountGG = req.body.accountGG;
+    var _accountFb = req.body.accountFb;
+    var _image = null;
+    dt.updateUser(AWS, _username, _phone, _birthday, _image, _accountFb, _accountGG, function (err, data) {
         if (!err) {
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({listFriends: data}));

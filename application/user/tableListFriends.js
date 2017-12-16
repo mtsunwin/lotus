@@ -21,7 +21,7 @@ exports.createTableListFriends = function (AWS, _id, callback) {
     dynamodb.createTable(params, callback);
 };
 
-exports.insertFriend = function (AWS, _id, _username, _nickname, _time) {
+exports.insertFriend = function (AWS, _id, _username, _nickname, _time, callback) {
     var docClient = new AWS.DynamoDB();
     var params = {
         TableName: table_name + "_" + _id,
@@ -32,9 +32,9 @@ exports.insertFriend = function (AWS, _id, _username, _nickname, _time) {
         }
     };
     docClient.putItem(params, function (err, data) {
-        if (!err) return true;
+        if (!err) callback(null, data);
         else
-            return false;
+            callback(err, null);
     });
 };
 

@@ -56,6 +56,18 @@ angular.module('myApp.service', [])
                     dataType: "json"
                 }).then(callback);
             },
+            addFriend: function (_keySearch, callback) {
+                $http({
+                    method: "POST",
+                    url: "/addfriends",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        getkey: _keySearch,
+
+                    })
+                }).then(callback);
+            },
             getNewsFeeds: function (callback) {
                 $http({
                     method: "POST",

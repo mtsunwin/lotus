@@ -3,6 +3,7 @@
 angular.module('myApp.controller', [])
 angular.module('myApp.controller.newfeed', [])
 angular.module('myApp.controller.profile', [])
+angular.module('myApp.controller.editprofile', [])
 angular.module('myApp.controller.test', [])
 angular.module('myApp.directiveNewsFeed', [])
 angular.module('myApp.service', [])
@@ -12,6 +13,7 @@ angular.module('myApp', [
     'myApp.controller',
     'myApp.controller.newfeed',
     'myApp.controller.profile',
+    'myApp.controller.editprofile',
     'myApp.service',
     'myApp.directive',
     'myApp.directiveNewsFeed',

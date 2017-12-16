@@ -23,6 +23,7 @@ angular.module('myApp.controller.profile', [])
                 if (typeof (data.data.info) != 'undefined' && data.data.info.username.length > 0) {
                     if (data.data.info.username != $scope.User.username) {
                         console.log("thang test", data.data.info);
+                        $scope.User.id = data.data.info._id;
                         $scope.User.avatar = data.data.info.avatar;
                         $scope.User.fullname = data.data.info.fullname;
                         $scope.User.localcreate = data.data.info.localcreate;
@@ -41,6 +42,8 @@ angular.module('myApp.controller.profile', [])
                                 });
                             }
                         });
+
+
                     }
                 }
             });
@@ -53,7 +56,8 @@ angular.module('myApp.controller.profile', [])
             Service.getOwnInfor(function (data) {
                 console.log("this data", data);
                 $scope.follow = false;
-                $scope.User.fullname = data.data.user.nickname;
+                $scope.User.fullname = data.data.user.fullname;
+                $scope.User.id = data.data.user._id;
                 $scope.User.phone = data.data.user.phone;
                 $scope.User.email = data.data.user.email;
                 $scope.User.birthday = data.data.user.birthday;
@@ -80,6 +84,11 @@ angular.module('myApp.controller.profile', [])
                 }
                 reader.readAsDataURL(element.files[0]);
             }
+        }
+        $scope.addFriend = function () {
+            Service.addFriend($scope.User.id, $scope.User.email, $scope.User.fullname, function (data) {
+                console.log("add friends completed", data)
+            });
         }
     }])
     .config(['$locationProvider', function ($locationProvider) {
