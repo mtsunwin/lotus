@@ -233,12 +233,18 @@ app.post("/getListFriends", auth, function (req, res) {
         }
     })
 });
-
+/**
+ * Lấy danh sách các tin tức của mình đã đăng
+ */
 app.post("/getNewsFeeds", auth, function (req, res) {
     var dt = require("../application/newFeed/newfeed");
-    var list = dt.getListNewFeedFriend(AWS, req.session.infoUser._id);
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({listNews: list}));
+    dt.getListNewFeed(AWS, req.session.infoUser._id, function (err, data) {
+        if (err == null) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({listNews: data.Items}));
+        }
+    });
+
 });
 /**
  * Lấy thông tin người đang đăng nhập

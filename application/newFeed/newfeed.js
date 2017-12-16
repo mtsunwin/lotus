@@ -56,38 +56,27 @@ exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _stat
     }
     docClient.putItem(params, callback);
 }
-
+/**
+ * Lấy danh sách tin tức của mình
+ * @param AWS
+ * @param _id
+ * @param callback
+ */
 exports.getListNewFeed = function (AWS, _id, callback) {
     var db = new AWS.DynamoDB();
     db.scan({
         TableName: table_name + "_" + _id,
         Limit: 50
     }, function (err, data) {
-        if (err) {
-            callback(false);
-        }
-        else {
-            callback(data);
-        }
+        if (!err) callback(null, data);
+        else
+            callback(err, null)
     })
 }
-exports.getListNewFeedFriend = function (AWS, _id) {
+exports.getListNewFeedFriend = function (AWS, _id, callback) {
     tableFriend.getListFriends(AWS, _id, function (err, data) {
-        if (!err) {
-            console.log(data);
-            console.log("ListFriend:", data);
-            var list = [];
-            for (var i = 0; i < data.length; i++) {
-                list.add(data.getItem(i));
-            }
-            console.log('getList', list);
-            var listNewfeed = [];
-            list.forEach(function callback(currentValue, index, array) {
-                var friend = list.get(index);
-                listNewfeed.add(this.getListNewFeed(AWS, friend.id))
-            });
-            console.log('getListNewFeedFriend', listNewfeed);
-            return listNewfeed;
-        }
+        if (!err) callback(null, data);
+        else
+            callback(err, null)
     });
 }

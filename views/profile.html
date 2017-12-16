@@ -166,36 +166,14 @@
         </div>
         <div class="fh5co-narrow-content  animate-box fh5co-border-bottom" data-animate-effect="fadeInLeft">
             <h2 class="fh5co-heading">Hình ảnh:</span></h2>
-            <div class="row">
-                <div class="col-md-4 fh5co-staff">
-                    <img src="../public/profile/images/person3.jpg" alt="Free HTML5 Bootstrap Template"
-                         class="img-responsive">
-                    <h3>Tiêu đề hình</h3>
-                    <h4>Thích 001 - Bình Luận 001</h4>
-                    <p>Nội dung</p>
-                    <ul class="fh5co-social">
-                        <li></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 fh5co-staff">
-                    <img src="../public/profile/images/person3.jpg" alt="Free HTML5 Bootstrap Template"
-                         class="img-responsive">
-                    <h3>Tiêu đề hình</h3>
-                    <h4>Thích 001 - Bình Luận 001</h4>
-                    <p>Nội dung</p>
-                    <ul class="fh5co-social">
-                        <li></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 fh5co-staff">
-                    <img src="../public/profile/images/person3.jpg" alt="Free HTML5 Bootstrap Template"
-                         class="img-responsive">
-                    <h3>Tiêu đề hình</h3>
-                    <h4>Thích 001 - Bình Luận 001</h4>
-                    <p>Nội dung</p>
-                    <ul class="fh5co-social">
-                        <li></li>
-                    </ul>
+            <div class="row" ng-if="listNews.length >= 0">
+                <div class="col-md-6 fh5co-staff" ng-repeat="da in listNews">
+                    <div style="margin:5px 0px;background: #7bc14470;height:auto;border: 2px solid #e4217f59;">
+                    <img ng-src="{{da.url}}" alt="Images" class="img-responsive" height="150px">
+                    <p style="font-size: 12px;float: right;">Thích 001 - Bình Luận 001</p>
+                        <br/>
+                    <p style="color: #000;padding:10px;">{{da.content}}</p>
+                    </div>
                 </div>
             </div>
         </div>

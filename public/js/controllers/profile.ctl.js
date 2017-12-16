@@ -61,6 +61,18 @@ angular.module('myApp.controller.profile', [])
             }
             reader.readAsDataURL(element.files[0]);
         }
+        $scope.listNews = [];
+        Service.getNewsFeeds(function (data) {
+            console.log("tmt", data.data.listNews);
+            for (var i = 0; i < data.data.listNews.length; i++) {
+                $scope.listNews.push({
+                    'url': data.data.listNews[i].imageName.S,
+                    'time': data.data.listNews[i].time.S,
+                    'content': data.data.listNews[i].status.S,
+                });
+            }
+            console.log("thang", $scope.listNews);
+        });
     }])
     .config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode({
