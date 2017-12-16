@@ -18,8 +18,8 @@
     <!--Services-->
     <script src="../public/js/services/factory.js"></script>
     <!--Controller-->
-    <script src="../public/js/controllers/profile.ctl.js"></script>
-    <script src="../public/js/controllers/narnewsfeeds.ctl.js"></script>
+    <script src="../public/js/controllers/narnewsfeeds.ctl.js" type="text/javascript"></script>
+    <script src="../public/js/controllers/editprofile.ctl.js" type="text/javascript"></script>
     <!--Directive-->
     <script src="../public/js/directive/narNewsFeeds.dir.js"></script>
     <!--Font more-->
@@ -40,90 +40,88 @@
     <!-- Modernizr JS -->
     <script src="../public/profile/js/modernizr-2.6.2.min.js"></script>
 </head>
-<body ng-app="myApp" ng-controller="profile">
+<body ng-app="myApp" ng-controller="editprofile">
 <navnewsfeed></navnewsfeed>
 <!--POST-->
-<div class="container marginTop_10_tmt" ng-if="checkOwnPage">
+<div class="container marginTop_10_tmt">
     <div class="fh5co-narrow-content animate-box" data-animate-effect="fadeInLeft">
         <div class="row">
             <div class="col-md-5" style="padding-top: 10px;padding-bottom: 5px;">
                 <h1 style="margin:0;">Cập nhật ảnh đại diện</h1>
             </div>
         </div>
-        <form action="/EditProfile" method="post" enctype="multipart/form-data">
-            <div class="row">
-                <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
                     <span class="thumbnail">
                         <img ng-src="{{src}}" alt="..." id="image">
                     </span>
-                </div>
             </div>
-            <div class="row">
-                <div class="form-group" style="float: right">
-                    <label class="custom-file-upload btn btn-primary btn-md">
-                        <input id="inputUpImg" type="file" ng-model="myFile"
-                               name="getImage"
-                               onchange="angular.element(this).scope().uploadedFile(this)"/>
-                        Thêm ảnh
-                    </label>
+        </div>
+        <div class="row">
+            <div class="form-group" style="float: right">
+                <label class="custom-file-upload btn btn-primary btn-md">
+                    <input id="inputUpImg" type="file" ng-model="myFile"
+                           name="getImage"
+                           onchange="angular.element(this).scope().uploadedFile(this)"/>
+                    Thêm ảnh
+                </label>
 
-                </div>
             </div>
-            <div id="fh5co-main">
-
-                <div class="fh5co-narrow-content fh5co-border-bottom">
-                    <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
-                        Thông tin:
-                    </h2>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
-                                <div class="fh5co-icon">
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
-                                </div>
-                                <div class="fh5co-text">
-                                    <h3>Số điện thoại:</h3>
-                                    <input type="text" id="txtphoneNumber" name="txtphoneNumber">
-                                </div>
+        </div>
+        <div id="fh5co-main">
+            <div class="fh5co-narrow-content fh5co-border-bottom">
+                <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
+                    Thông tin:
+                </h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                            <div class="fh5co-icon">
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                            </div>
+                            <div class="fh5co-text">
+                                <h3>Số điện thoại:</h3>
+                                <input type="text" ng-model="info.phone" id="txtphoneNumber" name="txtphoneNumber">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
-                                <div class="fh5co-icon">
-                                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                                </div>
-                                <div class="fh5co-text">
-                                    <h3>Sinh nhật:</h3>
-                                    <input type="date" id="txtSinhNhat" name="txtSinhNhat">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
-                                <div class="fh5co-icon">
-                                    <i class="fa fa-address-card-o" aria-hidden="true"></i>
-                                </div>
-                                <div class="fh5co-text">
-                                    <h3>Địa chỉ liên lạc:</h3>
-                                    <input type="text" id="accountGG" name="accountGG" placeholder="account Google">
-                                    <input type="text" id="accountFb" name="accountFb" placeholder="account FaceBook" style="margin-top:20px">
-                                </div>
-                            </div>
-                        </div>
-
-                        </div>
-                        <button type="submit" style="float:right;width: 150px;height:80px" >Xác nhận</button>
                     </div>
+                    <div class="col-md-6">
+                        <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                            <div class="fh5co-icon">
+                                <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                            </div>
+                            <div class="fh5co-text">
+                                <h3>Sinh nhật:</h3>
+                                <input type="date" ng-model="info.birth" id="txtSinhNhat" name="txtSinhNhat">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="fh5co-feature animate-box" data-animate-effect="fadeInLeft">
+                            <div class="fh5co-icon">
+                                <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                            </div>
+                            <div class="fh5co-text">
+                                <h3>Địa chỉ liên lạc:</h3>
+                                <input ng-model="info.gd" type="text" id="accountGG" name="accountGG"
+                                       placeholder="account Google">
+                                <input ng-model="info.fb" type="text" id="accountFb" name="accountFb"
+                                       placeholder="account FaceBook"
+                                       style="margin-top:20px">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
-
+                <button type="button" ng-click="submit()" style="float:right;width: 150px;height:80px">Xác nhận</button>
             </div>
-        </form>
+        </div>
     </div>
-    <br/>
+</div>
+<br/>
 </div>
 <!--PROFILE-->
-        <!-- jQuery -->
+<!-- jQuery -->
 <script src="../public/profile/js/jquery.min.js"></script>
 <!-- jQuery Easing -->
 <script src="../public/profile/js/jquery.easing.1.3.js"></script>

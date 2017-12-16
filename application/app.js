@@ -22,7 +22,6 @@ AWS.events.on('httpError', function () {
     }
 });
 AWS.config.update({region: 'ap-southeast-1'});
-
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -87,6 +86,7 @@ app.get("/profile", auth, function (req, res) {
     }
 });
 app.get("/EditProfile", auth, function (req, res) {
+
     fs.readFile("../views/editProfile.html", function (err, data) {
         if (err) {
             res.writeHead(404, {"content-type": "text/html"});
@@ -297,24 +297,21 @@ app.post("/getListFriends", auth, function (req, res) {
 });
 
 app.post("/EditProfile", auth, function (req, res) {
-    var parse = url.parse(req.url, true);
-    console.log("new", parse);
     var _username = req.session.infoUser.username;
-    var dt = require("../application/user/tableUser");
-    var _phone = req.body.txtphoneNumber;
-    var _birthday = req.body.txtSinhNhat;
-    var _accountGG = req.body.accountGG;
-    var _accountFb = req.body.accountFb;
+    var _phone = req.body.phone;
+    var _birthday = req.body.birth;
+    var _accountGG = req.body.google;
+    var _accountFb = req.body.facebook;
     var _image = null;
-    dt.updateUser(AWS, _username, _phone, _birthday, _image, _accountFb, _accountGG, function (err, data) {
-        if (!err) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({listFriends: data}));
-        }
-        else console.log("Thanh cong update");
-    })
-
-
+    var dt = require("../application/user/tableUser");
+    // dt.updateUser(AWS, _username, _phone, _birthday, _image, _accountFb, _accountGG, function (err, data) {
+    //     if (!err) {
+    //         res.setHeader('Content-Type', 'application/json');
+    //         res.send(JSON.stringify({listFriends: data}));
+    //     }
+    //     else console.log("Thanh cong update");
+    // })
+    console.log("oke", _phone + " - " + _accountFb);
 })
 /**
  * Lấy danh sách các tin tức CỦA MÌNH đã đăng
@@ -345,7 +342,6 @@ app.post("/getYourNewsFeeds", auth, function (req, res) {
 /**
  * Lấy thông tin người đang đăng nhập
  */
-
 app.post("/getinfo", auth, function (req, res) {
     console.log("oke ", req.session.infoUser);
     res.setHeader('Content-Type', 'application/json');

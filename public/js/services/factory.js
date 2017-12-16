@@ -98,5 +98,19 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
+            editProfile: function (_phone, _birth, _gd, _fb, callback) { // truy cập profile
+                $http({
+                    method: "POST",
+                    url: "/EditProfile",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        phone: _phone,
+                        birth: _birth,
+                        google: _gd,
+                        facebook: _fb
+                    })
+                }).then(callback);
+            },
         };
     }]);
