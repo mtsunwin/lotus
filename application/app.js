@@ -282,8 +282,8 @@ app.post("/getListFriends", auth, function (req, res) {
     })
 });
 app.post("/EditProfile",auth,function (req,res) {
-    var _username=req.session.infoUser.username;
     var dt=require("../application/user/tableUser");
+    var _username=req.session.infoUser.username;
     var _phone= req.body.txtphoneNumber;
     var _birthday= req.body.txtSinhNhat;
     var _accountGG= req.body.accountGG;

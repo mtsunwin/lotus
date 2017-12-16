@@ -234,7 +234,7 @@ exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_fb,_google,c
         UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google ",
         ExpressionAttributeValues:{
             ":birthday":_birthday,
-            ":image":null,
+            ":image":_image,
             ":fb":_fb,
             ":google":_google,
         },
