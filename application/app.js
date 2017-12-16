@@ -23,7 +23,6 @@ AWS.events.on('httpError', function () {
 });
 AWS.config.update({region: 'ap-southeast-1'});
 
-
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -73,16 +72,18 @@ app.get("/home", auth, function (req, res) {
 });
 
 app.get("/profile", auth, function (req, res) {
-    fs.readFile("../views/profile.html", function (err, data) {
-        if (err) {
-            res.writeHead(404, {"content-type": "text/html"});
-            res.end("not found");
+    var parse = url.parse(req.url, true);
+    console.log("parse", parse);
+    if (parse.search == '') {
+        callPageProfile(req, res);
+    } else {
+        var patt = /@/;
+        if (typeof (req.query.name) != 'undefined' && patt.test(parse.search)) {
+            callPageProfile(req, res);
         } else {
-            res.writeHead(200, {"content-type": "text/html"});
-            res.write(data);
-            res.end();
+            callPageErr(req, res);
         }
-    });
+    }
 });
 /**
  * Logout
@@ -104,6 +105,10 @@ app.get('/logout', function (req, res) {
  * Thông báo lỗi
  */
 app.get("/err", auth, function (req, res) {
+    callPageErr(req, res);
+});
+
+var callPageErr = function (req, res) {
     fs.readFile("../views/error.html", function (err, data) {
         if (err) {
             res.writeHead(404, {"content-type": "text/html"});
@@ -114,8 +119,19 @@ app.get("/err", auth, function (req, res) {
             res.end();
         }
     });
-});
-
+}
+var callPageProfile = function (req, res) {
+    fs.readFile("../views/profile.html", function (err, data) {
+        if (err) {
+            res.writeHead(404, {"content-type": "text/html"});
+            res.end("not found");
+        } else {
+            res.writeHead(200, {"content-type": "text/html"});
+            res.write(data);
+            res.end();
+        }
+    });
+}
 /**
  * Add User in Collection
  * ------- 2 steps -------
@@ -191,7 +207,7 @@ app.post("/login", function (req, res) {
 });
 
 /**
- * Tìm kiếm bạn bè
+ * Tìm kiếm bạn bè tương đối
  * ---input-----
  * getkey -> username or nickname
  * --output---
@@ -208,12 +224,29 @@ app.post("/findfriends", function (req, resp) {
         }
     });
 });
-
+/**
+ * Tìm kiếm bạn bè TUYỆT ĐỐI
+ * ---input-----
+ */
 app.post("/findFrieds", auth, function (req, res) {
     var key = req.body.usernametmt;
     var dt = require("../application/user/tableUser");
     dt.findFrieds(AWS, key, function (err, data) {
         if (!err) {
+            var dt = require("../application/user/tableListFriends");
+            dt.getListFriends(AWS, req.session.infoUser._id, function (err1, data1) {
+                    if (!err1) {
+                        if (data1.Items.length != 0) {
+                            for (var i = 0; i < data1.Items.length; i++) {
+                                if (data1.data.listFriends[i].username === data.username) {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+            console.log("tmt2", data);
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({info: data}));
         }
@@ -234,7 +267,7 @@ app.post("/getListFriends", auth, function (req, res) {
     })
 });
 /**
- * Lấy danh sách các tin tức của mình đã đăng
+ * Lấy danh sách các tin tức CỦA MÌNH đã đăng
  */
 app.post("/getNewsFeeds", auth, function (req, res) {
     var dt = require("../application/newFeed/newfeed");
@@ -244,7 +277,20 @@ app.post("/getNewsFeeds", auth, function (req, res) {
             res.send(JSON.stringify({listNews: data.Items}));
         }
     });
+});
 
+/**
+ * Lấy danh sách các tin tức CỦA ID đã đăng
+ */
+app.post("/getYourNewsFeeds", auth, function (req, res) {
+    var key = req.body.usernametmt;
+    var dt = require("../application/newFeed/newfeed");
+    dt.getListNewFeed(AWS, key, function (err, data) {
+        if (err == null) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({listNews: data.Items}));
+        }
+    });
 });
 /**
  * Lấy thông tin người đang đăng nhập

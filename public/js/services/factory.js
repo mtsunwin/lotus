@@ -64,6 +64,17 @@ angular.module('myApp.service', [])
                     dataType: "json"
                 }).then(callback);
             },
+            getYourNewsFeeds: function (_keySearch, callback) {
+                $http({
+                    method: "POST",
+                    url: "/getYourNewsFeeds",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        usernametmt: _keySearch
+                    })
+                }).then(callback);
+            },
             goFriends: function (_username, callback) { // truy cập profile
                 $http({
                     method: "POST",

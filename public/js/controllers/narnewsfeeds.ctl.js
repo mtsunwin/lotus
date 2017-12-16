@@ -13,6 +13,8 @@ angular.module('myApp.controller.test', [])
                         var count = data.data.a.Count;
                         for (var i = 0; i < count; i++) {
                             $scope.listFind.push(data.data.a.Items[i]);
+                            console.log(data.data.a.Items[i]);
+                            // username
                         }
                     }
                 });
