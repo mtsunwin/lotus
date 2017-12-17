@@ -24,6 +24,7 @@ AWS.events.on('httpError', function () {
 AWS.config.update({region: 'ap-southeast-1'});
 // AWS.config.accessKeyId="";
 // AWS.config.secretAccessKey="";
+
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -211,13 +212,17 @@ app.post("/login", function (req, res) {
             console.log("lỗi", err);
             res.send(JSON.stringify({status: 0}));
         } else {
-            console.log(data.Items);
-            req.session.allInfor = data.Items[0];
-            req.session.user = data.Items[0].username;
-            req.session.infoUser = data.Items[0];
-            sys_username = data.Items[0].username;
-            req.session.admin = true;
-            res.send(JSON.stringify({status: 1}));
+            console.log(data.Items.length);
+            if (data.Items.length == 1) {
+                req.session.allInfor = data.Items[0];
+                req.session.user = data.Items[0].username;
+                req.session.infoUser = data.Items[0];
+                sys_username = data.Items[0].username;
+                req.session.admin = true;
+                res.send(JSON.stringify({status: 1}));
+            } else {
+                res.send(JSON.stringify({status: 0}));
+            }
         }
     });
 });
@@ -310,32 +315,32 @@ app.post("/checkFriends", auth, function (req, res) {
         }
     })
 });
-app.post("/updateAvatar",auth,function (req,res) {
-    var dt2= require("../application/image/s3_listbuckets");
-    var dt= require("../application/user/tableUser");
+app.post("/updateAvatar", auth, function (req, res) {
+    var dt2 = require("../application/image/s3_listbuckets");
+    var dt = require("../application/user/tableUser");
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
         if (files.getImage.size > 0) {
             dt2.putItem(AWS, fs, files.getImage, function (data) {
-                    if(!err){
-                        var url= data.url;
-                        console.log("username:",req.session.infoUser.username);
-                        dt.updateAvatar(AWS,req.session.infoUser.username,req.session.infoUser.password,url,function (err,data) {
-                            if(err){
-                                dt2.deleteImage(AWS,fs,files.name,function (err,data) {
-                                    if(!err){
-                                        console.log("data:",data);
+                    if (!err) {
+                        var url = data.url;
+                        console.log("username:", req.session.infoUser.username);
+                        dt.updateAvatar(AWS, req.session.infoUser.username, req.session.infoUser.password, url, function (err, data) {
+                            if (err) {
+                                dt2.deleteImage(AWS, fs, files.name, function (err, data) {
+                                    if (!err) {
+                                        console.log("data:", data);
 
                                     }
                                     else console.log("Loi nhung khong the xoa hinh da dang");
                                 })
                             }
-                            else{
-                                console.log("avatar cu co link:",req.session.infoUser.avatar);
-                                var name=getNameImage(req.session.infoUser.avatar);
-                                console.log("name image:",name);
-                                dt2.deleteImage(AWS,fs,name,function (data,err) {
-                                    if(!err){
+                            else {
+                                console.log("avatar cu co link:", req.session.infoUser.avatar);
+                                var name = getNameImage(req.session.infoUser.avatar);
+                                console.log("name image:", name);
+                                dt2.deleteImage(AWS, fs, name, function (data, err) {
+                                    if (!err) {
                                         fs.readFile("../views/profile.html", function (err, data) {
                                             if (err) {
                                                 res.writeHead(404, {"content-type": "text/html"});
@@ -345,20 +350,19 @@ app.post("/updateAvatar",auth,function (req,res) {
                                                 res.write(data);
                                                 res.end();
                                             }
-                                    })
-                                }
+                                        })
+                                    }
 
                                 });
 
                             }
-                    });
+                        });
 
                     }
                     else {
-                        console.log("err upload image:",err)
+                        console.log("err upload image:", err)
                     }
                 }
-
             )
         }
     });
@@ -380,8 +384,7 @@ app.post("/EditProfile", auth, function (req, res) {
     var _image = null;
     var dt = require("../application/user/tableUser");
 
-    if(_phone==null || _phone=="") _phone=req.session.allInfor.phone.toString();
-
+    if (_phone == null || _phone == "") _phone = req.session.allInfor.phone.toString();
 
 
     if (birthday.indexOf("NaN") != -1) birthday = req.session.allInfor.birthday;
@@ -462,6 +465,7 @@ app.post("/getNewsFeeds", auth, function (req, res) {
     dt.getListNewFeed(AWS, req.session.infoUser._id, date, function (err, data) {
         if (!err) {
             res.setHeader('Content-Type', 'application/json');
+            console.log("qqq", data.Items);
             res.send(JSON.stringify({listNews: data.Items}));
         }
     });
@@ -578,9 +582,10 @@ app.post("/getImage", auth, function (req, res) {
  * Lấy ngày tháng hiện tại
  * @return {string}
  */
-var getNameImage= function(url){
+
+var getNameImage = function (url) {
     var vitri = url.lastIndexOf("/");
-    var name = url.substring(vitri+1,url.length);
+    var name = url.substring(vitri + 1, url.length);
     return name;
 }
 var getDateTime = function () {

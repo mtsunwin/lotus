@@ -31,8 +31,8 @@ angular.module('myApp.controller.profile', [])
                         $scope.User.birthday = data.data.info.birthday;
                         $scope.User.phone = data.data.info.phone;
                         $scope.User.email = data.data.info.email;
-                        $scope.User.accountGG=data.data.info.accountGoogle;
-                        $scope.User.accountFb=data.data.info.accountFacebook;
+                        $scope.User.accountGG = data.data.info.accountGoogle;
+                        $scope.User.accountFb = data.data.info.accountFacebook;
                         $scope.User.username = data.data.info.username;
                         $scope.listNews = [];
                         Service.checkFriends(data.data.info.username, function (data) {
@@ -75,17 +75,30 @@ angular.module('myApp.controller.profile', [])
                 $scope.User.username = data.data.user.username;
                 $scope.User.address = typeof (data.data.user.address) != "undefined" ? data.data.user.address : "";
                 $scope.listNews = [];
-
                 Service.getNewsFeeds(getDate(), function (data) {
                     console.log("tmt", data.data.listNews);
                     for (var i = 0; i < data.data.listNews.length; i++) {
+                        console.log("check", data.data.listNews[i]);
                         $scope.listNews.push({
-                            'url': data.data.listNews[i].imageName.S,
-                            'time': data.data.listNews[i].time.S,
-                            'content': data.data.listNews[i].status.S,
+                            'url': data.data.listNews[i].imageName,
+                            'time': data.data.listNews[i].time,
+                            'content': data.data.listNews[i].status,
                         });
+                        console.log("mmm", $scope.listNews);
                     }
                 });
+                for (var i = 1; i <= 10; i++) {
+                    Service.getNewsFeeds(calDate(i), function (data) {
+                        console.log("tmt", data.data.listNews);
+                        for (var i = 0; i < data.data.listNews.length; i++) {
+                            $scope.listNews.push({
+                                'url': data.data.listNews[i].imageName,
+                                'time': data.data.listNews[i].time,
+                                'content': data.data.listNews[i].status,
+                            });
+                        }
+                    });
+                }
             });
             $scope.uploadedFile = function (element) {
                 var reader = new FileReader();
@@ -106,7 +119,25 @@ angular.module('myApp.controller.profile', [])
                 }
             });
         };
-
+        var calDate = function (_after) {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+            day -= _after;
+            if (day <= 0) {
+                day = 31;
+                month--;
+                if (month <= 0) {
+                    month = 12;
+                    year--;
+                }
+            }
+            console.log("cal date", year + ":" + month + ":" + day);
+            return year + ":" + month + ":" + day;
+        }
         /**
          * Lấy ngày tháng hiện tại
          * @return {string}

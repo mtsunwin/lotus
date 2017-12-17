@@ -38,6 +38,23 @@ angular.module('myApp.controller.newfeed', [])
                 }
             });
         });
+        Service.getListFriend(function (data) {
+            if (data.data.listFriends.Count > 0) {
+                for (var i = 0; i < data.data.listFriends.Count; i++) {
+                    console.log("bạn bè", data.data.listFriends.Items[i].usernamefriend.S);
+                    Service.getYourNewsFeeds(data.data.listFriends.Items[i].usernamefriend.S, getDate(), function (data) {
+                        for (var i = 0; i < data.data.listNews.length; i++) {
+                            console.log("tin tức bạn bè", data.data.listNews[i]);
+                            $scope.listnews.push({
+                                'url': data.data.listNews[i].imageName.S,
+                                'time': data.data.listNews[i].time.S,
+                                'content': data.data.listNews[i].status.S,
+                            });
+                        }
+                    });
+                }
+            }
+        });
         Service.getAllNewsFeeds(function (data) {
             console.log("tmt222", data);
         });

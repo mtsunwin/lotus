@@ -102,7 +102,7 @@ button_background_none_tmt:hover {
 }
 
 .button_like {
-    float: left;
+    float: right;
     height: 30px;
     width: 30px;
     background-image: url(/public/images/instagram/likedont.png);

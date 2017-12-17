@@ -240,8 +240,7 @@ figure figcaption {
 }
 
 #fh5co-main {
-  width: auto;
-  float: right;
+  width: 100%;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;

@@ -31,7 +31,6 @@ angular.module('myApp.controller', [])
                         }
                     });
             },
-
         };
         $scope.login = {
             loginAccount: {
@@ -42,6 +41,10 @@ angular.module('myApp.controller', [])
                 Service.checkLogin(this.loginAccount.username, this.loginAccount.password, function (data) {
                     if (data.data.status == 1) {
                         window.location.assign('/home');
+                    } else {
+                        $scope.login.loginAccount.username = "";
+                        $scope.login.loginAccount.password = "";
+                        alert("Đăng nhập không thành công!");
                     }
                 });
             }
