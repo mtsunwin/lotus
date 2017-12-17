@@ -22,6 +22,7 @@ AWS.events.on('httpError', function () {
     }
 });
 AWS.config.update({region: 'ap-southeast-1'});
+
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -298,20 +299,30 @@ app.post("/getListFriends", auth, function (req, res) {
 
 app.post("/EditProfile", auth, function (req, res) {
     var _username = req.session.infoUser.username;
+    var _password= req.session.infoUser.password;
     var _phone = req.body.phone;
-    var _birthday = req.body.birth;
+    var _address=req.body.address;
+    console.log(_address);
+    var year= req.body.birth.substring(0,4);
+    var month= req.body.birth.substring(5,7);
+    var ngay= parseInt(req.body.birth.substring(8,10))+1;
+    var birthday=ngay+"-"+month+"-"+year;
     var _accountGG = req.body.google;
     var _accountFb = req.body.facebook;
     var _image = null;
     var dt = require("../application/user/tableUser");
-    // dt.updateUser(AWS, _username, _phone, _birthday, _image, _accountFb, _accountGG, function (err, data) {
-    //     if (!err) {
-    //         res.setHeader('Content-Type', 'application/json');
-    //         res.send(JSON.stringify({listFriends: data}));
-    //     }
-    //     else console.log("Thanh cong update");
-    // })
-    console.log("oke", _phone + " - " + _accountFb);
+     dt.updateUser(AWS, _username,_password, _phone, birthday, _image, _accountFb, _accountGG, _address,function (err, data) {
+         if (!err) {
+             res.setHeader('Content-Type', 'application/json');
+             res.send(JSON.stringify({user: data}));
+         }
+         else {
+             req.session.allInfor.accountFacebook=_accountFb;
+             req.session.allInfor.accountGoogle=_accountGG;
+             req.session.allInfor.birthday=birthday;
+             req.session.allInfor.phone=_phone;
+         };
+     })
 })
 /**
  * Lấy danh sách các tin tức CỦA MÌNH đã đăng
