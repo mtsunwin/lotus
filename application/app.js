@@ -25,7 +25,6 @@ AWS.config.update({region: 'ap-southeast-1'});
 
 // AWS.config.accessKeyId="";
 // AWS.config.secretAccessKey="";
-
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -172,6 +171,7 @@ app.post("/insertuser", function (req, resp) {
         username: req.body.username,
         password: req.body.password
     };
+    console.log("tmt obj", obj);
     if (obj.name.length == 0 || obj.nickname.length == 0 || obj.username.length == 0 || obj.password.length == 0) {
         resp.setHeader('Content-Type', 'application/json');
         resp.send(JSON.stringify({status: false}));
@@ -183,6 +183,7 @@ app.post("/insertuser", function (req, resp) {
             var dt2 = require("../application/newFeed/newfeed");
             dt2.createTableNewsFeeds(AWS, obj.id, function (err2, data2) {
                 if (!err2) {
+                    console.log("check", data2);
                     resp.setHeader('Content-Type', 'application/json');
                     resp.send(JSON.stringify({status: true}));
                 }

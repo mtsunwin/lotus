@@ -54,7 +54,6 @@ exports.createTableUser = function (AWS) {
 exports.insertUser = function (AWS, _obj, callback) {
     this.findItemhadExisted(AWS, _obj.username, function (err, data) {
         if (!err && data.Count == 0) {
-            console.log("run this", data);
             var docClient = new AWS.DynamoDB();
             var params = {
                 TableName: table_name,
@@ -62,12 +61,10 @@ exports.insertUser = function (AWS, _obj, callback) {
                     "_id": {S: _obj.id},
                     "fullname": {S: _obj.name},
                     "nickname": {S: _obj.nickname},
-                    "datacreate": {S: typeof (_obj.datecreate) != 'undefined' ? _obj.datecreate : 'null'},
-                    "localcreate": {S: typeof (_obj.localcreate) != 'undefined' ? _obj.localcreate : 'null'},
-                    "ipdevice": {S: typeof (_obj.ip) != 'undefined' ? _obj.ip : 'null'},
+                    "datacreate": {S: getDateTime()},
                     "phone": {S: typeof (_obj.phone) != 'undefined' ? _obj.phone : 'null'},
                     "email": {S: typeof (_obj.email) != 'undefined' ? _obj.email : 'null'},
-                    "birthday": {S: ''},
+                    "birthday": {S: 'null'},
                     "username": {S: _obj.username},
                     "password": {S: _obj.password},
                     "accountFacebook": {S: typeof (_obj.accountFacebook) != 'undefined' ? _obj.accountFacebook : 'null'},
@@ -76,11 +73,17 @@ exports.insertUser = function (AWS, _obj, callback) {
                 }
             };
             docClient.putItem(params, function (err, data) {
-                if (!err)
+                if (!err) {
                     mt_listFriends.createTableListFriends(AWS, _obj.id, function (err2, data2) {
-                        if (!err2)
+                        if (!err2) {
                             callback(true);
+                        }else{
+                            console.log("err list friends");
+                        }
                     });
+                } else {
+                    console.log("loi", err);
+                }
             });
         } else {
             callback(false);
@@ -199,58 +202,74 @@ exports.scanUser = function (AWS, params, callback) {
     });
 }
 
-exports.updateUser= function(AWS,_username,_password,_phone,_birthday,_fb,_google, _address,callback){
-    var docClient= new AWS.DynamoDB.DocumentClient();
-    var params={
-        TableName:table_name,
-        Key:{
-            "username":_username,
-            "password":_password,
+exports.updateUser = function (AWS, _username, _password, _phone, _birthday, _fb, _google, _address, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name,
+        Key: {
+            "username": _username,
+            "password": _password,
         },
-        UpdateExpression:"set phone= :phone, birthday = :birthday,accountFacebook =:fb,accountGoogle = :google, address = :address ",
-        ExpressionAttributeValues:{
-            ":phone":_phone,
-            ":birthday":_birthday,
-            ":fb":_fb,
-            ":google":_google,
+        UpdateExpression: "set phone= :phone, birthday = :birthday,accountFacebook =:fb,accountGoogle = :google, address = :address ",
+        ExpressionAttributeValues: {
+            ":phone": _phone,
+            ":birthday": _birthday,
+            ":fb": _fb,
+            ":google": _google,
             ":address": _address
         },
-        ReturnValues:"UPDATED_NEW"
+        ReturnValues: "UPDATED_NEW"
     };
     console.log("Updating the item...");
-    docClient.update(params, function(err, data) {
+    docClient.update(params, function (err, data) {
         if (err) {
             console.log(err);
             callback(false);
         } else {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-            callback(null,JSON.stringify(data, null, 2))
+            callback(null, JSON.stringify(data, null, 2))
         }
     });
 }
 
-exports.updateAvatar= function(AWS,_username,_password,_image,callback){
-    var docClient= new AWS.DynamoDB.DocumentClient();
-    var params={
-        TableName:table_name,
-        Key:{
-            "username":_username,
-            "password":_password,
+exports.updateAvatar = function (AWS, _username, _password, _image, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name,
+        Key: {
+            "username": _username,
+            "password": _password,
         },
-        UpdateExpression:"set avatar = :image",
-        ExpressionAttributeValues:{
-            ":image":_image
+        UpdateExpression: "set avatar = :image",
+        ExpressionAttributeValues: {
+            ":image": _image
         },
-        ReturnValues:"UPDATED_NEW"
+        ReturnValues: "UPDATED_NEW"
     };
     console.log("Updating the avatar item...");
-    docClient.update(params, function(err, data) {
+    docClient.update(params, function (err, data) {
         if (err) {
             console.log(err);
             callback(false);
         } else {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-            callback(null,JSON.stringify(data, null, 2))
+            callback(null, JSON.stringify(data, null, 2))
         }
     });
+}
+
+var getDateTime = function () {
+    var date = new Date();
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+    var min = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+    var sec = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+    var day = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+    return year + ":" + month + ":" + day + "-" + hour + ":" + min + ":" + sec;
 }
