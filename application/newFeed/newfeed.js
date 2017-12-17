@@ -68,6 +68,26 @@ exports.getListNewFeed = function (AWS, _id, _date, callback) {
     };
     docClient.query(params, callback);
 }
+exports.deleteNewFeed=function(AWS,_id,_date,_idnewFeed,callback){
+    var docClient= new AWS.DynamoDB.DocumentClient();
+    var params={
+        TableName:table_name+_id,
+        Key:{
+            "id":_date,
+            "username":_idnewFeed
+        },
+    }
+    docClient.delete(params,function(err,data){
+        if (err) {
+            console.log(err, err.stack);
+            callback(err,null)
+        }
+        else {
+            console.log(data);
+            callback(null,data);
+        }
+    })
+}
 /**
  * Lấy danh sách news feed theo ID
  * @param AWS
