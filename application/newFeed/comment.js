@@ -20,18 +20,44 @@ exports.createTableCommentNewFeed=function(AWS,_idNewFeed,callback){
     };
     dynamodb.createTable(params, callback);
 }
-exports.insertComment = function (AWS, _id, _idNewFeed, _username, _ImageName, _status, _time, callback) {
+/*
+* table_name+"_"+id:ten bang comment cua newfeed (id)
+*Contain:noi dung comment
+*username:username nguoi comment
+*time:thoi gian comment, lay thoi gian hien tai
+* idComment:id cua comment
+*/
+exports.insertComment = function (AWS, _id, _idComment, _username, _contain, _time, callback) {
     var docClient = new AWS.DynamoDB();
     var name = table_name + "_" + _id;
     var params = {
         TableName: name,
         Item: {
+            "id": {S: _idComment},
             "username": {S: _username},
-            "id": {S: _idNewFeed},
-            "imageName": {S: _ImageName},
             "time": {S: _time},
-            "status": {S: _status}
+            "contain":{S:_contain},
         }
     }
     docClient.putItem(params, callback);
+}
+exports.deleteComment=function (AWS,_id,_idComment,_username,callback) {
+    var docClient= new AWS.DynamoDB.DocumentClient();
+    var params={
+        TableName:table_name+"_"+_id,
+        Key:{
+            "id":_idComment,
+            "username":_username
+        },
+    }
+    docClient.delete(params,function(err,data){
+        if (err) {
+            console.log(err, err.stack);
+            callback(err,null)
+        }
+        else {
+            console.log(data);
+            callback(null,data);
+        }
+    })
 }
