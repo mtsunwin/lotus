@@ -31,6 +31,8 @@ angular.module('myApp.controller.profile', [])
                         $scope.User.birthday = data.data.info.birthday;
                         $scope.User.phone = data.data.info.phone;
                         $scope.User.email = data.data.info.email;
+                        $scope.User.accountGG=data.data.info.accountGoogle;
+                        $scope.User.accountFb=data.data.info.accountFacebook;
                         $scope.User.username = data.data.info.username;
                         $scope.listNews = [];
                         Service.checkFriends(data.data.info.username, function (data) {

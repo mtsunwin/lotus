@@ -15,6 +15,15 @@ angular.module('myApp.controller.editprofile', [])
             });
         }
         ;
-
+        $scope.uploadedFile = function (element) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                $scope.$apply(function ($scope) {
+                    $scope.files = element.files;
+                    $scope.src = event.target.result
+                });
+            }
+            reader.readAsDataURL(element.files[0]);
+        }
     }]);
 

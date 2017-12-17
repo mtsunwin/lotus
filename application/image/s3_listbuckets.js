@@ -39,14 +39,9 @@ exports.deleteImage=function (AWS,fs,image,callback) {
     var s3Bucket = new AWS.S3({params: {Bucket: _bucketName}});
     var params2={
         Bucket:_bucketName,
-        Delete:{
-            Objects:[
-                {
-                    Key:image.name,
-                }
-            ],
-        },
-    };
+        Key: image,
+    }
+
     s3Bucket.deleteObject(params2,function (err,data) {
         if (err) {
             console.log(err, err.stack);
@@ -57,4 +52,5 @@ exports.deleteImage=function (AWS,fs,image,callback) {
         }
         // successful response
     })
+
 }
