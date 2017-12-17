@@ -329,7 +329,6 @@ app.post("/updateAvatar", auth, function (req, res) {
             dt2.putItem(AWS, fs, files.getImage, function (data) {
                     if (!err) {
                         var url = data.url;
-                        console.log("username:", req.session.infoUser.username);
                         dt.updateAvatar(AWS, req.session.infoUser.username, req.session.infoUser.password, url, function (err, data) {
                             if (err) {
                                 dt2.deleteImage(AWS, fs, files.name, function (err, data) {
@@ -351,6 +350,10 @@ app.post("/updateAvatar", auth, function (req, res) {
                                                 res.writeHead(404, {"content-type": "text/html"});
                                                 res.end("not found");
                                             } else {
+                                                req.session.infoUser.avatar=url;
+                                                console.log("infoUser.avatar",req.session.infoUser.avatar);
+                                                req.session.allInfor.avatar=url;
+                                                console.log("allInfor.avatar",req.session.allInfor.avatar);
                                                 res.writeHead(200, {"content-type": "text/html"});
                                                 res.write(data);
                                                 res.end();
