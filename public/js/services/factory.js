@@ -110,7 +110,7 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
-            editProfile: function (_phone, _birth, _gd, _fb, callback) { // truy cập profile
+            editProfile: function (_phone, _birth, _gd, _fb, _address, callback) { // truy cập profile
                 $http({
                     method: "POST",
                     url: "/EditProfile",
@@ -120,7 +120,8 @@ angular.module('myApp.service', [])
                         phone: _phone,
                         birth: _birth,
                         google: _gd,
-                        facebook: _fb
+                        facebook: _fb,
+                        address: _address
                     })
                 }).then(callback);
             },

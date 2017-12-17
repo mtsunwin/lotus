@@ -6,10 +6,11 @@ angular.module('myApp.controller.editprofile', [])
             phone: "",
             birth: "",
             fb: "",
-            gd: ""
+            gd: "",
+            address:""
         };
         $scope.submit = function () {
-            Service.editProfile($scope.info.phone, $scope.info.birth, $scope.info.gd, $scope.info.fb, function (data) {
+            Service.editProfile($scope.info.phone, $scope.info.birth, $scope.info.gd, $scope.info.fb, $scope.info.address,function (data) {
                 console.log("oke");
             });
         }

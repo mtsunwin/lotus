@@ -127,32 +127,7 @@ exports.findItemhadExisted = function (AWS, _username, callback) {
     };
     docClient.query(params, callback);
 };
-exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_email,_fb,_google,callback){
-    var docClient= new AWS.DynamoDB.DocumentClient();
-    var params={
-        TableName:table_name,
-        Key:{
-            "username":table_username,
-        },
-        UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google ",
-        ExpressionAttributeValues:{
-            ":birthday":_birthday,
-            ":image":_image,
-            ":fb":_fb,
-            ":google":_google,
-        },
-        ReturnValues:"UPDATED_NEW"
-    };
-    console.log("Updating the item...");
-    docClient.update(params, function(err, data) {
-        if (err) {
-            callback(false);
-        } else {
-            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-            callback(null,JSON.stringify(data, null, 2))
-        }
-    });
-}
+
 /**
  * Kiểm tra đăng nhập
  * */
@@ -224,25 +199,29 @@ exports.scanUser = function (AWS, params, callback) {
     });
 }
 
-exports.updateUser= function(AWS,_username,_phone,_birthday,_image,_fb,_google,callback){
+exports.updateUser= function(AWS,_username,_password,_phone,_birthday,_image,_fb,_google, _address,callback){
     var docClient= new AWS.DynamoDB.DocumentClient();
     var params={
         TableName:table_name,
         Key:{
-            "username":table_username,
+            "username":_username,
+            "password":_password,
         },
-        UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google ",
+        UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google, address = :address ",
         ExpressionAttributeValues:{
+            ":phone":_phone,
             ":birthday":_birthday,
             ":image":_image,
             ":fb":_fb,
             ":google":_google,
+            ":address": _address
         },
         ReturnValues:"UPDATED_NEW"
     };
     console.log("Updating the item...");
     docClient.update(params, function(err, data) {
         if (err) {
+            console.log(err);
             callback(false);
         } else {
             console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
