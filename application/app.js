@@ -22,6 +22,10 @@ AWS.events.on('httpError', function () {
     }
 });
 AWS.config.update({region: 'ap-southeast-1'});
+// AWS.config.accessKeyId="";
+// AWS.config.secretAccessKey="";
+
+
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -319,40 +323,40 @@ app.post("/EditProfile", auth, function (req, res) {
     var month = req.body.birth.substring(5, 7);
     var ngay = parseInt(req.body.birth.substring(8, 10)) + 1;
     var birthday = ngay + "-" + month + "-" + year;
-    console.log("birthday",ngay + "-" + month + "-" + year);
-    console.log("req.session.allInfor.birthday:",req.session.allInfor.birthday);
+    console.log("birthday", ngay + "-" + month + "-" + year);
+    console.log("req.session.allInfor.birthday:", req.session.allInfor.birthday);
     var _accountGG = req.body.google;
     var _accountFb = req.body.facebook;
     var _image = null;
     var dt = require("../application/user/tableUser");
-    if(_phone==null || _phone=="") _phone=req.session.allInfor.phone.toString();
+    if (_phone == null || _phone == "") _phone = req.session.allInfor.phone.toString();
 
 
-    if(birthday.indexOf("NaN")!=-1) birthday=req.session.allInfor.birthday;
+    if (birthday.indexOf("NaN") != -1) birthday = req.session.allInfor.birthday;
 
-    if(_accountGG==null ||_accountGG=="") _accountGG=req.session.allInfor.accountGoogle;
+    if (_accountGG == null || _accountGG == "") _accountGG = req.session.allInfor.accountGoogle;
 
-    if(_accountFb==null||_accountFb=="") _accountFb=req.session.allInfor.accountFacebook;
+    if (_accountFb == null || _accountFb == "") _accountFb = req.session.allInfor.accountFacebook;
 
-    if(_address==null||_address=="") _address=req.session.allInfor.address;
+    if (_address == null || _address == "") _address = req.session.allInfor.address;
 
     dt.updateUser(AWS, _username, _password, _phone, birthday, _image, _accountFb, _accountGG, _address, function (err, data) {
         if (!err) {
-            if(_phone!=""){
-                req.session.allInfor.phone=_phone;
-                req.session.infoUser.phone=_phone;
+            if (_phone != "") {
+                req.session.allInfor.phone = _phone;
+                req.session.infoUser.phone = _phone;
             }
-            if(birthday!=""){
-                req.session.allInfor.birthday=birthday;
-                req.session.infoUser.birthday=birthday;
+            if (birthday != "") {
+                req.session.allInfor.birthday = birthday;
+                req.session.infoUser.birthday = birthday;
             }
-            if(_accountFb!=""){
-                req.session.allInfor.accountFacebook=_accountFb;
-                req.session.infoUser.account=_accountFb;
+            if (_accountFb != "") {
+                req.session.allInfor.accountFacebook = _accountFb;
+                req.session.infoUser.account = _accountFb;
             }
-            if(_accountGG!=""){
-                req.session.allInfor.accountG=_accountGG;
-                req.session.infoUser.accountG=_accountGG;
+            if (_accountGG != "") {
+                req.session.allInfor.accountG = _accountGG;
+                req.session.infoUser.accountG = _accountGG;
             }
 
             if (typeof (req.session.allInfor.address) != "undefined") {
@@ -369,6 +373,28 @@ app.post("/EditProfile", auth, function (req, res) {
         ;
     })
 })
+app.post("/getAllNewsFeeds", auth, function (req, res) {
+    var dt = require("../application/user/tableListFriends");
+    var da = [];
+    dt.getListFriends(AWS, req.session.infoUser._id, function (err, data) {
+        if (!err) {
+            console.log("danh sach bạn bè: ", data.Items);
+            if (data.Count != 0) {
+                for (var i = 0; i < data.Count; i++) {
+                    console.log("username: ", data.Items[i].usernamefriend.S);
+                    var dt2 = require("../application/newFeed/newfeed");
+                    dt2.getListNewFeed(AWS, data.Items[i].usernamefriend.S, function (err2, data2) {
+                        if (!err2) {
+                            da.push(data2);
+                        }
+                    });
+                }
+            }
+        }
+    });
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({NewsList: da}));
+});
 /**
  * Lấy danh sách các tin tức CỦA MÌNH đã đăng
  */
@@ -381,7 +407,6 @@ app.post("/getNewsFeeds", auth, function (req, res) {
         }
     });
 });
-
 /**
  * Lấy danh sách các tin tức CỦA ID đã đăng
  */

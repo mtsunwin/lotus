@@ -5,7 +5,7 @@ angular.module('myApp.controller.profile', [])
         var objUser = [];
         $scope.follow = false;
         $scope.User = {
-            avatar: '../public/images/instagram/profile.jpg',
+            avatar: '../public/images/instagram/avatar.png',
             fullname: 'Chờ trong giây lát...',
             image: '../public/images/instagram/profile.jpg',
             countLike: 0,

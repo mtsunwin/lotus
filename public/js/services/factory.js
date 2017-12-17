@@ -69,7 +69,15 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
-            getNewsFeeds: function (callback) {
+            getAllNewsFeeds: function (callback) {
+                $http({
+                    method: "POST",
+                    url: "/getAllNewsFeeds",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json"
+                }).then(callback);
+            },
+            getNewsFeeds: function (callback) { // Lấy danh sách News Fedd mình đăng
                 $http({
                     method: "POST",
                     url: "/getNewsFeeds",
