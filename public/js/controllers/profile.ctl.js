@@ -63,6 +63,7 @@ angular.module('myApp.controller.profile', [])
                 $scope.User.email = data.data.user.email;
                 $scope.User.birthday = data.data.user.birthday;
                 $scope.User.username = data.data.user.username;
+                $scope.User.address = typeof (data.data.user.address) != "undefined" ? data.data.user.address : "";
                 $scope.listNews = [];
                 Service.getNewsFeeds(function (data) {
                     console.log("tmt", data.data.listNews);

@@ -313,30 +313,37 @@ app.post("/checkFriends", auth, function (req, res) {
 
 app.post("/EditProfile", auth, function (req, res) {
     var _username = req.session.infoUser.username;
-    var _password= req.session.infoUser.password;
+    var _password = req.session.infoUser.password;
     var _phone = req.body.phone;
-    var _address=req.body.address;
-    console.log(_address);
-    var year= req.body.birth.substring(0,4);
-    var month= req.body.birth.substring(5,7);
-    var ngay= parseInt(req.body.birth.substring(8,10))+1;
-    var birthday=ngay+"-"+month+"-"+year;
+    var _address = req.body.address;
+    var year = req.body.birth.substring(0, 4);
+    var month = req.body.birth.substring(5, 7);
+    var ngay = parseInt(req.body.birth.substring(8, 10)) + 1;
+    var birthday = ngay + "-" + month + "-" + year;
     var _accountGG = req.body.google;
     var _accountFb = req.body.facebook;
     var _image = null;
     var dt = require("../application/user/tableUser");
-     dt.updateUser(AWS, _username,_password, _phone, birthday, _image, _accountFb, _accountGG, _address,function (err, data) {
-         if (!err) {
-             res.setHeader('Content-Type', 'application/json');
-             res.send(JSON.stringify({user: data}));
-         }
-         else {
-             req.session.allInfor.accountFacebook=_accountFb;
-             req.session.allInfor.accountGoogle=_accountGG;
-             req.session.allInfor.birthday=birthday;
-             req.session.allInfor.phone=_phone;
-         };
-     })
+    dt.updateUser(AWS, _username, _password, _phone, birthday, _image, _accountFb, _accountGG, _address, function (err, data) {
+        if (!err) {
+            if (typeof (req.session.allInfor.address) != "undefined") {
+                req.session.allInfor.address = _address;
+                req.session.infoUser.address = _address;
+            } else {
+                req.session.allInfor.push({address: _address});
+                req.session.infoUser.push({address: _address});
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({user: data}));
+        }
+        else {
+            req.session.allInfor.accountFacebook = _accountFb;
+            req.session.allInfor.accountGoogle = _accountGG;
+            req.session.allInfor.birthday = birthday;
+            req.session.allInfor.phone = _phone;
+        }
+        ;
+    })
 })
 /**
  * Lấy danh sách các tin tức CỦA MÌNH đã đăng
