@@ -312,7 +312,59 @@ app.post("/checkFriends", auth, function (req, res) {
         }
     })
 });
+app.post("/updateAvatar",auth,function (req,res) {
+    var dt2= require("../application/image/s3_listbuckets");
+    var dt= require("../application/user/tableUser");
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        if (files.getImage.size > 0) {
+            dt2.putItem(AWS, fs, files.getImage, function (data) {
+                    if(!err){
+                        var url= data.url;
+                        console.log("username:",req.session.infoUser.username);
+                        dt.updateAvatar(AWS,req.session.infoUser.username,req.session.infoUser.password,url,function (err,data) {
+                            if(err){
+                                dt2.deleteImage(AWS,fs,files.name,function (err,data) {
+                                    if(!err){
+                                        console.log("data:",data);
 
+                                    }
+                                    else console.log("Loi nhung khong the xoa hinh da dang");
+                                })
+                            }
+                            else{
+                                console.log("avatar cu co link:",req.session.infoUser.avatar);
+                                var name=getNameImage(req.session.infoUser.avatar);
+                                console.log("name image:",name);
+                                dt2.deleteImage(AWS,fs,name,function (data,err) {
+                                    if(!err){
+                                        fs.readFile("../views/profile.html", function (err, data) {
+                                            if (err) {
+                                                res.writeHead(404, {"content-type": "text/html"});
+                                                res.end("not found");
+                                            } else {
+                                                res.writeHead(200, {"content-type": "text/html"});
+                                                res.write(data);
+                                                res.end();
+                                            }
+                                    })
+                                }
+
+                                });
+
+                            }
+                    });
+
+                    }
+                    else {
+                        console.log("err upload image:",err)
+                    }
+                }
+
+            )
+        }
+    });
+})
 app.post("/EditProfile", auth, function (req, res) {
 
     var _username = req.session.infoUser.username;
@@ -329,7 +381,9 @@ app.post("/EditProfile", auth, function (req, res) {
     var _accountFb = req.body.facebook;
     var _image = null;
     var dt = require("../application/user/tableUser");
-    if (_phone == null || _phone == "") _phone = req.session.allInfor.phone.toString();
+
+    if(_phone==null || _phone=="") _phone=req.session.allInfor.phone.toString();
+
 
 
     if (birthday.indexOf("NaN") != -1) birthday = req.session.allInfor.birthday;
@@ -340,7 +394,7 @@ app.post("/EditProfile", auth, function (req, res) {
 
     if (_address == null || _address == "") _address = req.session.allInfor.address;
 
-    dt.updateUser(AWS, _username, _password, _phone, birthday, _image, _accountFb, _accountGG, _address, function (err, data) {
+    dt.updateUser(AWS, _username, _password, _phone, birthday, _accountFb, _accountGG, _address, function (err, data) {
         if (!err) {
             if (_phone != "") {
                 req.session.allInfor.phone = _phone;
@@ -462,6 +516,7 @@ app.post("/getImage", auth, function (req, res) {
                                     res.end();
                                 }
                             });
+
                         } else {
                             fs.readFile("../views/error.html", function (err, data) {
                                 if (err) {
@@ -517,6 +572,11 @@ app.post("/getImage", auth, function (req, res) {
  * Lấy ngày tháng hiện tại
  * @return {string}
  */
+var getNameImage= function(url){
+    var vitri = url.lastIndexOf("/");
+    var name = url.substring(vitri+1,url.length);
+    return name;
+}
 var getDateTime = function () {
     var date = new Date();
     var hour = date.getHours();

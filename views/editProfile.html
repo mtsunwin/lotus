@@ -50,10 +50,11 @@
                 <h1 style="margin:0;">Cập nhật ảnh đại diện</h1>
             </div>
         </div>
+        <form action="updateAvatar" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-12">
                     <span class="thumbnail">
-                        <img ng-src="{{src}}" alt="..." id="image">
+                        <img ng-src="{{src}}" alt="...">
                     </span>
             </div>
         </div>
@@ -65,9 +66,10 @@
                            onchange="angular.element(this).scope().uploadedFile(this)"/>
                     Thêm ảnh
                 </label>
-
+                <input type="submit" class="btn btn-primary btn-md" value="Đăng avatar">
             </div>
         </div>
+        </form>
         <div id="fh5co-main">
             <div class="fh5co-narrow-content fh5co-border-bottom">
                 <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
