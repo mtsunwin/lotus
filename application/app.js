@@ -23,6 +23,7 @@ AWS.events.on('httpError', function () {
 });
 AWS.config.update({region: 'ap-southeast-1'});
 
+
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -311,6 +312,7 @@ app.post("/checkFriends", auth, function (req, res) {
 });
 
 app.post("/EditProfile", auth, function (req, res) {
+
     var _username = req.session.infoUser.username;
     var _password = req.session.infoUser.password;
     var _phone = req.body.phone;
@@ -319,12 +321,42 @@ app.post("/EditProfile", auth, function (req, res) {
     var month = req.body.birth.substring(5, 7);
     var ngay = parseInt(req.body.birth.substring(8, 10)) + 1;
     var birthday = ngay + "-" + month + "-" + year;
+    console.log("birthday",ngay + "-" + month + "-" + year);
+    console.log("req.session.allInfor.birthday:",req.session.allInfor.birthday);
     var _accountGG = req.body.google;
     var _accountFb = req.body.facebook;
     var _image = null;
     var dt = require("../application/user/tableUser");
+    if(_phone==null || _phone=="") _phone=req.session.allInfor.phone.toString();
+
+
+    if(birthday.indexOf("NaN")!=-1) birthday=req.session.allInfor.birthday;
+
+    if(_accountGG==null ||_accountGG=="") _accountGG=req.session.allInfor.accountGoogle;
+
+    if(_accountFb==null||_accountFb=="") _accountFb=req.session.allInfor.accountFacebook;
+
+    if(_address==null||_address=="") _address=req.session.allInfor.address;
+
     dt.updateUser(AWS, _username, _password, _phone, birthday, _image, _accountFb, _accountGG, _address, function (err, data) {
         if (!err) {
+            if(_phone!=""){
+                req.session.allInfor.phone=_phone;
+                req.session.infoUser.phone=_phone;
+            }
+            if(birthday!=""){
+                req.session.allInfor.birthday=birthday;
+                req.session.infoUser.birthday=birthday;
+            }
+            if(_accountFb!=""){
+                req.session.allInfor.accountFacebook=_accountFb;
+                req.session.infoUser.account=_accountFb;
+            }
+            if(_accountGG!=""){
+                req.session.allInfor.accountG=_accountGG;
+                req.session.infoUser.accountG=_accountGG;
+            }
+
             if (typeof (req.session.allInfor.address) != "undefined") {
                 req.session.allInfor.address = _address;
                 req.session.infoUser.address = _address;
@@ -335,12 +367,7 @@ app.post("/EditProfile", auth, function (req, res) {
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({user: data}));
         }
-        else {
-            req.session.allInfor.accountFacebook = _accountFb;
-            req.session.allInfor.accountGoogle = _accountGG;
-            req.session.allInfor.birthday = birthday;
-            req.session.allInfor.phone = _phone;
-        }
+
         ;
     })
 })
