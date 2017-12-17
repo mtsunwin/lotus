@@ -6,7 +6,7 @@
         <div class="col-md-4 col-xs-12 col-sm-8" style="position: relative;">
             <input type="text" class="form-control" placeholder="Tìm kiếm..."
                    style="height: 100%; color:#fff; height: 35px;" ng-keypress="myFunct($event)" ng-model="narkeyname"/>
-            <div style="position: absolute; height: 200px; width: 300px; background: #e4217fad; z-index: 5; left: 30px;"
+            <div style="position: absolute; min-height: 200px; min-width: 300px; background: #e4217fad; z-index: 5; left: 30px;"
                  ng-show="popstatus" id="popjs">
                 <div style="height: 20px; width: 100%; background: #f9d9e4;">
                     <i class="fa fa-times cursor_tmt" aria-hidden="true"
@@ -14,7 +14,11 @@
                        ng-click="actionPopstatus()"></i>
                 </div>
                 <ul ng-if="listFind.length > 0" class="searchList">
-                    <li ng-repeat="da in listFind">{{da.nickname}}</li>
+                    <li ng-repeat="da in listFind" style="color: #000;font-size: 21px;padding: 5px;min-height: 40px;" ng-click="gopagefriends(da.username)">
+                        <img ng-src="{{da.avatar}}" ng-if="da.avatar != 'null'"
+                             style="height: 40px;width: 40px;border-radius: 50%;"/>
+                        {{da.nickname}} - {{da.username}}
+                    </li>
                 </ul>
             </div>
         </div>

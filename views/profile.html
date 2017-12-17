@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="src != 'null'">
                 <div class="col-md-12">
                     <span class="thumbnail">
                         <img ng-src="{{src}}" alt="...">
@@ -87,7 +87,7 @@
         <div class="fh5co-narrow-content">
             <div class="row">
                 <div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-                    <img src="{{User.avatar}}" alt="Free HTML5 Bootstrap Template"
+                    <img src="{{User.avatar!='null'?User.avatar:'../public/images/instagram/avatar.png'}}" alt="..."
                          class="img-responsive">
                 </div>
                 <div class="col-md-6">
@@ -158,10 +158,13 @@
             <h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">
                 Người đang theo dõi:
             </h2>
-            <div class="row animate-box" style="height: 300px;" data-animate-effect="fadeInLeft"
+            <div class="row animate-box" style="height: auto;" data-animate-effect="fadeInLeft"
                  ng-if="listFriend.Count != 0">
                 <ul>
-                    <li ng-repeat="da in listFriend" style="color:#000">{{da.usernickname.S}}</li>
+                    <li class="cursor_tmt" ng-repeat="da in listFriend" style="color:#000;list-style: none;" ng-click="gopagefriends(da.username)">
+                        <img ng-src="{{da.avatar}}" ng-if="da.avatar != 'null'"
+                             style="height: 60px;margin-right: 20px;border-radius: 50%;width: 60px;">{{da.fullname}} - ({{da.nickname}})
+                    </li>
                 </ul>
             </div>
         </div>
@@ -170,7 +173,7 @@
             <div class="row" ng-if="listNews.length >= 0">
                 <div class="col-md-6 fh5co-staff" ng-repeat="da in listNews">
                     <div style="margin:5px 0px;background: #7bc14470;height:auto;border: 2px solid #e4217f59;">
-                        <div style="display: flex;justify-content: space-around;">
+                        <div ng-if="da.url != 'null'" style="display: flex;justify-content: space-around;">
                             <img ng-src="{{da.url}}" alt="Images" class="img-responsive"
                                  style="height: 300px;width: auto;">
                         </div>
