@@ -22,6 +22,7 @@ AWS.events.on('httpError', function () {
     }
 });
 AWS.config.update({region: 'ap-southeast-1'});
+
 // AWS.config.accessKeyId="";
 // AWS.config.secretAccessKey="";
 
