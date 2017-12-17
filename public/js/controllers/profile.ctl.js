@@ -19,6 +19,7 @@ angular.module('myApp.controller.profile', [])
         $scope.checkOwnPage = false;
         $scope.listNews = [];
         if (typeof (paramValue) != 'undefined') {
+            console.log("oke");
             Service.goFriends(paramValue, function (data) {
                 if (typeof (data.data.info) != 'undefined' && data.data.info.username.length > 0) {
                     if (data.data.info.username != $scope.User.username) {
@@ -31,8 +32,14 @@ angular.module('myApp.controller.profile', [])
                         $scope.User.phone = data.data.info.phone;
                         $scope.User.email = data.data.info.email;
                         $scope.User.username = data.data.info.username;
-                        $scope.follow = true;
                         $scope.listNews = [];
+                        Service.checkFriends(data.data.info.username, function (data) {
+                            if (data.data.listFriends) {
+                                $scope.follow = false;
+                            } else {
+                                $scope.follow = true;
+                            }
+                        });
                         Service.getYourNewsFeeds(data.data.info._id, function (data) {
                             for (var i = 0; i < data.data.listNews.length; i++) {
                                 $scope.listNews.push({
@@ -42,17 +49,18 @@ angular.module('myApp.controller.profile', [])
                                 });
                             }
                         });
-                        Service.checkFriends(data.data.info.username, function (data) {
-                            console.log("oke111", data);
-                        });
+                    } else {
+                        window.location.assign('/profile');
                     }
+                } else {
+                    window.location.assign('/profile');
                 }
             });
         } else {
             $scope.checkOwnPage = true;
             Service.getListFriend(function (data) {
                 console.log("list friends:", data);
-                $scope.listFriend = data.data.listFriends;
+                $scope.listFriend = data.data.listFriends.Items;
             });
             Service.getOwnInfor(function (data) {
                 console.log("this data", data);

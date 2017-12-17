@@ -68,12 +68,12 @@ exports.getListFriends = function (AWS, _id, callback) {
 };
 
 /**
- * Kiểm tra đăng nhập
+ * Kiểm tra bạn bè
  * */
-exports.checkFriend = function (AWS, _username, callback) {
+exports.checkFriend = function (AWS, _ownId, _username, callback) {
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
-        TableName: table_name,
+        TableName: table_name + "_" + _ownId,
         KeyConditionExpression:
             "#username = :username",
         ExpressionAttributeNames: {

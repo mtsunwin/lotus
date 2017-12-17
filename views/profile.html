@@ -158,9 +158,9 @@
                 Người đang theo dõi:
             </h2>
             <div class="row animate-box" style="height: 300px;" data-animate-effect="fadeInLeft"
-                 ng-if="listFriend.Count > 0">
+                 ng-if="listFriend.Count != 0">
                 <ul>
-                    <li>Data</li>
+                    <li ng-repeat="da in listFriend" style="color:#000">{{da.usernickname.S}}</li>
                 </ul>
             </div>
         </div>

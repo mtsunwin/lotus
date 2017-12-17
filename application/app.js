@@ -262,24 +262,19 @@ app.post("/addfriends", function (req, resp) {
 app.post("/findFrieds", auth, function (req, res) {
     var key = req.body.usernametmt;
     var dt = require("../application/user/tableUser");
-    dt.findFrieds(AWS, key, function (err, data) {
-        if (!err) {
-            var dt = require("../application/user/tableListFriends");
-            dt.getListFriends(AWS, req.session.infoUser._id, function (err1, data1) {
-                    if (!err1 && data1.Items.length != 0) {
-                        for (var i = 0; i < data1.Items.length; i++) {
-                            if (data1.data.listFriends[i].username === data.username) {
-                                res.setHeader('Content-Type', 'application/json');
-                                res.send(JSON.stringify({info: data, yourFriend: true}));
-                            }
-                        }
-                    }
-                    res.setHeader('Content-Type', 'application/json');
-                    res.send(JSON.stringify({info: data, yourFriend: false}));
-                }
-            )
-        }
-    });
+    if (key !== req.session.infoUser.username) {
+        dt.findFrieds(AWS, key, function (err, data) {
+            if (!err) {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({info: data}));
+            } else {
+                callPageErr(req, res);
+            }
+        });
+    } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.end();
+    }
 });
 /**
  * Lấy danh sách bạn bè
@@ -301,12 +296,16 @@ app.post("/getListFriends", auth, function (req, res) {
  * True/False
  */
 app.post("/checkFriends", auth, function (req, res) {
+    console.log("call this");
     var key = req.body.username;
     var dt = require("../application/user/tableListFriends");
-    dt.checkFriend(AWS, key, function (err, data) {
+    dt.checkFriend(AWS, req.session.infoUser._id, key, function (err, data) {
         if (!err) {
             res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({listFriends: data}));
+            if (data.Count > 0)
+                res.send(JSON.stringify({listFriends: true}));
+            else
+                res.send(JSON.stringify({listFriends: false}));
         }
     })
 });

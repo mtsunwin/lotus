@@ -1,6 +1,6 @@
 'use strict'
 angular.module('myApp.controller.test', [])
-    .controller('testertmt', ["$scope", "Service", function ($scope, Service) {
+    .controller('narbar', ["$scope", "Service", function ($scope, Service) {
         $scope.narkeyname = "";
         $scope.listFind = [];
         $scope.popstatus = false;
@@ -24,8 +24,17 @@ angular.module('myApp.controller.test', [])
         };
         $scope.onExit = function () {
             window.location.assign('/logout');
-        }
+        };
         $scope.actionPopstatus = function () {
             $scope.popstatus = !$scope.popstatus;
-        }
+        };
+        $scope.goHome = function () {
+            window.location.assign('/home');
+        };
+        $scope.goProfile = function () {
+            window.location.assign('/profile');
+        };
+        $scope.goEditProfile = function () {
+            window.location.assign('/EditProfile');
+        };
     }]);
