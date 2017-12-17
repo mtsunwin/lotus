@@ -26,14 +26,14 @@ angular.module('myApp.controller.newfeed', [])
             $scope.User.username = data.data.user.username;
             $scope.User.address = typeof (data.data.user.address) != "undefined" ? data.data.user.address : "";
             Service.getNewsFeeds(getDate(), function (data) {
-                console.log("tmt", data.data.listNews);
                 for (var i = 0; i < data.data.listNews.length; i++) {
                     $scope.listnews.push({
+                        gopage: $scope.User.username,
                         name: $scope.User.fullname,
                         avatar: $scope.User.avatar,
-                        image: data.data.listNews[i].imageName.S,
-                        time: data.data.listNews[i].time.S,
-                        content: data.data.listNews[i].status.S,
+                        image: data.data.listNews[i].imageName,
+                        time: data.data.listNews[i].time,
+                        content: data.data.listNews[i].status
                     });
                 }
             });
@@ -41,14 +41,23 @@ angular.module('myApp.controller.newfeed', [])
         Service.getListFriend(function (data) {
             if (data.data.listFriends.Count > 0) {
                 for (var i = 0; i < data.data.listFriends.Count; i++) {
-                    console.log("bạn bè", data.data.listFriends.Items[i].usernamefriend.S);
-                    Service.getYourNewsFeeds(data.data.listFriends.Items[i].usernamefriend.S, getDate(), function (data) {
-                        for (var i = 0; i < data.data.listNews.length; i++) {
-                            console.log("tin tức bạn bè", data.data.listNews[i]);
-                            $scope.listnews.push({
-                                'url': data.data.listNews[i].imageName.S,
-                                'time': data.data.listNews[i].time.S,
-                                'content': data.data.listNews[i].status.S,
+                    var id = data.data.listFriends.Items[i]._id.S;
+                    Service.goFriends(data.data.listFriends.Items[i].usernamefriend.S, function (data2) {
+                        if (typeof (data2.data.info) != 'undefined' && data2.data.info.username.length > 0) {
+                            var avatar = data2.data.info.avatar;
+                            var name = data2.data.info.fullname;
+                            var user = data2.data.info.username;
+                            Service.getYourNewsFeeds(id, getDate(), function (data) {
+                                for (var i = 0; i < data.data.listNews.length; i++) {
+                                    $scope.listnews.push({
+                                        gopage: user,
+                                        name: name,
+                                        image: data.data.listNews[i].imageName,
+                                        time: data.data.listNews[i].time,
+                                        content: data.data.listNews[i].status,
+                                        avatar: avatar
+                                    });
+                                }
                             });
                         }
                     });

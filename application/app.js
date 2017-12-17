@@ -25,6 +25,7 @@ AWS.config.update({region: 'ap-southeast-1'});
 
 // AWS.config.accessKeyId="";
 // AWS.config.secretAccessKey="";
+
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -270,8 +271,10 @@ app.post("/addfriends", function (req, resp) {
 app.post("/findFrieds", auth, function (req, res) {
     var key = req.body.usernametmt;
     var dt = require("../application/user/tableUser");
+    console.log("find friedns", key);
     if (key !== req.session.infoUser.username) {
         dt.findFrieds(AWS, key, function (err, data) {
+            console.log("find friends", data);
             if (!err) {
                 res.setHeader('Content-Type', 'application/json');
                 res.send(JSON.stringify({info: data}));
@@ -478,9 +481,11 @@ app.post("/getNewsFeeds", auth, function (req, res) {
 app.post("/getYourNewsFeeds", auth, function (req, res) {
     var key = req.body.usernametmt;
     var date = req.body.date;
+    console.log("app getdate", date + " - " + key);
     var dt = require("../application/newFeed/newfeed");
     dt.getListNewFeed(AWS, key, date, function (err, data) {
         if (!err) {
+            console.log("app tin tuc", data);
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({listNews: data.Items}));
         }
