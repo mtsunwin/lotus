@@ -67,6 +67,7 @@ angular.module('myApp.controller.profile', [])
             Service.getOwnInfor(function (data) {
                 console.log("this data", data);
                 $scope.follow = false;
+                $scope.User.avatar = data.data.user.avatar;
                 $scope.User.fullname = data.data.user.fullname;
                 $scope.User.id = data.data.user._id;
                 $scope.User.phone = data.data.user.phone;
