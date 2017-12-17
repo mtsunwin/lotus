@@ -77,22 +77,26 @@ angular.module('myApp.service', [])
                     dataType: "json"
                 }).then(callback);
             },
-            getNewsFeeds: function (callback) { // Lấy danh sách News Fedd mình đăng
+            getNewsFeeds: function (_date, callback) { // Lấy danh sách News Fedd mình đăng
                 $http({
                     method: "POST",
                     url: "/getNewsFeeds",
                     headers: {"content-type": "application/json"},
-                    dataType: "json"
+                    dataType: "json",
+                    data: JSON.stringify({
+                        date: _date
+                    })
                 }).then(callback);
             },
-            getYourNewsFeeds: function (_keySearch, callback) {
+            getYourNewsFeeds: function (_keySearch, _date, callback) {
                 $http({
                     method: "POST",
                     url: "/getYourNewsFeeds",
                     headers: {"content-type": "application/json"},
                     dataType: "json",
                     data: JSON.stringify({
-                        usernametmt: _keySearch
+                        usernametmt: _keySearch,
+                        date: _date
                     })
                 }).then(callback);
             },

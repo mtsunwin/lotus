@@ -41,17 +41,20 @@
 <navnewsfeed></navnewsfeed>
 <div class="container">
     <div class="col-md-10 col-md-offset-1 news_tmt" ng-repeat="data in listnews">
-        <div class="row">
+        <div class="row" style="height: auto;padding: 5px 0px;">
             <div class="col-xs-6 col-md-3 news_head_tmt">
                 <img ng-src="{{data.avatar}}" height="70px" width="70px" style="height: 70px; width:70px;"/>
                 <span name="content">
                     <span name="name">{{data.name}}</span>
-                    <span name="time">{{data.time}}</span>
+                    <span name="time" style="font-size: 11px;">{{data.time}}</span>
                 </span>
             </div>
         </div>
-        <div class="row thumbnail" style="text-align: center; ">
-            <img ng-src="{{data.image}}" height="427" width="240"/>
+        <div class="row thumbnail" style="text-align: center; " ng-if="data.image != 'null'">
+            <img ng-src="{{data.image}}"/>
+        </div>
+        <div class="row thumbnail" style="text-align: center; " ng-if="data.content != null">
+            <span style="color:#000;">{{data.content}}</span>
         </div>
         <div class="row" style="border-top: 1px solid #ccc;padding-top: 3px;">
             <div class="button_like cursor_tmt"><span>{{data.countLike}}</span></div>
@@ -66,6 +69,7 @@
         <div class="row">
             <input type="text" class="input_comment" placeholder="Nội dung bình luận..."/>
         </div>
+        <br/>
     </div>
 </div>
 <!-- jQuery -->

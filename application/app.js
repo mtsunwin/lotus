@@ -24,8 +24,6 @@ AWS.events.on('httpError', function () {
 AWS.config.update({region: 'ap-southeast-1'});
 // AWS.config.accessKeyId="";
 // AWS.config.secretAccessKey="";
-
-
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -213,7 +211,7 @@ app.post("/login", function (req, res) {
             console.log("lỗi", err);
             res.send(JSON.stringify({status: 0}));
         } else {
-            console.log(data.Items[0]);
+            console.log(data.Items);
             req.session.allInfor = data.Items[0];
             req.session.user = data.Items[0].username;
             req.session.infoUser = data.Items[0];
@@ -380,28 +378,35 @@ app.post("/getAllNewsFeeds", auth, function (req, res) {
         if (!err) {
             console.log("danh sach bạn bè: ", data.Items);
             if (data.Count != 0) {
+                var bol = false;
                 for (var i = 0; i < data.Count; i++) {
                     console.log("username: ", data.Items[i].usernamefriend.S);
+                    var bol2 = false;
                     var dt2 = require("../application/newFeed/newfeed");
                     dt2.getListNewFeed(AWS, data.Items[i].usernamefriend.S, function (err2, data2) {
                         if (!err2) {
                             da.push(data2);
                         }
                     });
+                    if (i == data.Count)
+                        bol = true;
+                }
+                if (bol) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send(JSON.stringify({NewsList: da}));
                 }
             }
         }
     });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({NewsList: da}));
 });
 /**
  * Lấy danh sách các tin tức CỦA MÌNH đã đăng
  */
 app.post("/getNewsFeeds", auth, function (req, res) {
     var dt = require("../application/newFeed/newfeed");
-    dt.getListNewFeed(AWS, req.session.infoUser._id, function (err, data) {
-        if (err == null) {
+    var date = req.body.date;
+    dt.getListNewFeed(AWS, req.session.infoUser._id, date, function (err, data) {
+        if (!err) {
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({listNews: data.Items}));
         }
@@ -412,9 +417,10 @@ app.post("/getNewsFeeds", auth, function (req, res) {
  */
 app.post("/getYourNewsFeeds", auth, function (req, res) {
     var key = req.body.usernametmt;
+    var date = req.body.date;
     var dt = require("../application/newFeed/newfeed");
-    dt.getListNewFeed(AWS, key, function (err, data) {
-        if (err == null) {
+    dt.getListNewFeed(AWS, key, date, function (err, data) {
+        if (!err) {
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({listNews: data.Items}));
         }
@@ -443,12 +449,12 @@ app.post("/getImage", auth, function (req, res) {
         if (files.getImage.size > 0) {
             dt.putItem(AWS, fs, files.getImage, function (data) {
                 dt2.insertNew(
-                    AWS,
-                    req.session.allInfor._id,
-                    uuidv4(),
-                    req.session.allInfor.username,
-                    data.url,
-                    (fields.message.length > 0) ? fields.message : 'null',
+                    AWS, // AWS
+                    req.session.allInfor._id, // ID người đăng
+                    getDate(), // ID bài post
+                    uuidv4(), // tên người đăng
+                    data.url, // Hình ảnh
+                    (fields.message.length > 0) ? fields.message : 'null', // Nội dung
                     getDateTime(),
                     function (err1, data1) {
                         if (!err1) {
@@ -480,8 +486,8 @@ app.post("/getImage", auth, function (req, res) {
             dt2.insertNew(
                 AWS,
                 req.session.allInfor._id,
+                getDate(),
                 uuidv4(),
-                req.session.allInfor.username,
                 'null',
                 fields.message,
                 getDateTime(),
@@ -531,6 +537,33 @@ var getDateTime = function () {
     var day = date.getDate();
     day = (day < 10 ? "0" : "") + day;
     return year + ":" + month + ":" + day + "-" + hour + ":" + min + ":" + sec;
+}
+/**
+ * Lấy ngày tháng hiện tại
+ * @return {string}
+ */
+var getDate = function () {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+    var day = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+    return year + ":" + month + ":" + day;
+}
+/**
+ * Lấy ngày tháng hiện tại
+ * @return {string}
+ */
+var getTime = function () {
+    var date = new Date();
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+    var min = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+    var sec = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+    return hour + ":" + min + ":" + sec;
 }
 
 /**

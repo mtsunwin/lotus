@@ -40,7 +40,7 @@ angular.module('myApp.controller.profile', [])
                                 $scope.follow = true;
                             }
                         });
-                        Service.getYourNewsFeeds(data.data.info._id, function (data) {
+                        Service.getYourNewsFeeds(data.data.info._id, getDate(), function (data) {
                             for (var i = 0; i < data.data.listNews.length; i++) {
                                 $scope.listNews.push({
                                     'url': data.data.listNews[i].imageName.S,
@@ -73,7 +73,8 @@ angular.module('myApp.controller.profile', [])
                 $scope.User.username = data.data.user.username;
                 $scope.User.address = typeof (data.data.user.address) != "undefined" ? data.data.user.address : "";
                 $scope.listNews = [];
-                Service.getNewsFeeds(function (data) {
+
+                Service.getNewsFeeds(getDate(), function (data) {
                     console.log("tmt", data.data.listNews);
                     for (var i = 0; i < data.data.listNews.length; i++) {
                         $scope.listNews.push({
@@ -102,6 +103,34 @@ angular.module('myApp.controller.profile', [])
                     $scope.follow = false;
                 }
             });
+        };
+
+        /**
+         * Lấy ngày tháng hiện tại
+         * @return {string}
+         */
+        var getDate = function () {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            month = (month < 10 ? "0" : "") + month;
+            var day = date.getDate();
+            day = (day < 10 ? "0" : "") + day;
+            return year + ":" + month + ":" + day;
+        }
+        /**
+         * Lấy giờ phút hiện tại
+         * @return {string}
+         */
+        var getTime = function () {
+            var date = new Date();
+            var hour = date.getHours();
+            hour = (hour < 10 ? "0" : "") + hour;
+            var min = date.getMinutes();
+            min = (min < 10 ? "0" : "") + min;
+            var sec = date.getSeconds();
+            sec = (sec < 10 ? "0" : "") + sec;
+            return hour + ":" + min + ":" + sec;
         }
     }])
     .config(['$locationProvider', function ($locationProvider) {
