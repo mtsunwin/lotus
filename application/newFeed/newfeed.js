@@ -102,16 +102,15 @@ exports.getListNewFeedFriend = function (AWS, _id, callback) {
     });
 }
 exports.insertComment=function (AWS,_id,_comment,callback) {
-    var docClient = new AWS.DynamoDB();
-    var name = table_name + "_" + _id;
-    var params = {
-        TableName: name,
-        Item: {
-           "comment":{M:{
-               "username"
-           }}
-        }
-    }
-    docClient.putItem(params, callback);
-
+    // var docClient = new AWS.DynamoDB();
+    // var name = table_name + "_" + _id;
+    // var params = {
+    //     TableName: name,
+    //     Item: {
+    //        "comment":{M:{
+    //            "username"
+    //        }}
+    //     }
+    // }
+    // docClient.putItem(params, callback);
 }
