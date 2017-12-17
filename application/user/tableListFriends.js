@@ -1,6 +1,12 @@
 const table_name = "listFriends";
 const col_username = "usernamefriend";
 const col_nickname = "usernickname";
+/**
+ * Tạo table list Friends mỗi khi User đăng ký tài khoản
+ * @param AWS
+ * @param _id
+ * @param callback
+ */
 exports.createTableListFriends = function (AWS, _id, callback) {
     var dynamodb = new AWS.DynamoDB();
     var params = {
@@ -20,12 +26,22 @@ exports.createTableListFriends = function (AWS, _id, callback) {
     };
     dynamodb.createTable(params, callback);
 };
-
-exports.insertFriend = function (AWS, _id, _username, _nickname, _time, callback) {
+/**
+ * Thêm bạn
+ * @param AWS
+ * @param _ownId
+ * @param _id
+ * @param _username
+ * @param _nickname
+ * @param _time
+ * @param callback
+ */
+exports.insertFriend = function (AWS, _ownId, _id, _username, _nickname, _time, callback) {
     var docClient = new AWS.DynamoDB();
     var params = {
-        TableName: table_name + "_" + _id,
+        TableName: table_name + "_" + _ownId,
         Item: {
+            "_id": {S: _id},
             "usernamefriend": {S: _username},
             "usernickname": {S: _nickname},
             "time": {S: _time}
@@ -37,7 +53,12 @@ exports.insertFriend = function (AWS, _id, _username, _nickname, _time, callback
             callback(err, null);
     });
 };
-
+/**
+ * Lấy danh sách bạn bè
+ * @param AWS
+ * @param _id
+ * @param callback
+ */
 exports.getListFriends = function (AWS, _id, callback) {
     var db = new AWS.DynamoDB();
     db.scan({
@@ -46,3 +67,26 @@ exports.getListFriends = function (AWS, _id, callback) {
     }, callback);
 };
 
+/**
+ * Kiểm tra đăng nhập
+ * */
+exports.checkFriend = function (AWS, _username, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name,
+        KeyConditionExpression:
+            "#username = :username",
+        ExpressionAttributeNames: {
+            "#username": "usernamefriend",
+        },
+        ExpressionAttributeValues: {
+            ":username": _username,
+        }
+    };
+    docClient.query(params, function (err, data) {
+        if (err)
+            callback(err);
+        else
+            callback(null, data);
+    });
+};

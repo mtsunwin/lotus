@@ -22,6 +22,8 @@ AWS.events.on('httpError', function () {
     }
 });
 AWS.config.update({region: 'ap-southeast-1'});
+AWS.config.accessKeyId = "AKIAITA43ZCZNCOAFMWA"
+AWS.config.secretAccessKey = "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"
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -160,7 +162,6 @@ var callPageProfile = function (req, res) {
  * 1 if success
  * 0 if fail
  */
-
 app.post("/insertuser", function (req, resp) {
     var obj = {
         id: uuidv4(),
@@ -247,10 +248,10 @@ app.post("/addfriends", function (req, resp) {
     var nickf = req.body.nickname;
     if (key !== req.session.user) {
         var dt = require("../application/user/tableListFriends");
-        dt.insertFriend(AWS, idf, key, nickf, getDateTime(), function (err, data) {
+        dt.insertFriend(AWS, req.session.infoUser._id, idf, key, nickf, getDateTime(), function (err, data) {
             if (!err) {
                 resp.setHeader('Content-Type', 'application/json');
-                resp.send(JSON.stringify({a: data}));
+                resp.send(JSON.stringify({a: true}));
             }
         });
     }
@@ -289,6 +290,21 @@ app.post("/findFrieds", auth, function (req, res) {
 app.post("/getListFriends", auth, function (req, res) {
     var dt = require("../application/user/tableListFriends");
     dt.getListFriends(AWS, req.session.infoUser._id, function (err, data) {
+        if (!err) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({listFriends: data}));
+        }
+    })
+});
+/**
+ * Kiểm tra bạn bè
+ * --output---
+ * True/False
+ */
+app.post("/checkFriends", auth, function (req, res) {
+    var key = req.body.username;
+    var dt = require("../application/user/tableListFriends");
+    dt.checkFriend(AWS, key, function (err, data) {
         if (!err) {
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({listFriends: data}));

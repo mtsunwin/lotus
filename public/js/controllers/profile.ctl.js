@@ -42,15 +42,16 @@ angular.module('myApp.controller.profile', [])
                                 });
                             }
                         });
-
-
+                        Service.checkFriends(data.data.info.username, function (data) {
+                            console.log("oke111", data);
+                        });
                     }
                 }
             });
         } else {
             $scope.checkOwnPage = true;
             Service.getListFriend(function (data) {
-                console.log(data);
+                console.log("list friends:", data);
                 $scope.listFriend = data.data.listFriends;
             });
             Service.getOwnInfor(function (data) {
@@ -86,8 +87,11 @@ angular.module('myApp.controller.profile', [])
             }
         }
         $scope.addFriend = function () {
-            Service.addFriend($scope.User.id, $scope.User.email, $scope.User.fullname, function (data) {
-                console.log("add friends completed", data)
+            console.log("oke chưa");
+            Service.addFriend($scope.User.id, $scope.User.username, $scope.User.fullname, function (data) {
+                if (data.data.a) {
+                    $scope.follow = false;
+                }
             });
         }
     }])

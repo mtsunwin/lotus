@@ -56,15 +56,16 @@ angular.module('myApp.service', [])
                     dataType: "json"
                 }).then(callback);
             },
-            addFriend: function (_keySearch, callback) {
+            addFriend: function (_id, _getkey, _nickname, callback) {
                 $http({
                     method: "POST",
                     url: "/addfriends",
                     headers: {"content-type": "application/json"},
                     dataType: "json",
                     data: JSON.stringify({
-                        getkey: _keySearch,
-
+                        id: _id,
+                        getkey: _getkey,
+                        nickname: _nickname
                     })
                 }).then(callback);
             },
@@ -95,6 +96,17 @@ angular.module('myApp.service', [])
                     dataType: "json",
                     data: JSON.stringify({
                         usernametmt: _username
+                    })
+                }).then(callback);
+            },
+            checkFriends: function (_username, callback) { // truy cập profile
+                $http({
+                    method: "POST",
+                    url: "/checkFriends",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        username: _username
                     })
                 }).then(callback);
             },
