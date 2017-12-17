@@ -67,7 +67,7 @@ exports.insertUser = function (AWS, _obj, callback) {
                     "ipdevice": {S: typeof (_obj.ip) != 'undefined' ? _obj.ip : 'null'},
                     "phone": {S: typeof (_obj.phone) != 'undefined' ? _obj.phone : 'null'},
                     "email": {S: typeof (_obj.email) != 'undefined' ? _obj.email : 'null'},
-                    "birthday": {S: typeof (_obj.birthday) != 'undefined' ? _obj.birthday : 'null'},
+                    "birthday": {S: ''},
                     "username": {S: _obj.username},
                     "password": {S: _obj.password},
                     "accountFacebook": {S: typeof (_obj.accountFacebook) != 'undefined' ? _obj.accountFacebook : 'null'},
@@ -199,7 +199,7 @@ exports.scanUser = function (AWS, params, callback) {
     });
 }
 
-exports.updateUser= function(AWS,_username,_password,_phone,_birthday,_image,_fb,_google, _address,callback){
+exports.updateUser= function(AWS,_username,_password,_phone,_birthday,_fb,_google, _address,callback){
     var docClient= new AWS.DynamoDB.DocumentClient();
     var params={
         TableName:table_name,
@@ -207,11 +207,10 @@ exports.updateUser= function(AWS,_username,_password,_phone,_birthday,_image,_fb
             "username":_username,
             "password":_password,
         },
-        UpdateExpression:"set phone= :phone, birthday = :birthday, avatar = :image,accountFacebook =:fb,accountGoogle = :google, address = :address ",
+        UpdateExpression:"set phone= :phone, birthday = :birthday,accountFacebook =:fb,accountGoogle = :google, address = :address ",
         ExpressionAttributeValues:{
             ":phone":_phone,
             ":birthday":_birthday,
-            ":image":_image,
             ":fb":_fb,
             ":google":_google,
             ":address": _address
@@ -219,6 +218,32 @@ exports.updateUser= function(AWS,_username,_password,_phone,_birthday,_image,_fb
         ReturnValues:"UPDATED_NEW"
     };
     console.log("Updating the item...");
+    docClient.update(params, function(err, data) {
+        if (err) {
+            console.log(err);
+            callback(false);
+        } else {
+            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            callback(null,JSON.stringify(data, null, 2))
+        }
+    });
+}
+
+exports.updateAvatar= function(AWS,_username,_password,_image,callback){
+    var docClient= new AWS.DynamoDB.DocumentClient();
+    var params={
+        TableName:table_name,
+        Key:{
+            "username":_username,
+            "password":_password,
+        },
+        UpdateExpression:"set avatar = :image",
+        ExpressionAttributeValues:{
+            ":image":_image
+        },
+        ReturnValues:"UPDATED_NEW"
+    };
+    console.log("Updating the avatar item...");
     docClient.update(params, function(err, data) {
         if (err) {
             console.log(err);
