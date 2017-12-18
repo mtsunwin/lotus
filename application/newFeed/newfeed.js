@@ -33,70 +33,52 @@ exports.createTableNewsFeeds = function (AWS, _id, callback) {
 * total like tổng like:N
 * */
 
-exports.updateUser = function (AWS, _username, _password, _phone, _birthday, _fb, _google, _address, callback) {
-    var docClient = new AWS.DynamoDB.DocumentClient();
-    var params = {
-        TableName: table_name,
-        Key: {
-            "username": _username,
-            "password": _password,
-        },
-        UpdateExpression: "set phone= :phone, birthday = :birthday,accountFacebook =:fb,accountGoogle = :google, address = :address ",
-        ExpressionAttributeValues: {
-            ":phone": _phone,
-            ":birthday": _birthday,
-            ":fb": _fb,
-            ":google": _google,
-            ":address": _address
-        },
-        ReturnValues: "UPDATED_NEW"
-    };
-    console.log("Updating the item...");
-    docClient.update(params, function (err, data) {
-        if (err) {
-            console.log(err);
-            callback(false);
-        } else {
-            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-            callback(null, JSON.stringify(data, null, 2))
-        }
-    });
-}
-
 exports.insertComment=function(AWS,_idNewFeed,_idUser,_idComment,_username,_nickname,_imageUrl,_date,_content,callback){
     var docClient = new AWS.DynamoDB.DocumentClient();
     var name= table_name+"_"+_idUser;
-    var params={
-        "id":_idNewFeed,
-        "username":_username,
-        "nickname":_nickname,
-        "image":_imageUrl,
-        "date":_date,
-        "content":_content
-    }
+    var upsertExpr = (name.comments == undefined) ? " :attrValue" : "list_append(#attrName, :attrValue)";
     var params1={
         TableName: name,
         Key:{
             "id":_idNewFeed,
             "username":_username
         },
-        UpdateExpression: "set comment.add(:comment)",
+        UpdateExpression: 'set #attrName= '+upsertExpr,
+        ExpressionAttributeNames:{
+            '#attrName':"comments",
+        },
         ExpressionAttributeValues: {
-            ":comment":params
+            ":attrValue":{
+                "L":[
+                    {
+                        "M":{
+                            "id":{"S":_idComment},
+                            "username":{"S":_username},
+                            "nickname":{"S":_nickname},
+                            "image":{"S":_imageUrl},
+                            "date":{"S":_date},
+                            "content":{"S":_content},
+                        }
+                    }
+                ]
+            }
         },
         ReturnValues: "UPDATED_NEW"
     }
     console.log("Updating the item...");
     docClient.update(params1, function (err, data) {
-        if (err) {
-            console.log(err);
-            callback(false);
-        } else {
-            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-            callback(null, JSON.stringify(data, null, 2))
+            if (err) {
+                console.log(err);
+                callback(false);
+            } else {
+                console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+                callback(null, JSON.stringify(data, null, 2))
+            }
         }
-    });
-}
+    )
+    }
+
+
 exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _status, _time, callback) {
     var docClient = new AWS.DynamoDB();
     var name = table_name + "_" + _id;
@@ -165,17 +147,4 @@ exports.getListNewFeedFriend = function (AWS, _id, callback) {
         else
             callback(err, null)
     });
-}
-exports.insertComment=function (AWS,_id,_comment,callback) {
-    // var docClient = new AWS.DynamoDB();
-    // var name = table_name + "_" + _id;
-    // var params = {
-    //     TableName: name,
-    //     Item: {
-    //        "comment":{M:{
-    //            "username"
-    //        }}
-    //     }
-    // }
-    // docClient.putItem(params, callback);
 }

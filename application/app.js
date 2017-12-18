@@ -23,9 +23,6 @@ AWS.events.on('httpError', function () {
 });
 AWS.config.update({region: 'ap-southeast-1'});
 
-
-// AWS.config.accessKeyId="";
-// AWS.config.secretAccessKey="";
 //
 
 app.use("/public/", express.static("../public/"));
@@ -513,6 +510,7 @@ app.post("/getinfo", auth, function (req, res) {
  * context -> nội dung
  */
 
+
 app.post("/getImage", auth, function (req, res) {
     var dt = require("../application/image/s3_listbuckets");
     var dt2 = require("../application/newFeed/newfeed");
@@ -651,3 +649,27 @@ var getTime = function () {
  * */
 var system_tmt = require('../application/system');
 system_tmt.init(app, fs, AWS);
+app.post("/Insertcomment", auth, function (req, res) {
+    var dt = require("../application/newFeed/newfeed");
+    var idNewFeed = req.body._id;
+    var idUser=req.session.infoUser._id;
+    var idComment=uuidv4();
+    console.log("username trong comment:",req.session.infoUser.username);
+    var username=req.session.infoUser.username;
+    var nickname=req.session.infoUser.nickname;
+    var image= req.session.infoUser.avatar;
+    var Date=getDateTime();
+    console.log("data trong comment:",req.body.data);
+    var data = req.body.data;
+    dt.insertComment(AWS,idNewFeed,idUser,idComment,username,nickname,image,Date,data,function (err,data) {
+        if(!err){
+            console.log("Data comment:",data);
+            req.body.data="";
+        }
+        else
+        {
+            console.log("err up comment",err);
+        }
+    })
+
+})
