@@ -42,12 +42,14 @@ angular.module('myApp.controller.profile', [])
                                 $scope.follow = true;
                             }
                         });
-                        Service.getYourNewsFeeds(data.data.info._id, getDate(), function (data) {
-                            for (var i = 0; i < data.data.listNews.length; i++) {
+                        Service.getYourNewsFeeds(data.data.info._id, getDate(), function (data2) {
+                            console.log("this", data2.data);
+                            for (var i = 0; i < data2.data.listNews.length; i++) {
+
                                 $scope.listNews.push({
-                                    'url': data.data.listNews[i].imageName.S,
-                                    'time': data.data.listNews[i].time.S,
-                                    'content': data.data.listNews[i].status.S,
+                                    'url': data2.data.listNews[i].imageName.S,
+                                    'time': data2.data.listNews[i].time.S,
+                                    'content': data2.data.listNews[i].status.S,
                                 });
                             }
                         });
@@ -60,9 +62,20 @@ angular.module('myApp.controller.profile', [])
             });
         } else {
             $scope.checkOwnPage = true;
+            $scope.listFriend = [];
             Service.getListFriend(function (data) {
-                console.log("list friends:", data);
-                $scope.listFriend = data.data.listFriends.Items;
+                if (data.data.listFriends.Count > 0) {
+                    for (var i = 0; i < data.data.listFriends.Count; i++) {
+                        var id = data.data.listFriends.Items[i]._id.S;
+                        console.log("show", data.data.listFriends.Items[i]);
+                        Service.goFriends(data.data.listFriends.Items[i].usernamefriend.S, function (data2) {
+                            if (typeof (data2.data.info) != 'undefined' && data2.data.info.username.length > 0) {
+                                console.log("list friends:", data2);
+                                $scope.listFriend.push(data2.data.info);
+                            }
+                        });
+                    }
+                }
             });
             Service.getOwnInfor(function (data) {
                 console.log("this data", data);
@@ -120,6 +133,9 @@ angular.module('myApp.controller.profile', [])
                 }
             });
         };
+        $scope.gopagefriends = function (_data) {
+            window.location.assign('/profile?name=' + _data);
+        };
         var calDate = function (_after) {
             var date = new Date();
             var year = date.getFullYear();
@@ -166,6 +182,7 @@ angular.module('myApp.controller.profile', [])
             sec = (sec < 10 ? "0" : "") + sec;
             return hour + ":" + min + ":" + sec;
         }
+        $scope.src = "null";
     }])
     .config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode({

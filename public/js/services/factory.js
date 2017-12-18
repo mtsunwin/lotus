@@ -137,5 +137,17 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
+            comment: function(_id, _data, callback){
+                $http({
+                    method: "POST",
+                    url: "/Insertcomment",
+                    headers: {"content-type": "application/json"},
+                    dataType: "json",
+                    data: JSON.stringify({
+                        _id: _id,
+                        data: _data
+                    })
+                }).then(callback);
+            }
         };
     }]);
