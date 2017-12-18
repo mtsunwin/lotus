@@ -32,6 +32,71 @@ exports.createTableNewsFeeds = function (AWS, _id, callback) {
 * status dòng cảm nghĩ: S
 * total like tổng like:N
 * */
+
+exports.updateUser = function (AWS, _username, _password, _phone, _birthday, _fb, _google, _address, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name,
+        Key: {
+            "username": _username,
+            "password": _password,
+        },
+        UpdateExpression: "set phone= :phone, birthday = :birthday,accountFacebook =:fb,accountGoogle = :google, address = :address ",
+        ExpressionAttributeValues: {
+            ":phone": _phone,
+            ":birthday": _birthday,
+            ":fb": _fb,
+            ":google": _google,
+            ":address": _address
+        },
+        ReturnValues: "UPDATED_NEW"
+    };
+    console.log("Updating the item...");
+    docClient.update(params, function (err, data) {
+        if (err) {
+            console.log(err);
+            callback(false);
+        } else {
+            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            callback(null, JSON.stringify(data, null, 2))
+        }
+    });
+}
+
+exports.insertComment=function(AWS,_idNewFeed,_idUser,_idComment,_username,_nickname,_imageUrl,_date,_content,callback){
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var name= table_name+"_"+_idUser;
+    var params={
+        "id":_idNewFeed,
+        "username":_username,
+        "nickname":_nickname,
+        "image":_imageUrl,
+        "date":_date,
+        "content":_content
+    }
+    var params1={
+        TableName: name,
+        Key:{
+            "id":_idNewFeed,
+            "username":_username
+        },
+        UpdateExpression: "set comment.add(:comment)",
+        ExpressionAttributeValues: {
+            ":comment":params
+        },
+        ReturnValues: "UPDATED_NEW"
+    }
+    console.log("Updating the item...");
+    docClient.update(params1, function (err, data) {
+        if (err) {
+            console.log(err);
+            callback(false);
+        } else {
+            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+            callback(null, JSON.stringify(data, null, 2))
+        }
+    });
+}
 exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _status, _time, callback) {
     var docClient = new AWS.DynamoDB();
     var name = table_name + "_" + _id;
