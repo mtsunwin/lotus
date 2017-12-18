@@ -23,9 +23,6 @@ AWS.events.on('httpError', function () {
 });
 AWS.config.update({region: 'ap-southeast-1'});
 
-// AWS.config.accessKeyId="";
-// AWS.config.secretAccessKey="";
-
 app.use("/public/", express.static("../public/"));
 app.use("/public/js/", express.static("../node_modules/angular/"));
 app.use("/public/js/", express.static("../node_modules/jquery/dist/"));
@@ -178,6 +175,7 @@ app.post("/insertuser", function (req, resp) {
         resp.send(JSON.stringify({status: false}));
     }
     var dt = require("../application/user/tableUser");
+
     dt.insertUser(AWS, obj, function (err) {
         console.log("ttt", err);
         if (err) { // đúng
@@ -375,6 +373,7 @@ app.post("/updateAvatar", auth, function (req, res) {
         }
     });
 })
+
 app.post("/EditProfile", auth, function (req, res) {
 
     var _username = req.session.infoUser.username;
@@ -517,6 +516,7 @@ app.post("/getImage", auth, function (req, res) {
         if (files.getImage.size > 0) {
             dt.putItem(AWS, fs, files.getImage, function (data) {
                 dt2.insertNew(
+
                     AWS, // AWS
                     req.session.allInfor._id, // ID người đăng
                     getDate(), // ID bài post
