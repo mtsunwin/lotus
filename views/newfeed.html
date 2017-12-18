@@ -45,8 +45,14 @@
             <div class="col-xs-6 col-md-3 news_head_tmt">
                 <img ng-src="{{data.avatar}}" height="70px" width="70px" style="height: 70px; width:70px;"/>
                 <span name="content">
-                    <span name="name"><a href="/profile?name={{data.gopage}}">{{data.name}}</a></span>
-                    <span name="time" style="font-size: 11px;min-width: 130px;">{{data.time}}</span>
+                    <span name="name">
+                        <a href="/profile?name={{data.gopage}}">
+                        {{data.name}}
+                        </a>
+                    </span>
+                    <span name="time" style="font-size: 11px;min-width: 130px;">
+                        {{data.time}}
+                    </span>
                 </span>
             </div>
         </div>
@@ -67,7 +73,8 @@
             </div>
         </div>
         <div class="row">
-            <input type="text" class="input_comment" placeholder="Nội dung bình luận..."/>
+            <input type="text" class="input_comment" placeholder="Nội dung bình luận..." id="{{data._id}}"
+                   ng-keypress="comment.action(data._id, $event)"/>
         </div>
         <br/>
     </div>

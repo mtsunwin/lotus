@@ -28,6 +28,7 @@ angular.module('myApp.controller.newfeed', [])
             Service.getNewsFeeds(getDate(), function (data) {
                 for (var i = 0; i < data.data.listNews.length; i++) {
                     $scope.listnews.push({
+                        _id: data.data.listNews[i].username,
                         gopage: $scope.User.username,
                         name: $scope.User.fullname,
                         avatar: $scope.User.avatar,
@@ -35,6 +36,7 @@ angular.module('myApp.controller.newfeed', [])
                         time: data.data.listNews[i].time,
                         content: data.data.listNews[i].status
                     });
+                    console.log("tmt", $scope.listnews);
                 }
             });
         });
@@ -49,9 +51,11 @@ angular.module('myApp.controller.newfeed', [])
                             var user = data2.data.info.username;
                             Service.getYourNewsFeeds(id, getDate(), function (data) {
                                 for (var i = 0; i < data.data.listNews.length; i++) {
+                                    console.log("tmttt", data.data.listNews[i]);
                                     $scope.listnews.push({
                                         gopage: user,
                                         name: name,
+                                        _id: data.data.listNews[i].username,
                                         image: data.data.listNews[i].imageName,
                                         time: data.data.listNews[i].time,
                                         content: data.data.listNews[i].status,
@@ -61,25 +65,25 @@ angular.module('myApp.controller.newfeed', [])
                             });
                         }
                     });
+                    console.log("tmt", $scope.listnews);
                 }
             }
         });
+        $scope.comment = {
+            action: function (_data, keyEvent) {
+                if (keyEvent.which === 13) {
+                    var com = document.getElementById(_data).value;
+                    Service.comment(_data, com, function (data) {
+                        alert("oke");
+                    });
+                }
+            },
+            data: "",
+        }
         Service.getAllNewsFeeds(function (data) {
             console.log("tmt222", data);
         });
         $scope.listnews = [];
-        // $scope.listnews = [
-        //     {
-        //         avatar: '../public/images/instagram/profile.jpg',
-        //         name: 'Minh Thang',
-        //         time: '8h30 27/11',
-        //         image: '../public/images/instagram/profile.jpg',
-        //         countLike: 1200,
-        //         comment: [
-        //             {name: "Nghĩa", content: "Tó!"},
-        //             {name: "Nghĩa", content: "Tó!"}
-        //         ]
-        //     }];
         /**
          * Lấy ngày tháng hiện tại
          * @return {string}
