@@ -37,7 +37,7 @@ angular.module('myApp.controller.newfeed', [])
                         time: data.data.listNews[i].time,
                         content: data.data.listNews[i].status
                     });
-                    if((i+1) == data.data.listNews.length){
+                    if ((i + 1) == data.data.listNews.length) {
                         $scope.loading = false;
                     }
                 }
@@ -50,6 +50,8 @@ angular.module('myApp.controller.newfeed', [])
                     var id = data.data.listFriends.Items[i]._id.S;
                     Service.goFriends(data.data.listFriends.Items[i].usernamefriend.S, function (data2) {
                         if (typeof (data2.data.info) != 'undefined' && data2.data.info.username.length > 0) {
+                            console.log("friends", data2);
+                            var _idf = data2.data.info._id;
                             var avatar = data2.data.info.avatar;
                             var name = data2.data.info.fullname;
                             var user = data2.data.info.username;
@@ -59,13 +61,16 @@ angular.module('myApp.controller.newfeed', [])
                                     $scope.listnews.push({
                                         gopage: user,
                                         name: name,
+                                        _idf: _idf,
+                                        _idp: data.data.listNews[i].id,
                                         _id: data.data.listNews[i].username,
                                         image: data.data.listNews[i].imageName,
                                         time: data.data.listNews[i].time,
                                         content: data.data.listNews[i].status,
-                                        avatar: avatar
+                                        avatar: avatar,
+                                        comment: data.data.listNews[i].comments,
                                     });
-                                    if((i+1) == data.data.listNews.length){
+                                    if ((i + 1) == data.data.listNews.length) {
                                         $scope.loading = false;
                                     }
                                 }
@@ -78,11 +83,14 @@ angular.module('myApp.controller.newfeed', [])
             }
         });
         $scope.comment = {
-            action: function (_data, keyEvent) {
+            action: function (_data, _idf, _idp, _obj, keyEvent) {
                 if (keyEvent.which === 13) {
                     var com = document.getElementById(_data).value;
-                    Service.comment(_data, com, function (data) {
-                        alert("oke");
+                    console.log("data this", _obj);
+                    Service.comment(_data, _idf, _idp, com, _obj, function (data) {
+                        console.log(data);
+                        if (data.data.status == true)
+                            window.location.assign('/home');
                     });
                 }
             },

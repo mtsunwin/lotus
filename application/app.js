@@ -352,10 +352,10 @@ app.post("/updateAvatar", auth, function (req, res) {
                                                 res.writeHead(404, {"content-type": "text/html"});
                                                 res.end("not found");
                                             } else {
-                                                req.session.infoUser.avatar=url;
-                                                console.log("infoUser.avatar",req.session.infoUser.avatar);
-                                                req.session.allInfor.avatar=url;
-                                                console.log("allInfor.avatar",req.session.allInfor.avatar);
+                                                req.session.infoUser.avatar = url;
+                                                console.log("infoUser.avatar", req.session.infoUser.avatar);
+                                                req.session.allInfor.avatar = url;
+                                                console.log("allInfor.avatar", req.session.allInfor.avatar);
                                                 res.writeHead(200, {"content-type": "text/html"});
                                                 res.write(data);
                                                 res.end();
@@ -521,7 +521,6 @@ app.post("/getImage", auth, function (req, res) {
         if (files.getImage.size > 0) {
             dt.putItem(AWS, fs, files.getImage, function (data) {
                 dt2.insertNew(
-
                     AWS, // AWS
                     req.session.allInfor._id, // ID người đăng
                     getDate(), // ID bài post
@@ -654,24 +653,28 @@ system_tmt.init(app, fs, AWS);
 app.post("/Insertcomment", auth, function (req, res) {
     var dt = require("../application/newFeed/newfeed");
     var idNewFeed = req.body._id;
-    var idUser=req.session.infoUser._id;
-    var idComment=uuidv4();
-    console.log("username trong comment:",req.session.infoUser.username);
-    var username=req.session.infoUser.username;
-    var nickname=req.session.infoUser.nickname;
-    var image= req.session.infoUser.avatar;
-    var Date=getDateTime();
-    console.log("data trong comment:",req.body.data);
+    var idUser = req.body._idf;
+    var _obj = req.body._obj;
+    console.log(_obj);
+    var _idp = req.body._idp;
+    var _auto = uuidv4();
+    var idComment = uuidv4();
+    console.log("username trong comment:", req.session.infoUser.username);
+    var username = req.session.infoUser.username;
+    var nickname = req.session.infoUser.nickname;
+    var image = req.session.infoUser.avatar;
+    var Date = getDateTime();
+    console.log("data trong comment:", req.body.data);
     var data = req.body.data;
-    dt.insertComment(AWS,idNewFeed,idUser,idComment,username,nickname,image,Date,data,function (err,data) {
-        if(!err){
-            console.log("Data comment:",data);
-            req.body.data="";
+    dt.insertComment(AWS, _obj, _auto, _idp, idNewFeed, idUser, idComment, username, nickname, image, Date, data, function (err, data) {
+        if (!err) {
+            console.log("Data comment:", data);
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({status: true}));
         }
-        else
-        {
-            console.log("err up comment",err);
+        else {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({status: false}));
         }
     })
-
 })

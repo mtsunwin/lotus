@@ -53,7 +53,8 @@
         <div class="row cursor_tmt" style="height: auto;padding: 5px 0px;">
             <div class="col-xs-6 col-md-3 news_head_tmt">
                 <div class="height:70px; width:70px; padding:0px; margin:0px;border-radius: 50%;">
-                    <img ng-src="{{data.avatar}}" height="70" width="70" style="height: 70px; width:70px;border-radius: 50%;"/>
+                    <img ng-src="{{data.avatar}}" height="70" width="70"
+                         style="height: 70px; width:70px;border-radius: 50%;"/>
                 </div>
                 <span name="content">
                     <span name="name">
@@ -77,16 +78,19 @@
             <div class="button_like cursor_tmt"><span>{{data.countLike}}</span></div>
             <div class="button_share cursor_tmt"></div>
         </div>
-        <div class="row" ng-if="data.comment.length  > 0">
-            {{data}}
-            <div class="comment_friend" ng-repeat="conversation in data.comment">
-                <span name="name_friend">{{conversation.name}}</span>
-                <span name="conent_friend">{{conversation.content}}</span>
+        <div class="row" ng-if="data.comment.M.length > 0">
+            <div class="comment_friend">
+                <ul>
+                    <li ng-repeat="conversation in data.comment.M track by $index" style="list-style: none">
+                        <span name="name_friend">{{conversation.nickname}}:</span>
+                        <span name="conent_friend">{{conversation.content}}</span>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="row">
             <input type="text" class="input_comment" placeholder="Nội dung bình luận..." id="{{data._id}}"
-                   ng-keypress="comment.action(data._id, $event)"/>
+                   ng-keypress="comment.action(data._id, data._idf, data._idp, data.comment.M.length>0?data.comment.M:'', $event)"/>
         </div>
         <br/>
     </div>

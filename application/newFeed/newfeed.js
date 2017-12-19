@@ -33,34 +33,36 @@ exports.createTableNewsFeeds = function (AWS, _id, callback) {
 * total like tổng like:N
 * */
 
-exports.insertComment=function(AWS,_idNewFeed,_idUser,_idComment,_username,_nickname,_imageUrl,_date,_content,callback){
+exports.insertComment = function (AWS, _obj, _auto, _idp, _idNewFeed, _idUser, _idComment, _username, _nickname, _imageUrl, _date, _content, callback) {
     var docClient = new AWS.DynamoDB.DocumentClient();
-    var name= table_name+"_"+_idUser;
+    var name = table_name + "_" + _idUser;
     var upsertExpr = (name.comments == undefined) ? " :attrValue" : "list_append(#attrName, :attrValue)";
-    var params1={
+    var obj = [];
+    console.log(_obj);
+    for (var i = 0; i < _obj.length; i++) {
+        obj.push(_obj[i]);
+    }
+    obj.push({
+        "id": _idComment,
+        "username": _username,
+        "nickname": _nickname,
+        "image": _imageUrl,
+        "date": _date,
+        "content": _content,
+    });
+    var params1 = {
         TableName: name,
-        Key:{
-            "id":_idNewFeed,
-            "username":_username
+        Key: {
+            "id": _idp,
+            "username": _idNewFeed
         },
-        UpdateExpression: 'set #attrName= '+upsertExpr,
-        ExpressionAttributeNames:{
-            '#attrName':"comments",
+        UpdateExpression: 'set #attrName= ' + upsertExpr,
+        ExpressionAttributeNames: {
+            '#attrName': "comments",
         },
         ExpressionAttributeValues: {
-            ":attrValue":{
-                "L":[
-                    {
-                        "M":{
-                            "id":{"S":_idComment},
-                            "username":{"S":_username},
-                            "nickname":{"S":_nickname},
-                            "image":{"S":_imageUrl},
-                            "date":{"S":_date},
-                            "content":{"S":_content},
-                        }
-                    }
-                ]
+            ":attrValue": {
+                "M": obj
             }
         },
         ReturnValues: "UPDATED_NEW"
@@ -76,7 +78,7 @@ exports.insertComment=function(AWS,_idNewFeed,_idUser,_idComment,_username,_nick
             }
         }
     )
-    }
+}
 
 
 exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _status, _time, callback) {
@@ -100,24 +102,24 @@ exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _stat
  * @param _id
  * @param callback
  */
-exports.getListComment=function(AWS,_id,_date,_idNewfeed,callback){
-    var docClient= new AWS.DynamoDB.DocumentClient();
-    var params={
+exports.getListComment = function (AWS, _id, _date, _idNewfeed, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
         TableName: table_name + "_" + _id,
         KeyConditionExpression:
             "#id = :id and #username =:username",
         ExpressionAttributeNames: {
             "#id": "id",
-            "#username":"username"
+            "#username": "username"
         },
         ExpressionAttributeValues: {
             ":id": _date,
-            ":username":_idNewfeed
+            ":username": _idNewfeed
         }
     };
     docClient.query(params, callback);
-    }
 }
+
 exports.getListNewFeed = function (AWS, _id, _date, callback) {
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
@@ -133,23 +135,23 @@ exports.getListNewFeed = function (AWS, _id, _date, callback) {
     };
     docClient.query(params, callback);
 }
-exports.deleteNewFeed=function(AWS,_id,_date,_idnewFeed,callback){
-    var docClient= new AWS.DynamoDB.DocumentClient();
-    var params={
-        TableName:table_name+_id,
-        Key:{
-            "id":_date,
-            "username":_idnewFeed
+exports.deleteNewFeed = function (AWS, _id, _date, _idnewFeed, callback) {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var params = {
+        TableName: table_name + _id,
+        Key: {
+            "id": _date,
+            "username": _idnewFeed
         },
     }
-    docClient.delete(params,function(err,data){
+    docClient.delete(params, function (err, data) {
         if (err) {
             console.log(err, err.stack);
-            callback(err,null)
+            callback(err, null)
         }
         else {
             console.log(data);
-            callback(null,data);
+            callback(null, data);
         }
     })
 }

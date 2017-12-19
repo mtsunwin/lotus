@@ -137,7 +137,7 @@ angular.module('myApp.service', [])
                     })
                 }).then(callback);
             },
-            comment: function(_id, _data, callback){
+            comment: function (_id, _idf, _idp, _data, _obj, callback) {
                 $http({
                     method: "POST",
                     url: "/Insertcomment",
@@ -145,7 +145,10 @@ angular.module('myApp.service', [])
                     dataType: "json",
                     data: JSON.stringify({
                         _id: _id,
-                        data: _data
+                        _idf: _idf,
+                        data: _data,
+                        _idp: _idp,
+                        _obj: _obj
                     })
                 }).then(callback);
             }
