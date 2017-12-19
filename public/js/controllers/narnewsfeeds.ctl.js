@@ -22,6 +22,9 @@ angular.module('myApp.controller.test', [])
                 console.log("okokok");
             }
         };
+        $scope.gotoProfile = function (_id) {
+            window.location.assign('/profile?name=' + _id);
+        };
         $scope.onExit = function () {
             window.location.assign('/logout');
         };
