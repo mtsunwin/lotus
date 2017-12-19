@@ -14,7 +14,7 @@
                        ng-click="actionPopstatus()"></i>
                 </div>
                 <ul ng-if="listFind.length > 0" class="searchList">
-                    <li ng-repeat="da in listFind" style="color: #000;font-size: 21px;padding: 5px;min-height: 40px;" ng-click="gopagefriends(da.username)">
+                    <li ng-repeat="da in listFind" style="color: #000;font-size: 21px;padding: 5px;min-height: 40px;" ng-click="gotoProfile(da.username)">
                         <img ng-src="{{da.avatar}}" ng-if="da.avatar != 'null'"
                              style="height: 40px;width: 40px;border-radius: 50%;"/>
                         {{da.nickname}} - {{da.username}}

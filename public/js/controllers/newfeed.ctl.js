@@ -1,6 +1,7 @@
 'use strict'
 angular.module('myApp.controller.newfeed', [])
     .controller('newfeed', ["$scope", "Service", function ($scope, Service) {
+        $scope.loading = true;
         $scope.User = {
             avatar: '../public/images/instagram/avatar.png',
             fullname: 'Chờ trong giây lát...',
@@ -36,8 +37,11 @@ angular.module('myApp.controller.newfeed', [])
                         time: data.data.listNews[i].time,
                         content: data.data.listNews[i].status
                     });
-                    console.log("tmt", $scope.listnews);
+                    if((i+1) == data.data.listNews.length){
+                        $scope.loading = false;
+                    }
                 }
+
             });
         });
         Service.getListFriend(function (data) {
@@ -61,7 +65,11 @@ angular.module('myApp.controller.newfeed', [])
                                         content: data.data.listNews[i].status,
                                         avatar: avatar
                                     });
+                                    if((i+1) == data.data.listNews.length){
+                                        $scope.loading = false;
+                                    }
                                 }
+
                             });
                         }
                     });
