@@ -100,6 +100,24 @@ exports.insertNew = function (AWS, _id, _idNewFeed, _username, _ImageName, _stat
  * @param _id
  * @param callback
  */
+exports.getListComment=function(AWS,_id,_date,_idNewfeed,callback){
+    var docClient= new AWS.DynamoDB.DocumentClient();
+    var params={
+        TableName: table_name + "_" + _id,
+        KeyConditionExpression:
+            "#id = :id and #username =:username",
+        ExpressionAttributeNames: {
+            "#id": "id",
+            "#username":"username"
+        },
+        ExpressionAttributeValues: {
+            ":id": _date,
+            ":username":_idNewfeed
+        }
+    };
+    docClient.query(params, callback);
+    }
+}
 exports.getListNewFeed = function (AWS, _id, _date, callback) {
     var docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
